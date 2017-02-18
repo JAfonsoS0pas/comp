@@ -3,16 +3,17 @@ CHARACTERS			[a-zA-Z]
 UNDERSCORE			"_"
 DOLLAR				"$"
 NEWLINE 			"\n"
+DOT 				"."
 
-ID					
-DECLIT				
-REALLIT
-STRLIT
+ID					([a-z]|[A-Z]|"_")+([a-z]|[A-Z]|"_"|[0-9])*
+DECLIT				"fidaaaaaaaaaaaaaaaaaaaaaaalgo"		
+REALLIT				"merda"
+STRLIT				"fidaaaaaaaaaaaaaaaaaaaaaaalgooooooooooooooooooooo"
 
 BOOL 				"boolean"
-BOOLIT				["true"|"false"]
+BOOLLIT				"true"|"false"
 CLASS 				"class"
-DOLLAR				"do"
+DO					"do"
 DOTLENGTH			".length"
 DOUBLE				"double"
 ELSE				"else"
@@ -49,14 +50,55 @@ NOT 				"!"
 ASSIGN 				"="
 SEMI 				";"
 COMMA 				","
-RESERVED 			["++"|"--"|"null"]
+RESERVED 			"++"|"null"|"--"
 
 
 %%
-{NUMBERS}+			{printf("Numeros: %s\n",yytext);}
-{CHARACTERS}+			{printf("Letras: %s\n",yytext);}
-{NEWLINE}				{;}
+
+{BOOL}				{printf("BOOL\n");}	
+{BOOLLIT}			{printf("BOOLLIT\n");}	
+{CLASS}				{printf("CLASS\n");}
+{DO}				{printf("DO\n");}
+{DOTLENGTH}			{printf("DOTLENGTH\n");}
+{DOUBLE}			{printf("DOUBLE\n");}
+{ELSE}				{printf("ELSE\n");}
+{IF}				{printf("IF\n");}
+{INT}				{printf("INT\n");}
+{PARSEINT}			{printf("PARSEINT\n");}
+{PRINT}				{printf("PRINT\n");}
+{PUBLIC}			{printf("PUBLIC\n");}
+{RETURN}			{printf("RETURN\n");}
+{STATIC}			{printf("STATIC\n");}
+{STRING}			{printf("STRING\n");}
+{VOID}				{printf("VOID\n");}
+{WHILE}				{printf("WHILE\n");}
+{OCURV}				{printf("OCURV\n");}
+{CCURV}				{printf("CCURV\n");}
+{OBRACE}			{printf("OBRACE\n");}
+{CBRACE}			{printf("CBRACE\n");}
+{OSQUARE} 			{printf("OSQUARE\n");}
+{CSQUARE} 			{printf("CSQUARE\n");}
+{AND}				{printf("AND\n");}
+{OR}				{printf("OR\n");}
+{LT}				{printf("LT\n");}
+{GT}				{printf("GT\n");}
+{EQ}				{printf("EQ\n");}
+{NEQ}				{printf("NEQ\n");}
+{LEQ}				{printf("LEQ\n");}
+{GEQ}				{printf("GEQ\n");}
+{PLUS}				{printf("PLUS\n");}
+{MINUS}				{printf("MINUS\n");}
+{STAR}				{printf("STAR\n");}
+{DIV}				{printf("DIV\n");}
+{MOD}				{printf("MOD\n");}
+{NOT}				{printf("NOT\n");}
+{ASSIGN}			{printf("ASSIGN\n");}
+{SEMI}				{printf("SEMI\n");}
+{COMMA}				{printf("COMMA\n");}
+{RESERVED} 			{printf("RESERVED\n");}
+{NEWLINE}			{;}
 .					{;}
+
 %%
 int main(){
 	yylex();
