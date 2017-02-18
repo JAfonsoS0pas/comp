@@ -10,10 +10,10 @@ INITCOM				"/*"
 FINISHCOM			"*/"
 SINGLECOM			"//"
 
-ID					([a-z]|[A-Z]|"_")+([a-z]|[A-Z]|"_"|[0-9])*
-DECLIT				"fidaaaaaaaaaaaaaaaaaaaaaaalgo"		
-REALLIT				"merda"
-STRLIT				"fidaaaaaaaaaaaaaaaaaaaaaaalgooooooooooooooooooooo"
+ID			([a-z]|[A-Z]|"_")+([a-z]|[A-Z]|"_"|[0-9])*
+DECLIT			[ˆ0]+( "0" | ([0-9]{"."}[0-9])* | ("_")* ) [0-9]+  			
+REALLIT				( ([0-9]+".")+ ([0-9]+"/"[0-9]+ | [0-9]+"/"[0-9]+ "e"("+"|"-"))? ) |( "."[0-9]"/"[0-9]  (("e"|"E")("+"|"-")([0-9]+)? ) | ([0-9]+("e"|"E")("+"|"-")[0-9]+(([0-9]+"."[0-9]+)+ | "_"+   )[0-9]+	
+STRLIT				
 
 BOOL 				"boolean"
 BOOLLIT				"true"|"false"
