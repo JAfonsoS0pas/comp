@@ -10,10 +10,10 @@ INITCOM				"/*"
 FINISHCOM			"*/"
 SINGLECOM			"//"
 
-ID			([a-z]|[A-Z]|"_")+([a-z]|[A-Z]|"_"|[0-9])*
-DECLIT			[ˆ0]+( "0" | ([0-9]{"."}[0-9])* | ("_")* ) [0-9]+  			
-REALLIT				( ([0-9]+".")+ ([0-9]+"/"[0-9]+ | [0-9]+"/"[0-9]+ "e"("+"|"-"))? ) |( "."[0-9]"/"[0-9]  (("e"|"E")("+"|"-")([0-9]+)? ) | ([0-9]+("e"|"E")("+"|"-")[0-9]+(([0-9]+"."[0-9]+)+ | "_"+   )[0-9]+	
-STRLIT				
+ID					({CHARACTERS}|"_")+({CHARACTERS}|"_"|{NUMBERS})*
+DECLIT				("0"|[1-9]+|([1-9]+({NUMBERS}|{UNDERSCORE})*{NUMBERS}+))
+REALLIT				"fidalgoooooooooooooooooooooooooooooo"
+STRLIT				"fidalgoooooo"
 
 BOOL 				"boolean"
 BOOLLIT				"true"|"false"
@@ -111,10 +111,13 @@ RESERVED 			"++"|"null"|"--"
 {SEMI}				{printf("SEMI\n");}
 {COMMA}				{printf("COMMA\n");}
 {RESERVED} 			{printf("RESERVED\n");}
+{ID}				{printf("ID(%s)\n", yytext);}
+{DECLIT}			{printf("DECLIT(%s)\n",yytext);}
 {NEWLINE}			{;}
 .					{;}
 
 %%
+
 int main(){
 	yylex();
 	return 0;
