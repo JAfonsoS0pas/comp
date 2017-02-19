@@ -1,9 +1,9 @@
-class Echo { 
-	/* um comentario com um int x = 0;
+class Echo {
+	/* Comentando int x = 0;
 	*/
 	public static void main(String[] args) {
-	int x; 
-	x = Integer.parseInt(args[0]);
-	System.out.println(x);
+		int x; // mais um comentario; WELELELELLEL int x = A B C ; 
+		x = Integer.parseInt(args[0]);
+		System.out.println(x);
 	}
 }

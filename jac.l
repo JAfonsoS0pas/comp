@@ -1,14 +1,19 @@
+%X SINGLE MULTICOM
+
 NUMBERS				[0-9]
 CHARACTERS			[a-zA-Z]
 UNDERSCORE			"_"
 DOLLAR				"$"
 NEWLINE 			"\n"
 DOT 				"."
+INITCOM				"/*"
+FINISHCOM			"*/"
+SINGLECOM			"//"
 
-ID					([a-z]|[A-Z]|"_")+([a-z]|[A-Z]|"_"|[0-9])*
-DECLIT				"fidaaaaaaaaaaaaaaaaaaaaaaalgo"		
-REALLIT				"merda"
-STRLIT				"fidaaaaaaaaaaaaaaaaaaaaaaalgooooooooooooooooooooo"
+ID			([a-z]|[A-Z]|"_")+([a-z]|[A-Z]|"_"|[0-9])*
+DECLIT			[ˆ0]+( "0" | ([0-9]{"."}[0-9])* | ("_")* ) [0-9]+  			
+REALLIT				( ([0-9]+".")+ ([0-9]+"/"[0-9]+ | [0-9]+"/"[0-9]+ "e"("+"|"-"))? ) |( "."[0-9]"/"[0-9]  (("e"|"E")("+"|"-")([0-9]+)? ) | ([0-9]+("e"|"E")("+"|"-")[0-9]+(([0-9]+"."[0-9]+)+ | "_"+   )[0-9]+	
+STRLIT				
 
 BOOL 				"boolean"
 BOOLLIT				"true"|"false"
@@ -53,7 +58,17 @@ COMMA 				","
 RESERVED 			"++"|"null"|"--"
 
 
+
 %%
+
+{INITCOM}				{BEGIN MULTICOM;}
+<MULTICOM>.				{;}
+<MULTICOM>{NEWLINE}		{;}
+<MULTICOM>{FINISHCOM}	{BEGIN 0;}
+
+{SINGLECOM} 			{BEGIN SINGLE;}
+<SINGLE>.				{;}
+<SINGLE>{NEWLINE}		{BEGIN 0;}
 
 {BOOL}				{printf("BOOL\n");}	
 {BOOLLIT}			{printf("BOOLLIT\n");}	
