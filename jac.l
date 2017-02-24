@@ -5,10 +5,15 @@ CHARACTERS			[a-zA-Z]
 UNDERSCORE			"_"
 DOLLAR				"$"
 NEWLINE 			"\n"
+SPACE 				" "
+TAB					"\t"
+CARRIAGERETURN 		"\r"
+FORMFEED			"f"
 DOT 				"."
 INITCOM				"/*"
 FINISHCOM			"*/"
 SINGLECOM			"//"
+ESCAPE				{SPACE}|{TAB}|{FORMFEED}|{CARRIAGERETURN}|{NEWLINE}
 
 ID					({CHARACTERS}|"_")+({CHARACTERS}|"_"|{NUMBERS})*
 DECLIT				("0"|[1-9]+|([1-9]+({NUMBERS}|{UNDERSCORE})*{NUMBERS}+))
@@ -55,7 +60,7 @@ NOT 				"!"
 ASSIGN 				"="
 SEMI 				";"
 COMMA 				","
-RESERVED 			"++"|"null"|"--"
+RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"char"|"const"|"continue"|"default"|"double"|"enum"|"extends"|"final"|"finally"|"float"|"goto"|"implements"|"import"|"instanceof"|"interface"|"long"|"native"|"new"|"package"|"private"|"protected"|"short"|"strictfp"|"super"|"switch"|"synchronized"|"this"|"throw"|"throws"|"transient"|"try"|"volatile"
 
 
 
@@ -63,7 +68,7 @@ RESERVED 			"++"|"null"|"--"
 
 {INITCOM}				{BEGIN MULTICOM;}
 <MULTICOM>.				{;}
-<MULTICOM>{NEWLINE}		{;}
+<MULTICOM>{ESCAPE}		{;}
 <MULTICOM>{FINISHCOM}	{BEGIN 0;}
 
 {SINGLECOM} 			{BEGIN SINGLE;}
@@ -113,7 +118,7 @@ RESERVED 			"++"|"null"|"--"
 {RESERVED} 			{printf("RESERVED\n");}
 {ID}				{printf("ID(%s)\n", yytext);}
 {DECLIT}			{printf("DECLIT(%s)\n",yytext);}
-{NEWLINE}			{;}
+{ESCAPE}			{;}
 .					{;}
 
 %%
