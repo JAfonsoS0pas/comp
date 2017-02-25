@@ -29,7 +29,7 @@ SPACE 				" "
 TAB					\\t
 CARRIAGERETURN 		"\r"
 FORMFEED			"\f"
-LINETERMINATOR		"\n"|{CARRIAGERETURN}|({CARRIAGERETURN}+)"\n"
+LINETERMINATOR		"\n"|{CARRIAGERETURN}|({CARRIAGERETURN})"\n"
 DOT 				"."
 DOUBLEDOT			":"
 INITCOM				"/*"
@@ -50,7 +50,7 @@ DECLIT				([0]|([1-9]({SQ1}*{NUMBERS})*))
 
 REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|{DOT}{SQ2}(({EXPOENTE}{SQ2})?)|({SQ2}{EXPOENTE}{SQ2})
 
-STRLIT				([^\n"\r\\]|{NEWLINE}|{TAB}|{BB}|(\\{ASPAS}))*
+STRLIT				([^\n"\r\\]|{NEWLINE}\|{TAB}|{BB}|(\\{ASPAS}))*
 INVALIDESCAPE		(\\.?|[^\n"\r\\ ]*)*
 
 
