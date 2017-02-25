@@ -1,3 +1,13 @@
+%{
+	#include <stdio.h>
+	#include <string.h>
+
+	int flag = 0;	
+
+	void print_text(char* text);
+	void print_with_content(char* text, char* content);
+%}
+
 %X SINGLE MULTICOM
 
 NUMBERS				[0-9]
@@ -8,11 +18,12 @@ NEWLINE 			"\n"
 SPACE 				" "
 TAB					"\t"
 CARRIAGERETURN 		"\r"
-FORMFEED			"f"
+FORMFEED			"\f"
 DOT 				"."
 INITCOM				"/*"
 FINISHCOM			"*/"
 SINGLECOM			"//"
+
 ESCAPE				{SPACE}|{TAB}|{FORMFEED}|{CARRIAGERETURN}|{NEWLINE}
 
 ID					({CHARACTERS}|"_")+({CHARACTERS}|"_"|{NUMBERS})*
@@ -60,7 +71,7 @@ NOT 				"!"
 ASSIGN 				"="
 SEMI 				";"
 COMMA 				","
-RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"char"|"const"|"continue"|"default"|"double"|"enum"|"extends"|"final"|"finally"|"float"|"goto"|"implements"|"import"|"instanceof"|"interface"|"long"|"native"|"new"|"package"|"private"|"protected"|"short"|"strictfp"|"super"|"switch"|"synchronized"|"this"|"throw"|"throws"|"transient"|"try"|"volatile"
+RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"char"|"const"|"continue"|"default"|"enum"|"extends"|"final"|"finally"|"float"|"goto"|"implements"|"import"|"instanceof"|"interface"|"long"|"native"|"new"|"package"|"private"|"protected"|"short"|"strictfp"|"super"|"switch"|"synchronized"|"this"|"throw"|"throws"|"transient"|"try"|"volatile"
 
 
 
@@ -75,55 +86,73 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 <SINGLE>.				{;}
 <SINGLE>{NEWLINE}		{BEGIN 0;}
 
-{BOOL}				{printf("BOOL\n");}	
-{BOOLLIT}			{printf("BOOLLIT\n");}	
-{CLASS}				{printf("CLASS\n");}
-{DO}				{printf("DO\n");}
-{DOTLENGTH}			{printf("DOTLENGTH\n");}
-{DOUBLE}			{printf("DOUBLE\n");}
-{ELSE}				{printf("ELSE\n");}
-{IF}				{printf("IF\n");}
-{INT}				{printf("INT\n");}
-{PARSEINT}			{printf("PARSEINT\n");}
-{PRINT}				{printf("PRINT\n");}
-{PUBLIC}			{printf("PUBLIC\n");}
-{RETURN}			{printf("RETURN\n");}
-{STATIC}			{printf("STATIC\n");}
-{STRING}			{printf("STRING\n");}
-{VOID}				{printf("VOID\n");}
-{WHILE}				{printf("WHILE\n");}
-{OCURV}				{printf("OCURV\n");}
-{CCURV}				{printf("CCURV\n");}
-{OBRACE}			{printf("OBRACE\n");}
-{CBRACE}			{printf("CBRACE\n");}
-{OSQUARE} 			{printf("OSQUARE\n");}
-{CSQUARE} 			{printf("CSQUARE\n");}
-{AND}				{printf("AND\n");}
-{OR}				{printf("OR\n");}
-{LT}				{printf("LT\n");}
-{GT}				{printf("GT\n");}
-{EQ}				{printf("EQ\n");}
-{NEQ}				{printf("NEQ\n");}
-{LEQ}				{printf("LEQ\n");}
-{GEQ}				{printf("GEQ\n");}
-{PLUS}				{printf("PLUS\n");}
-{MINUS}				{printf("MINUS\n");}
-{STAR}				{printf("STAR\n");}
-{DIV}				{printf("DIV\n");}
-{MOD}				{printf("MOD\n");}
-{NOT}				{printf("NOT\n");}
-{ASSIGN}			{printf("ASSIGN\n");}
-{SEMI}				{printf("SEMI\n");}
-{COMMA}				{printf("COMMA\n");}
-{RESERVED} 			{printf("RESERVED\n");}
-{ID}				{printf("ID(%s)\n", yytext);}
-{DECLIT}			{printf("DECLIT(%s)\n",yytext);}
+{BOOL}				{print_text("BOOL");}	
+{BOOLLIT}			{print_text("BOOLLIT");}	
+{CLASS}				{print_text("CLASS");}
+{DO}				{print_text("DO");}
+{DOTLENGTH}			{print_text("DOTLENGTH");}
+{DOUBLE}			{print_text("DOUBLE");}
+{ELSE}				{print_text("ELSE");}
+{IF}				{print_text("IF");}
+{INT}				{print_text("INT");}
+{PARSEINT}			{print_text("PARSEINT");}
+{PRINT}				{print_text("PRINT");}
+{PUBLIC}			{print_text("PUBLIC");}
+{RETURN}			{print_text("RETURN");}
+{STATIC}			{print_text("STATIC");}
+{STRING}			{print_text("STRING");}
+{VOID}				{print_text("VOID");}
+{WHILE}				{print_text("WHILE");}
+{OCURV}				{print_text("OCURV");}
+{CCURV}				{print_text("CCURV");}
+{OBRACE}			{print_text("OBRACE");}
+{CBRACE}			{print_text("CBRACE");}
+{OSQUARE} 			{print_text("OSQUARE");}
+{CSQUARE} 			{print_text("CSQUARE");}
+{AND}				{print_text("AND");}
+{OR}				{print_text("OR");}
+{LT}				{print_text("LT");}
+{GT}				{print_text("GT");}
+{EQ}				{print_text("EQ");}
+{NEQ}				{print_text("NEQ");}
+{LEQ}				{print_text("LEQ");}
+{GEQ}				{print_text("GEQ");}
+{PLUS}				{print_text("PLUS");}
+{MINUS}				{print_text("MINUS");}
+{STAR}				{print_text("STAR");}
+{DIV}				{print_text("DIV");}
+{MOD}				{print_text("MOD");}
+{NOT}				{print_text("NOT");}
+{ASSIGN}			{print_text("ASSIGN");}
+{SEMI}				{print_text("SEMI");}
+{COMMA}				{print_text("COMMA");}
+{RESERVED} 			{print_text("RESERVED");}
+{ID}				{print_with_content("ID", yytext);}
+{DECLIT}			{print_with_content("DECLIT",yytext);}
 {ESCAPE}			{;}
 .					{;}
 
 %%
 
-int main(){
+void print_text(char* text){
+	if(flag == 1){
+		printf("%s\n",text);
+	}
+}
+
+void print_with_content(char* text, char* content){
+	if(flag == 1){
+		printf("%s(%s)\n",text,content);
+	}
+}
+
+int main(int argc, char *argv[]){
+	if(argc > 1){
+		if(strcmp(argv[1],"-l") == 0 || strcmp(argv[1],"-1") == 0){
+			flag=1;
+		}
+		printf("flag -> %d\n", flag);
+	}
 	yylex();
 	return 0;
 }
