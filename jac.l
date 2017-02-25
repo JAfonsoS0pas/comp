@@ -23,13 +23,18 @@ DOT 				"."
 INITCOM				"/*"
 FINISHCOM			"*/"
 SINGLECOM			"//"
+SQ1			({NUMBERS}+|{UNDERSCORE}+)
+SQ2			{SQENUND}+{NUMBERS}
+EXPOENTE		("E"|"e")("+"|"-")
 
 ESCAPE				{SPACE}|{TAB}|{FORMFEED}|{CARRIAGERETURN}|{NEWLINE}
 
 ID					({CHARACTERS}|"_")+({CHARACTERS}|"_"|{NUMBERS})*
-DECLIT				("0"|[1-9]+|([1-9]+({NUMBERS}|{UNDERSCORE})*{NUMBERS}+))
-REALLIT				({NUMBERS}{DOT}({NUMEBERS}|("E"|"e")("+"|"-")|({NUMBERS}({NUMBERS}+|{UNDERSCORE}+){NUMBERS})("E"|"e")("+"|"-") {NUMBERS}+?) | {DOT} 
-STRLIT				"fidalgoooooo"
+DECLIT				("0"|([1-9]{SQ1}+{NUMBERS}))
+
+REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2})) | ({SQ2}{EXPOENTE}{SQ2}))? ) |({DOT}{SQ2}({EXPOENTE}{SQ2})? ) | ({SQ2}{EXPOENTE}{SQ2})
+
+STRLIT				
 
 BOOL 				"boolean"
 BOOLLIT				"true"|"false"
