@@ -2,9 +2,9 @@
 %{
 	#include <stdio.h>
 	#include <string.h>
-	#define COLUNA coluna+=yyleng;
+	
 	#define LINHA linha++; coluna=1;
-
+	#define COLUNA coluna+=yyleng;
 	int flag = 0;	
 	
 	
@@ -12,8 +12,8 @@
 	void print_with_content(char* text, char* content);
 	int linha =1;
 	int coluna=1;
-	c_actual=1;
-	l_actual=1;
+	int c_actual=1;
+	int l_actual=1;
 	
 %}
 
@@ -59,7 +59,7 @@ DO					"do"
 DOTLENGTH			".length"
 DOUBLE				"double"
 ELSE				"else"
-IF					"if"
+IF				"if"
 INT 				"int"
 PARSEINT			"Integer.parseInt"
 PRINT 				"System.out.println"
@@ -98,60 +98,66 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 
 %%
 
-{INITCOM}			{BEGIN MULTICOM;}
-<MULTICOM>.			{;}
-<MULTICOM>{ESCAPE}		{;}
-<MULTICOM>{FINISHCOM}	        {BEGIN 0;}
+{INITCOM}			{BEGIN MULTICOM; l_actual= linha; c_actual= coluna; COLUNA;}
+<MULTICOM>{FINISHCOM}		{BEGIN 0; COLUNA;}
+<MULTICOM>{NEWLINE}		{LINHA;}
+<MULTICOM>{DOT}			{COLUNA;}
+<MULTICOM><<EOF>		{BEGIN 0; printf("Line %d, col %d: unterminated comment\n", l_actual, c_actual); COLUNA;}
 
-{SINGLECOM} 			{BEGIN SINGLE;}
-<SINGLE>.				{;}
-<SINGLE>{NEWLINE}		{BEGIN 0;}
+{SINGLECOM}			{BEGIN SINGLE;}
+<SINGLE>.			{COLUNA;}
+<SINGLE>{NEWLINE}		{BEGIN 0;LINHA;}
 
-{BOOL}				{print_text("BOOL");}	
-{BOOLLIT}			{print_text("BOOLLIT");}	
-{CLASS}				{print_text("CLASS");}
-{DO}				{print_text("DO");}
-{DOTLENGTH}			{print_text("DOTLENGTH");}
-{DOUBLE}			{print_text("DOUBLE");}
-{ELSE}				{print_text("ELSE");}
-{IF}				{print_text("IF");}
-{INT}				{print_text("INT");}
-{PARSEINT}			{print_text("PARSEINT");}
-{PRINT}				{print_text("PRINT");}
-{PUBLIC}			{print_text("PUBLIC");}
-{RETURN}			{print_text("RETURN");}
-{STATIC}			{print_text("STATIC");}
-{STRING}			{print_text("STRING");}
-{VOID}				{print_text("VOID");}
-{WHILE}				{print_text("WHILE");}
-{OCURV}				{print_text("OCURV");}
-{CCURV}				{print_text("CCURV");}
-{OBRACE}			{print_text("OBRACE");}
-{CBRACE}			{print_text("CBRACE");}
-{OSQUARE} 			{print_text("OSQUARE");}
-{CSQUARE} 			{print_text("CSQUARE");}
-{AND}				{print_text("AND");}
-{OR}				{print_text("OR");}
-{LT}				{print_text("LT");}
-{GT}				{print_text("GT");}
-{EQ}				{print_text("EQ");}
-{NEQ}				{print_text("NEQ");}
-{LEQ}				{print_text("LEQ");}
-{GEQ}				{print_text("GEQ");}
-{PLUS}				{print_text("PLUS");}
-{MINUS}				{print_text("MINUS");}
-{STAR}				{print_text("STAR");}
-{DIV}				{print_text("DIV");}
-{MOD}				{print_text("MOD");}
-{NOT}				{print_text("NOT");}
+{BOOL}				{print_text("BOOL"); COLUNA;}	
+{BOOLLIT}			{print_text("BOOLLIT");COLUNA;}	
+{CLASS}				{print_text("CLASS"); COLUNA;}
+{DO}				{print_text("DO"); COLUNA;}
+{DOTLENGTH}			{print_text("DOTLENGTH");  COLUNA;}
+{DOUBLE}			{print_text("DOUBLE"); COLUNA;}
+{ELSE}				{print_text("ELSE"); COLUNA;}
+{IF}				{print_text("IF"); COLUNA;}
+{INT}				{print_text("INT"); COLUNA;}
+{PARSEINT}			{print_text("PARSEINT"); COLUNA;}
+{PRINT}				{print_text("PRINT"); COLUNA;}
+{PUBLIC}			{print_text("PUBLIC"); COLUNA;}
+{RETURN}			{print_text("RETURN"); COLUNA;}
+{STATIC}			{print_text("STATIC"); COLUNA;}
+{STRING}			{print_text("STRING"); COLUNA;}
+{VOID}				{print_text("VOID"); COLUNA;}
+{WHILE}				{print_text("WHILE"); COLUNA;}
+{OCURV}				{print_text("OCURV"); COLUNA;}
+{CCURV}				{print_text("CCURV"); COLUNA;}
+{OBRACE}			{print_text("OBRACE"); COLUNA;}
+{CBRACE}			{print_text("CBRACE"); COLUNA;}
+{OSQUARE} 			{print_text("OSQUARE"); COLUNA;}
+{CSQUARE} 			{print_text("CSQUARE"); COLUNA;}
+{AND}				{print_text("AND"); COLUNA;}
+{OR}				{print_text("OR"); COLUNA;}
+{LT}				{print_text("LT"); COLUNA;}
+{GT}				{print_text("GT"); COLUNA;}
+{EQ}				{print_text("EQ"); COLUNA;}
+{NEQ}				{print_text("NEQ"); COLUNA;}
+{LEQ}				{print_text("LEQ"); COLUNA;}
+{GEQ}				{print_text("GEQ"); COLUNA;}
+{PLUS}				{print_text("PLUS");COLUNA;}
+{MINUS}				{print_text("MINUS");COLUNA;}
+{STAR}				{print_text("STAR");COLUNA;}
+{DIV}				{print_text("DIV");COLUNA;}
+{MOD}				{print_text("MOD");COLUNA;}
+{NOT}				{print_text("NOT");COLUNA;}
 {ASSIGN}			{print_text("ASSIGN");}
 {SEMI}				{print_text("SEMI");}
 {COMMA}				{print_text("COMMA");}
-{RESERVED} 			{print_text("RESERVED");}
-{ID}				{print_with_content("ID", yytext);}
-{DECLIT}			{print_with_content("DECLIT",yytext);}
-{ESCAPE}			{;}
-.					{;}
+{RESERVED} 			{print_text("RESERVED");COLUNA;}
+{ID}				{print_with_content("ID", yytext);COLUNA;}
+{DECLIT}			{print_with_content("DECLIT",yytext);COLUNA;}
+
+\n				{LINHA;}
+{TAB}				{COLUNA;}
+{CARRIAGERETURN}		{;}
+
+
+
 
 %%
 
