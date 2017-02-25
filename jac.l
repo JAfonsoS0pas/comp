@@ -1,11 +1,20 @@
+
 %{
 	#include <stdio.h>
 	#include <string.h>
+	#define COLUNA coluna+=yyleng;
+	#define LINHA linha++; coluna=1;
 
 	int flag = 0;	
-
+	
+	
 	void print_text(char* text);
 	void print_with_content(char* text, char* content);
+	int linha =1;
+	int coluna=1;
+	c_actual=1;
+	l_actual=1;
+	
 %}
 
 %X SINGLE MULTICOM
@@ -16,25 +25,32 @@ UNDERSCORE			"_"
 DOLLAR				"$"
 NEWLINE 			"\n"
 SPACE 				" "
-TAB					"\t"
-CARRIAGERETURN 		"\r"
+TAB				"\t"
+CARRIAGERETURN 			"\r"
 FORMFEED			"\f"
 DOT 				"."
 INITCOM				"/*"
 FINISHCOM			"*/"
 SINGLECOM			"//"
+
+BB				"\\"
+B				"\"
 SQ1			({NUMBERS}+|{UNDERSCORE}+)
 SQ2			{SQ1}+{NUMBERS}
 EXPOENTE		("E"|"e")("+"|"-")
+ASPASDUPLAS			"""
 
-ESCAPE				{SPACE}|{TAB}|{FORMFEED}|{CARRIAGERETURN}|{NEWLINE}
 
-ID					({CHARACTERS}|"_")+({CHARACTERS}|"_"|{NUMBERS})*
-DECLIT				("0"|[1-9]|([1-9]{SQ1}+{NUMBERS}))
 
-REALLIT				({SQ2}{DOT} (({SQ2}|({EXPOENTE}{SQ2})) | ({SQ2}{EXPOENTE}{SQ2}))? ) |({DOT}{SQ2}({EXPOENTE}{SQ2})? ) | ({SQ2}{EXPOENTE}{SQ2})
 
-STRLIT				
+ESCAPE				{BB}|{B}|{TAB}|{FORMFEED}|{CARRIAGERETURN}|{NEWLINE}
+
+ID				({CHARACTERS}|"_")+({CHARACTERS}|"_"|{NUMBERS})*
+DECLIT				([0]|[1-9]|([1-9]{SQ1}+{NUMBERS}))
+
+REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|({DOT}{SQ2}({EXPOENTE}{SQ2})?)|({SQ2}{EXPOENTE}{SQ2})
+
+STRLIT				([^({CARRIAGERETURN}|{NEWLINE}|{ASPASDUPLAS})]) | [^({CARRIAGERETURN}|{NEWLINE}|{ASPASDUPLAS})] (({ASPASDUPLAS}{CARRIAGERETURN}{ASPASDUPLAS}|({ASPASDUPLAS}{NEWLINE}{ASPASDUPLAS})|{ASPASDUPLAS} )
 
 BOOL 				"boolean"
 BOOLLIT				"true"|"false"
@@ -60,10 +76,10 @@ CBRACE 				"}"
 OSQUARE 			"["
 CSQUARE 			"]"
 AND 				"&&"
-OR 					"||"
-LT 					"<"
-GT 					">"
-EQ 					"=="
+OR 				"||"
+LT 				"<"
+GT 				">"
+EQ 				"=="
 NEQ 				"!="
 LEQ 				"<="
 GEQ 				">="
@@ -82,10 +98,10 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 
 %%
 
-{INITCOM}				{BEGIN MULTICOM;}
-<MULTICOM>.				{;}
+{INITCOM}			{BEGIN MULTICOM;}
+<MULTICOM>.			{;}
 <MULTICOM>{ESCAPE}		{;}
-<MULTICOM>{FINISHCOM}	{BEGIN 0;}
+<MULTICOM>{FINISHCOM}	        {BEGIN 0;}
 
 {SINGLECOM} 			{BEGIN SINGLE;}
 <SINGLE>.				{;}
