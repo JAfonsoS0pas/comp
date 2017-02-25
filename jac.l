@@ -12,7 +12,7 @@ SINGLECOM			"//"
 
 ID					({CHARACTERS}|"_")+({CHARACTERS}|"_"|{NUMBERS})*
 DECLIT				("0"|[1-9]+|([1-9]+({NUMBERS}|{UNDERSCORE})*{NUMBERS}+))
-REALLIT				"fidalgoooooooooooooooooooooooooooooo"
+REALLIT				({NUMBERS}{DOT}({NUMEBERS}|("E"|"e")("+"|"-")|({NUMBERS}({NUMBERS}+|{UNDERSCORE}+){NUMBERS})("E"|"e")("+"|"-") {NUMBERS}+?) | {DOT} 
 STRLIT				"fidalgoooooo"
 
 BOOL 				"boolean"
