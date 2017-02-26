@@ -50,8 +50,7 @@ DECLIT				([0]|([1-9]({SQ1}*{NUMBERS})*))
 REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|{DOT}{SQ2}(({EXPOENTE}{SQ2})?)|({SQ2}{EXPOENTE}{SQ2})
 
 STRLIT				([^\n\r\\"]|{ESCAPE})*
-STRINV				(\\(.*)|[^\n\r\\"])*
-
+STRINV				(\\(.*)|[^\n\r\"\\\t\f])*
 
 BOOL 				"boolean"
 BOOLLIT				"true"|"false"
@@ -110,7 +109,7 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 
 \"{STRLIT}\" 														{printf("STRLIT(%s)\n",yytext); COLUNA;}
 \"{STRLIT}															{printf("Line %d, col %d: unterminated string literal\n", linha, coluna);COLUNA;}
-\"{STRINV}\"														{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;}
+\"[^{STRLIT}]\"														{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;}
 
 
 
