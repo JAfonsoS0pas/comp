@@ -17,7 +17,7 @@
 	
 %}
 
-%X SINGLE MULTICOM
+%X SINGLE MULTICOM STRINGLIT
 
 NUMBERS				[0-9]
 CHARACTERS			[a-zA-Z]
@@ -38,7 +38,9 @@ B				"\"
 SQ1			({NUMBERS}+|{UNDERSCORE}+)
 SQ2			{SQ1}+{NUMBERS}
 EXPOENTE		("E"|"e")("+"|"-")
-ASPASDUPLAS			"""
+ASPASDUPLAS			"\"\""
+ASPAS				"\""
+
 
 
 
@@ -92,7 +94,7 @@ NOT 				"!"
 ASSIGN 				"="
 SEMI 				";"
 COMMA 				","
-RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"char"|"const"|"continue"|"default"|"enum"|"extends"|"final"|"finally"|"float"|"goto"|"implements"|"import"|"instanceof"|"interface"|"long"|"native"|"new"|"package"|"private"|"protected"|"short"|"strictfp"|"super"|"switch"|"synchronized"|"this"|"throw"|"throws"|"transient"|"try"|"volatile"
+RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"char"|"const"|"continue"|"default"|"enum"|"extends"|"final"|"finally"|"float"|"goto"|"implements"|"import"|"instanceof"|"interface"|"Integer"|"long"|"native"|"new"|"package"|"private"|"protected"|"short"|"strictfp"|"super"|"switch"|"synchronized"|"System"|"this"|"throw"|"throws"|"transient"|"try"|"volatile"
 
 
 
@@ -107,6 +109,10 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 {SINGLECOM}			{BEGIN SINGLE;}
 <SINGLE>.			{COLUNA;}
 <SINGLE>{NEWLINE}		{BEGIN 0;LINHA;}
+
+{ASPAS}				{BEGIN STRINGLIT;}
+<STRINGLIT><<EOF>		{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual); COLUNA;}
+
 
 {BOOL}				{print_text("BOOL"); COLUNA;}	
 {BOOLLIT}			{print_text("BOOLLIT");COLUNA;}	
