@@ -25,26 +25,27 @@ UNDERSCORE			"_"
 DOLLAR				"$"
 NEWLINE 			"\n"
 SPACE 				" "
-TAB					"\t"
-CARRIAGERETURN 		"\r"
-FORMFEED			"\f"
+TAB					\\\t
+CARRIAGERETURN 		\\\r
+FORMFEED			\\\f
 DOT 				"."
 DOUBLEDOT			":"
 INITCOM				"/*"
 FINISHCOM			"*/"
 SINGLECOM			"//"
 
-BB					"\\"
-B					"\"
+BB					\\\\
+B					\\\
 SQ1					({NUMBERS}+|{UNDERSCORE}+)
 SQ2					{SQ1}+{NUMBERS}
 EXPOENTE			("E"|"e")("+"|"-")
-ASPASDUPLAS			"""
+ASPASDUPLAS			\\\"
+SINGLEQUOTE			\\\'
 
 
 
 
-ESCAPE				{BB}|{B}|{TAB}|{FORMFEED}|{CARRIAGERETURN}|{SPACE}
+ESCAPE				{BB}|{B}|{FORMFEED}|{CARRIAGERETURN}|{ASPASDUPLAS}
 
 ID					({CHARACTERS}|{UNDERSCORE}|{DOLLAR})+({CHARACTERS}|{UNDERSCORE}|{DOLLAR}|{NUMBERS})*
 
@@ -100,10 +101,10 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 
 %%
 
-{INITCOM}					{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;}
+{INITCOM}					{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;COLUNA;}
 <MULTICOM>{FINISHCOM}		{BEGIN 0;}
 <MULTICOM>{NEWLINE}			{LINHA;}
-<MULTICOM>.					{;}
+<MULTICOM>.					{COLUNA;}
 <MULTICOM><<EOF>>			{BEGIN 0; printf("Line %d, col %d: unterminated comment\n", l_actual, c_actual);}
 
 {SINGLECOM}				{BEGIN SINGLE;}
@@ -147,18 +148,21 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 {DIV}				{print_text("DIV");COLUNA;}
 {MOD}				{print_text("MOD");COLUNA;}
 {NOT}				{print_text("NOT");COLUNA;}
-{ASSIGN}			{print_text("ASSIGN");}
-{SEMI}				{print_text("SEMI");}
-{COMMA}				{print_text("COMMA");}
-{RESERVED} 			{print_with_content("RESERVED",yytext);COLUNA;}
-{ID}				{print_with_content("ID", yytext);COLUNA;}
-{DECLIT}			{print_with_content("DECLIT",yytext);COLUNA;}
+{ASSIGN}			{print_text("ASSIGN");COLUNA;}
+{SEMI}				{print_text("SEMI");COLUNA;}
+{COMMA}				{print_text("COMMA");COLUNA;}
 
-{NEWLINE}			{LINHA;}
+{RESERVED} 			{print_with_content("RESERVED",yytext); COLUNA;}
+{ID}				{print_with_content("ID", yytext); COLUNA;}
+{DECLIT}			{print_with_content("DECLIT",yytext); COLUNA;}
+{REALLIT}			{print_with_content("REALLIT",yytext); COLUNA;}
+
 {SPACE}				{COLUNA;}
 {DOUBLEDOT}			{COLUNA;}
 {TAB}				{COLUNA;}
-{CARRIAGERETURN}	{;}
+{NEWLINE}			{LINHA;}
+
+. 					{;}
 
 
 
