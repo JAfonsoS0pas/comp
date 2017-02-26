@@ -17,7 +17,7 @@
 	
 %}
 
-%X SINGLE MULTICOM STRINGLIT
+%X SINGLE MULTICOM STRINGLIT STRINGLIT2
 
 NUMBERS				[0-9]
 CHARACTERS			[a-zA-Z]
@@ -25,8 +25,8 @@ UNDERSCORE			"_"
 DOLLAR				"$"
 NEWLINE 			"\n"
 SPACE 				" "
-TAB					"\t"
-CARRIAGERETURN 		"\r"
+TAB				"\t"
+CARRIAGERETURN 			"\r"
 FORMFEED			"\f"
 DOT 				"."
 DOUBLEDOT			":"
@@ -36,15 +36,14 @@ SINGLECOM			"//"
 
 BB				"\\"
 B				"\"
-SQ1			({NUMBERS}+|{UNDERSCORE}+)
-SQ2			{SQ1}+{NUMBERS}
-EXPOENTE		("E"|"e")("+"|"-")
+SQ1				({NUMBERS}+|{UNDERSCORE}+)
+SQ2				{SQ1}+{NUMBERS}
+EXPOENTE			("E"|"e")("+"|"-")
 ASPASDUPLAS			"\"\""
 ASPAS				"\""
+PLICAS				"\'
 
-
-
-ESCAPE				{BB}|{B}|{TAB}|{FORMFEED}|{CARRIAGERETURN}|{SPACE}
+ESCAPE				{BB}|{B}|{TAB}|{FORMFEED}|{CARRIAGERETURN}
 
 ID					({CHARACTERS}|{UNDERSCORE}|{DOLLAR})+({CHARACTERS}|{UNDERSCORE}|{DOLLAR}|{NUMBERS})*
 
@@ -99,18 +98,26 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 
 %%
 
-{INITCOM}					{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;}
+{INITCOM}			{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;}
 <MULTICOM>{FINISHCOM}		{BEGIN 0;}
-<MULTICOM>{NEWLINE}			{LINHA;}
-<MULTICOM>.					{;}
-<MULTICOM><<EOF>>			{BEGIN 0; printf("Line %d, col %d: unterminated comment\n", l_actual, c_actual);}
+<MULTICOM>{NEWLINE}		{LINHA;}
+<MULTICOM>.			{;}
+<MULTICOM><<EOF>>		{BEGIN 0; printf("Line %d, col %d: unterminated comment\n", l_actual, c_actual);}
 
-{SINGLECOM}				{BEGIN SINGLE;}
-<SINGLE>.				{;}
+{SINGLECOM}			{BEGIN SINGLE;}
+<SINGLE>.			{;}
 <SINGLE>{NEWLINE}		{BEGIN 0;LINHA;}
+
 
 {ASPAS}				{BEGIN STRINGLIT;}
 <STRINGLIT><<EOF>		{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual); COLUNA;}
+
+"\'"				{BEGIN STRINGLIT2;}
+<STRINGLIT2><<EOF>		{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual); COLUNA;}
+
+{DOT}				{printf("Line %d, col %d: illegal character (%s)\n", linha, coluna, yytext);COLUNA};
+
+[^"\""]\[^rt\]	{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA};
 
 
 {BOOL}				{print_text("BOOL"); COLUNA;}	
@@ -161,7 +168,7 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 {SPACE}				{LINHA;}
 {DOUBLEDOT}			{LINHA;}
 {TAB}				{COLUNA;}
-{CARRIAGERETURN}	{;}
+{CARRIAGERETURN}		{;}
 
 
 
