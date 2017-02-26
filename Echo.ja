@@ -3,7 +3,11 @@ class Echo {
 	*/
 	public static void main(String[] args) {
 		int x; // mais um comentario; WELELELELLEL int x = A B C ; 
-		int y = 5;
+		int xlength = 5;
+		switch(xlength){
+			case 1: x = 1;
+			break;
+		}
 		x = Integer.parseInt(args[0]);
 		System.out.println(x);
 	}
