@@ -17,7 +17,7 @@
 	
 %}
 
-%X SINGLE MULTICOM
+%X SINGLE MULTICOM STRINGLIT STRINGLIT2
 
 NUMBERS				[0-9]
 CHARACTERS			[a-zA-Z]
@@ -25,15 +25,22 @@ UNDERSCORE			"_"
 DOLLAR				"$"
 NEWLINE 			"\n"
 SPACE 				" "
+<<<<<<< HEAD
 TAB					\\\t
 CARRIAGERETURN 		\\\r
 FORMFEED			\\\f
+=======
+TAB				"\t"
+CARRIAGERETURN 			"\r"
+FORMFEED			"\f"
+>>>>>>> c318943edfd36d3fdf4fa7cc41f309856c085afb
 DOT 				"."
 DOUBLEDOT			":"
 INITCOM				"/*"
 FINISHCOM			"*/"
 SINGLECOM			"//"
 
+<<<<<<< HEAD
 BB					\\\\
 B					\\\
 SQ1					({NUMBERS}+|{UNDERSCORE}+)
@@ -46,6 +53,18 @@ SINGLEQUOTE			\\\'
 
 
 ESCAPE				{BB}|{B}|{FORMFEED}|{CARRIAGERETURN}|{ASPASDUPLAS}
+=======
+BB				"\\"
+B				"\"
+SQ1				({NUMBERS}+|{UNDERSCORE}+)
+SQ2				{SQ1}+{NUMBERS}
+EXPOENTE			("E"|"e")("+"|"-")
+ASPASDUPLAS			"\"\""
+ASPAS				"\""
+PLICAS				"\'
+
+ESCAPE				{BB}|{B}|{TAB}|{FORMFEED}|{CARRIAGERETURN}
+>>>>>>> c318943edfd36d3fdf4fa7cc41f309856c085afb
 
 ID					({CHARACTERS}|{UNDERSCORE}|{DOLLAR})+({CHARACTERS}|{UNDERSCORE}|{DOLLAR}|{NUMBERS})*
 
@@ -95,21 +114,40 @@ NOT 				"!"
 ASSIGN 				"="
 SEMI 				";"
 COMMA 				","
-RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"char"|"const"|"continue"|"default"|"enum"|"extends"|"final"|"finally"|"float"|"goto"|"implements"|"import"|"instanceof"|"interface"|"long"|"native"|"new"|"package"|"private"|"protected"|"short"|"strictfp"|"super"|"switch"|"synchronized"|"this"|"throw"|"throws"|"transient"|"try"|"volatile"|"Integer"|"System"
-
+RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"char"|"const"|"continue"|"default"|"enum"|"extends"|"final"|"finally"|"float"|"goto"|"implements"|"import"|"instanceof"|"interface"|"Integer"|"long"|"native"|"new"|"package"|"private"|"protected"|"short"|"strictfp"|"super"|"switch"|"synchronized"|"System"|"this"|"throw"|"throws"|"transient"|"try"|"volatile"
 
 
 %%
 
+<<<<<<< HEAD
 {INITCOM}					{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;COLUNA;}
 <MULTICOM>{FINISHCOM}		{BEGIN 0;}
 <MULTICOM>{NEWLINE}			{LINHA;}
 <MULTICOM>.					{COLUNA;}
 <MULTICOM><<EOF>>			{BEGIN 0; printf("Line %d, col %d: unterminated comment\n", l_actual, c_actual);}
+=======
+{INITCOM}			{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;}
+<MULTICOM>{FINISHCOM}		{BEGIN 0;}
+<MULTICOM>{NEWLINE}		{LINHA;}
+<MULTICOM>.			{;}
+<MULTICOM><<EOF>>		{BEGIN 0; printf("Line %d, col %d: unterminated comment\n", l_actual, c_actual);}
+>>>>>>> c318943edfd36d3fdf4fa7cc41f309856c085afb
 
-{SINGLECOM}				{BEGIN SINGLE;}
-<SINGLE>.				{;}
+{SINGLECOM}			{BEGIN SINGLE;}
+<SINGLE>.			{;}
 <SINGLE>{NEWLINE}		{BEGIN 0;LINHA;}
+
+
+{ASPAS}				{BEGIN STRINGLIT;}
+<STRINGLIT><<EOF>		{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual); COLUNA;}
+
+"\'"				{BEGIN STRINGLIT2;}
+<STRINGLIT2><<EOF>		{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual); COLUNA;}
+
+{DOT}				{printf("Line %d, col %d: illegal character (%s)\n", linha, coluna, yytext);COLUNA};
+
+[^"\""]\[^rt\]	{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA};
+
 
 {BOOL}				{print_text("BOOL"); COLUNA;}	
 {BOOLLIT}			{print_text("BOOLLIT");COLUNA;}	
@@ -160,9 +198,13 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 {SPACE}				{COLUNA;}
 {DOUBLEDOT}			{COLUNA;}
 {TAB}				{COLUNA;}
+<<<<<<< HEAD
 {NEWLINE}			{LINHA;}
 
 . 					{;}
+=======
+{CARRIAGERETURN}		{;}
+>>>>>>> c318943edfd36d3fdf4fa7cc41f309856c085afb
 
 
 
