@@ -25,10 +25,11 @@ UNDERSCORE			"_"
 DOLLAR				"$"
 NEWLINE 			"\n"
 SPACE 				" "
-TAB				"\t"
-CARRIAGERETURN 			"\r"
+TAB					"\t"
+CARRIAGERETURN 		"\r"
 FORMFEED			"\f"
 DOT 				"."
+DOUBLEDOT			":"
 INITCOM				"/*"
 FINISHCOM			"*/"
 SINGLECOM			"//"
@@ -43,11 +44,10 @@ ASPAS				"\""
 
 
 
+ESCAPE				{BB}|{B}|{TAB}|{FORMFEED}|{CARRIAGERETURN}|{SPACE}
 
+ID					({CHARACTERS}|{UNDERSCORE}|{DOLLAR})+({CHARACTERS}|{UNDERSCORE}|{DOLLAR}|{NUMBERS})*
 
-ESCAPE				{BB}|{B}|{TAB}|{FORMFEED}|{CARRIAGERETURN}|{NEWLINE}
-
-ID				({CHARACTERS}|"_")+({CHARACTERS}|"_"|{NUMBERS})*
 DECLIT				([0]|[1-9]|([1-9]{SQ1}+{NUMBERS}))
 
 REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|({DOT}{SQ2}({EXPOENTE}{SQ2})?)|({SQ2}{EXPOENTE}{SQ2})
@@ -61,7 +61,7 @@ DO					"do"
 DOTLENGTH			".length"
 DOUBLE				"double"
 ELSE				"else"
-IF				"if"
+IF					"if"
 INT 				"int"
 PARSEINT			"Integer.parseInt"
 PRINT 				"System.out.println"
@@ -78,10 +78,10 @@ CBRACE 				"}"
 OSQUARE 			"["
 CSQUARE 			"]"
 AND 				"&&"
-OR 				"||"
-LT 				"<"
-GT 				">"
-EQ 				"=="
+OR 					"||"
+LT 					"<"
+GT 					">"
+EQ 					"=="
 NEQ 				"!="
 LEQ 				"<="
 GEQ 				">="
@@ -97,17 +97,16 @@ COMMA 				","
 RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"char"|"const"|"continue"|"default"|"enum"|"extends"|"final"|"finally"|"float"|"goto"|"implements"|"import"|"instanceof"|"interface"|"Integer"|"long"|"native"|"new"|"package"|"private"|"protected"|"short"|"strictfp"|"super"|"switch"|"synchronized"|"System"|"this"|"throw"|"throws"|"transient"|"try"|"volatile"
 
 
-
 %%
 
-{INITCOM}			{BEGIN MULTICOM; l_actual= linha; c_actual= coluna; COLUNA;}
-<MULTICOM>{FINISHCOM}		{BEGIN 0; COLUNA;}
-<MULTICOM>{NEWLINE}		{LINHA;}
-<MULTICOM>{DOT}			{COLUNA;}
-<MULTICOM><<EOF>		{BEGIN 0; printf("Line %d, col %d: unterminated comment\n", l_actual, c_actual); COLUNA;}
+{INITCOM}					{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;}
+<MULTICOM>{FINISHCOM}		{BEGIN 0;}
+<MULTICOM>{NEWLINE}			{LINHA;}
+<MULTICOM>.					{;}
+<MULTICOM><<EOF>>			{BEGIN 0; printf("Line %d, col %d: unterminated comment\n", l_actual, c_actual);}
 
-{SINGLECOM}			{BEGIN SINGLE;}
-<SINGLE>.			{COLUNA;}
+{SINGLECOM}				{BEGIN SINGLE;}
+<SINGLE>.				{;}
 <SINGLE>{NEWLINE}		{BEGIN 0;LINHA;}
 
 {ASPAS}				{BEGIN STRINGLIT;}
@@ -154,13 +153,15 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 {ASSIGN}			{print_text("ASSIGN");}
 {SEMI}				{print_text("SEMI");}
 {COMMA}				{print_text("COMMA");}
-{RESERVED} 			{print_text("RESERVED");COLUNA;}
+{RESERVED} 			{print_with_content("RESERVED",yytext);COLUNA;}
 {ID}				{print_with_content("ID", yytext);COLUNA;}
 {DECLIT}			{print_with_content("DECLIT",yytext);COLUNA;}
 
-\n				{LINHA;}
+{NEWLINE}			{LINHA;}
+{SPACE}				{LINHA;}
+{DOUBLEDOT}			{LINHA;}
 {TAB}				{COLUNA;}
-{CARRIAGERETURN}		{;}
+{CARRIAGERETURN}	{;}
 
 
 
@@ -184,7 +185,6 @@ int main(int argc, char *argv[]){
 		if(strcmp(argv[1],"-l") == 0 || strcmp(argv[1],"-1") == 0){
 			flag=1;
 		}
-		printf("flag -> %d\n", flag);
 	}
 	yylex();
 	return 0;
