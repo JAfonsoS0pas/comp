@@ -155,8 +155,8 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 {DECLIT}			{print_with_content("DECLIT",yytext);COLUNA;}
 
 {NEWLINE}			{LINHA;}
-{SPACE}				{LINHA;}
-{DOUBLEDOT}			{LINHA;}
+{SPACE}				{COLUNA;}
+{DOUBLEDOT}			{COLUNA;}
 {TAB}				{COLUNA;}
 {CARRIAGERETURN}	{;}
 
