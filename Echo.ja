@@ -1,26 +1,14 @@
-class Echo {
-	/* Comentando int x = 0;
-	* ASDSADASDAS
-	** ASDSADSADASDASDAS
-
-	******* asdasdasdasd\ | /
-		/ YOLOLOLOL
-	*/ =
-	public static void main(String[] args) {
-		int x; // mais um comentario; WELELELELLEL int x = A B C ; 
-		int xlength = 5;
-		switch(xlength){
-			case 1: x = 1;
-			break;
-		}
-		for(int j=0;j<xlength;j++){
-			x++;
-		}
-		\
-		x = Integer.parseInt(args[0]);
-		System.out.println(x);
-	}
-}
 
 
-// ultimo comentario
+	
+
+
+
+
+
+
+
+
+
+
+										        				

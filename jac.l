@@ -27,6 +27,7 @@ NEWLINE 			"\n"
 SPACE 				" "
 TAB					"\t"
 CARRIAGERETURN 		"\r"
+LINETERMINATOR		"\r\t"
 FORMFEED			"\f"
 DOT 				"."
 DOUBLEDOT			":"
@@ -100,19 +101,25 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 
 {INITCOM}															{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;}
 <MULTICOM>{FINISHCOM}												{BEGIN 0;}
-<MULTICOM>{CARRIAGERETURN}{NEWLINE}|{NEWLINE}|{CARRIAGERETURN}		{LINHA;}
+<MULTICOM>{LINETERMINATOR}|{NEWLINE}|{CARRIAGERETURN}				{LINHA;}
 <MULTICOM>.															{;}
 <MULTICOM><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated comment\n", l_actual, c_actual);}
 
 {SINGLECOM}															{BEGIN SINGLE;}
 <SINGLE>.															{;}
-<SINGLE>{CARRIAGERETURN}{NEWLINE}|{NEWLINE}|{CARRIAGERETURN}		{BEGIN 0;LINHA;}
+<SINGLE>{LINETERMINATOR}|{NEWLINE}|{CARRIAGERETURN}					{BEGIN 0;LINHA;}
 
 
-{ASPAS}																{BEGIN STRINGLIT;}
+{ASPAS}																{BEGIN STRINGLIT; l_actual= linha; c_actual= coluna;}
+<STRINGLIT>{ASPAS}													{BEGIN 0; COLUNA;}													
+<STRINGLIT>{LINETERMINATOR}|{NEWLINE}|{CARRIAGERETURN}				{LINHA;}
+<STRINGLIT>.														{COLUNA;}
 <STRINGLIT><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual); COLUNA;}
 
-"\'"																{BEGIN STRINGLIT2;}
+{PLICAS}															{BEGIN STRINGLIT2; l_actual= linha; c_actual= coluna;}
+<STRINGLIT2>{PLICAS}												{BEGIN 0;COLUNA;}	
+<STRINGLIT2>{LINETERMINATOR}|{NEWLINE}|{CARRIAGERETURN}				{LINHA;}
+<STRINGLIT2>.														{COLUNA;}
 <STRINGLIT2><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual); COLUNA;}
 
 
@@ -168,7 +175,9 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 {DOUBLEDOT}					{COLUNA;}
 {TAB}						{COLUNA;}
 {NEWLINE}					{LINHA;}
-{CARRIAGERETURN}			{;}
+{CARRIAGERETURN}			{LINHA;}
+{LINETERMINATOR}			{LINHA;}
+{FORMFEED}					{LINHA;}
 [^("\"")|("\'")]\[^rt\]		{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA};
 .							{printf("Line %d, col %d: illegal character (%s)\n", linha, coluna, yytext);COLUNA};
 
