@@ -44,15 +44,15 @@ ASPASDUPLAS			"\"\""
 ASPAS				"\""
 PLICAS				"\'"
 
-ESCAPE				{BB}|{B}|{TAB}|{FORMFEED}|{CARRIAGERETURN}
+ESCAPE				{BB}|{B}|{TAB}|{FORMFEED}|{CARRIAGERETURN}|{NEWLINE}
 
 ID					({CHARACTERS}|{UNDERSCORE}|{DOLLAR})+({CHARACTERS}|{UNDERSCORE}|{DOLLAR}|{NUMBERS})*
 
-DECLIT				([0]|[1-9]|([1-9]{SQ1}+{NUMBERS}))
+DECLIT				([0]|([1-9]({SQ1}*{NUMBERS})*))
 
 REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|({DOT}{SQ2}({EXPOENTE}{SQ2})?)|({SQ2}{EXPOENTE}{SQ2})
 
-STRLIT				([^({CARRIAGERETURN}|{NEWLINE}|{ASPASDUPLAS})]) | [^({CARRIAGERETURN}|{NEWLINE}|{ASPASDUPLAS})] (({ASPASDUPLAS}{CARRIAGERETURN}{ASPASDUPLAS}|({ASPASDUPLAS}{NEWLINE}{ASPASDUPLAS})|{ASPASDUPLAS} )
+STRLIT				[^\r\n\"{ESCAPE}]*
 
 BOOL 				"boolean"
 BOOLLIT				"true"|"false"
@@ -99,27 +99,29 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 
 %%
 
-{INITCOM}															{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;}
+{INITCOM}															{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;COLUNA;}
 <MULTICOM>{FINISHCOM}												{BEGIN 0; COLUNA;}
 <MULTICOM>{LINETERMINATOR}											{LINHA;}
-<MULTICOM>.															{;}
+<MULTICOM>.															{COLUNA;}
 <MULTICOM><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated comment\n", l_actual, c_actual);}
 
-{SINGLECOM}															{BEGIN SINGLE;}
+{SINGLECOM}															{BEGIN SINGLE;COLUNA;}
 <SINGLE>{LINETERMINATOR}											{BEGIN 0;LINHA;}
-<SINGLE>.															{;}
+<SINGLE>.															{COLUNA;}
 
 
-{ASPAS}																{BEGIN STRINGLIT; l_actual= linha; c_actual= coluna;}
+{ASPAS}																{BEGIN STRINGLIT; l_actual= linha; c_actual= coluna;COLUNA;}
 <STRINGLIT>{ASPAS}													{BEGIN 0; COLUNA;}													
 <STRINGLIT>{LINETERMINATOR}											{LINHA;}
-<STRINGLIT>.														{;}
+<STRINGLIT>{STRLIT}													{print_with_content("STRLIT",yytext); COLUNA;}
+<STRINGLIT>.														{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;}
 <STRINGLIT><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);}
 
-{PLICAS}															{BEGIN STRINGLIT2; l_actual= linha; c_actual= coluna;}
+{PLICAS}															{BEGIN STRINGLIT2; l_actual= linha; c_actual= coluna;COLUNA;}
 <STRINGLIT2>{PLICAS}												{BEGIN 0;COLUNA;}	
 <STRINGLIT2>{LINETERMINATOR}										{LINHA;}
-<STRINGLIT2>.														{;}
+<STRINGLIT2>{STRLIT}												{print_with_content("STRLIT",yytext); COLUNA;}
+<STRINGLIT2>.														{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;}
 <STRINGLIT2><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);}
 
 
@@ -168,14 +170,14 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 
 {RESERVED} 			{print_with_content("RESERVED",yytext); COLUNA;}
 {ID}				{print_with_content("ID", yytext); COLUNA;}
-{DECLIT}			{print_with_content("DECLIT",yytext); COLUNA;}
 {REALLIT}			{print_with_content("REALLIT",yytext); COLUNA;}
+{DECLIT}			{print_with_content("DECLIT",yytext); COLUNA;}
+
 
 {SPACE}						{COLUNA;}
 {DOUBLEDOT}					{COLUNA;}
 {TAB}						{COLUNA;}
 {LINETERMINATOR}			{LINHA;}
-[^("\"")|("\'")]\[^rt\]		{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA};
 .							{printf("Line %d, col %d: illegal character (%s)\n", linha, coluna, yytext);COLUNA};
 
 

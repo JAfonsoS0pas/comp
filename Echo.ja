@@ -5,20 +5,23 @@ class Echo {
 
 	******* asdasdasdasd\ | /
 		/ YOLOLOLOL
-	*/ =
+	*/ 
 	public static void main(String[] args) {
-		int x; // mais um comentario; WELELELELLEL int x = A B C ; 
+		int x; // mais um comentario; WELELELELLEL int x = A B C ; /
 		int xlength = 5;
 		switch(xlength){
-			case 1: x = 1;
+			case 1: x = _1____2;
 			break;
 		}
 		for(int j=0;j<xlength;j++){
 			x++;
 		}
 		\
-		/* this comment /* // /** ends here: */
-		String y = 'YOOOOOOOOOOOOOOO';
+		/* this comment /* // /** ends here: */ \
+		String y = "YOOOOOOOOOOOOOOO" ;
+		1.2
+		.2e2
+		/*	
 		x = Integer.parseInt(args[0]);
 		System.out.println(x);
 	}
