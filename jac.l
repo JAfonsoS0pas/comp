@@ -50,6 +50,8 @@ DECLIT				([0]|([1-9]({SQ1}*{NUMBERS})*))
 REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|{DOT}{SQ2}(({EXPOENTE}{SQ2})?)|({SQ2}{EXPOENTE}{SQ2})
 
 STRLIT				([^\n\r\\"]|{ESCAPE})*
+STRINV				(\\(.*)|[^\n\r\\"])*
+
 
 BOOL 				"boolean"
 BOOLLIT				"true"|"false"
@@ -106,12 +108,9 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 <SINGLE>{LINETERMINATOR}											{BEGIN 0;LINHA;}
 <SINGLE>.															{COLUNA;}
 
-{ASPAS}																{BEGIN STRINGLIT; l_actual= linha; c_actual= coluna;COLUNA;}								
-<STRINGLIT>\"														{BEGIN 0; COLUNA;}													
-<STRINGLIT><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);}
-<STRINGLIT>{STRLIT}													{printf("STRLIT(\"%s\")\n",yytext); COLUNA; }
-<STRINGLIT>{LINETERMINATOR}											{LINHA;}
-<STRINGLIT>.														{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;}
+\"{STRLIT}\" 														{printf("STRLIT(%s)\n",yytext); COLUNA;}
+\"{STRLIT}															{printf("Line %d, col %d: unterminated string literal\n", linha, coluna);COLUNA;}
+\"{STRINV}\"														{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;}
 
 
 
