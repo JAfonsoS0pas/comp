@@ -5,7 +5,7 @@ class Echo {
 
 	******* asdasdasdasd\ | /
 		/ YOLOLOLOL
-	*/ 
+	*/ 	\
 	public static void main(String[] args) {
 		int x; // mais um comentario; WELELELELLEL int x = A B C ; /
 		int xlength = 5;
@@ -17,13 +17,35 @@ class Echo {
 			x++;
 		}
 		\
+
 		/* this comment /* // /** ends here: */ \
-		String y = "YOOOOOOOOOOOOOOO" ;
-		1.2
-		.2e+2
-		/*	
+		String y = "YOOOOOOOOOOOOOOO ;
+		\" teste " ; 
+
+		1E0
+		!
+		&
+		#
+		"\""
+		
+		.e23_1
+		:::::*****
+		0_1
+		4_1____2
+		10.10
+		10________2.e2
+		10_10.2_2e2_2
+		1_1_1.2_2e+2
+		.0_1e-1_0
+		10.
+		e+10
+		"sdadasd\n"
+		"asdas\r"
+		"batata\\"
+		"wepro\""
+
 		x = Integer.parseInt(args[0]);
-		System.out.println(x);
+		System.out.println(x);"
 	}
 }
 
