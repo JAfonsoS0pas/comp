@@ -38,7 +38,7 @@ SINGLECOM			"//"
 BB					"\\"
 B					"\"
 SQ1					({NUMBERS}|{UNDERSCORE})
-SQ2					{SQ1}+{NUMBERS}
+SQ2					{NUMBERS}+({SQ1}*{NUMBERS})*
 EXPOENTE			("E"|"e")("+"|"-")
 ASPASDUPLAS			"\"\""
 ASPAS				"\""

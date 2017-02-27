@@ -20,7 +20,7 @@ class Echo {
 		/* this comment /* // /** ends here: */ \
 		String y = "YOOOOOOOOOOOOOOO" ;
 		1.2
-		.2e2
+		.2e+2
 		/*	
 		x = Integer.parseInt(args[0]);
 		System.out.println(x);
