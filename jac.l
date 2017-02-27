@@ -27,8 +27,8 @@ NEWLINE 			"\n"
 SPACE 				" "
 TAB					"\t"
 CARRIAGERETURN 		"\r"
-LINETERMINATOR		"\r\t"
 FORMFEED			"\f"
+LINETERMINATOR		{NEWLINE}|{CARRIAGERETURN}|({CARRIAGERETURN}+){NEWLINE}
 DOT 				"."
 DOUBLEDOT			":"
 INITCOM				"/*"
@@ -100,27 +100,27 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 %%
 
 {INITCOM}															{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;}
-<MULTICOM>{FINISHCOM}												{BEGIN 0;}
-<MULTICOM>{LINETERMINATOR}|{NEWLINE}|{CARRIAGERETURN}				{LINHA;}
+<MULTICOM>{FINISHCOM}												{BEGIN 0; COLUNA;}
+<MULTICOM>{LINETERMINATOR}											{LINHA;}
 <MULTICOM>.															{;}
 <MULTICOM><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated comment\n", l_actual, c_actual);}
 
 {SINGLECOM}															{BEGIN SINGLE;}
+<SINGLE>{LINETERMINATOR}											{BEGIN 0;LINHA;}
 <SINGLE>.															{;}
-<SINGLE>{LINETERMINATOR}|{NEWLINE}|{CARRIAGERETURN}					{BEGIN 0;LINHA;}
 
 
 {ASPAS}																{BEGIN STRINGLIT; l_actual= linha; c_actual= coluna;}
 <STRINGLIT>{ASPAS}													{BEGIN 0; COLUNA;}													
-<STRINGLIT>{LINETERMINATOR}|{NEWLINE}|{CARRIAGERETURN}				{LINHA;}
-<STRINGLIT>.														{COLUNA;}
-<STRINGLIT><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual); COLUNA;}
+<STRINGLIT>{LINETERMINATOR}											{LINHA;}
+<STRINGLIT>.														{;}
+<STRINGLIT><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);}
 
 {PLICAS}															{BEGIN STRINGLIT2; l_actual= linha; c_actual= coluna;}
 <STRINGLIT2>{PLICAS}												{BEGIN 0;COLUNA;}	
-<STRINGLIT2>{LINETERMINATOR}|{NEWLINE}|{CARRIAGERETURN}				{LINHA;}
-<STRINGLIT2>.														{COLUNA;}
-<STRINGLIT2><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual); COLUNA;}
+<STRINGLIT2>{LINETERMINATOR}										{LINHA;}
+<STRINGLIT2>.														{;}
+<STRINGLIT2><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);}
 
 
 
@@ -174,10 +174,7 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 {SPACE}						{COLUNA;}
 {DOUBLEDOT}					{COLUNA;}
 {TAB}						{COLUNA;}
-{NEWLINE}					{LINHA;}
-{CARRIAGERETURN}			{LINHA;}
 {LINETERMINATOR}			{LINHA;}
-{FORMFEED}					{LINHA;}
 [^("\"")|("\'")]\[^rt\]		{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA};
 .							{printf("Line %d, col %d: illegal character (%s)\n", linha, coluna, yytext);COLUNA};
 
