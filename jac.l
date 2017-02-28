@@ -52,7 +52,7 @@ REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|{DOT}
 
 
 STRLIT				([^\n\r\\"]|{ESCAPE})*
-INVALIDESCAPE 		(\\([^{STRLIT}]))*
+INVALIDESCAPE 		(\\([^{STRLIT}nrft" ]))*
 
 
 
