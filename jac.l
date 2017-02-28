@@ -5,7 +5,7 @@
 	
 	#define LINHA linha++; coluna=1;
 	#define COLUNA coluna+=yyleng;
-	int flag = 0;	
+	int flag = 0,error =0;	
 	char *save;
 	
 	
@@ -51,7 +51,7 @@ DECLIT				([0]|([1-9]({SQ1}*{NUMBERS})*))
 REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|{DOT}{SQ2}(({EXPOENTE}{SQ2})?)|({SQ2}{EXPOENTE}{SQ2})
 
 STRLIT				([^\n"\r\\]|{NEWLINE}|{TAB}|{BB}|(\\{ASPAS}))*
-INVALIDESCAPE		(\\.|[^\n"\r\\]*)*
+INVALIDESCAPE		(\\.?|[^\n"\r\\ ]*)*
 
 
 
@@ -96,6 +96,7 @@ ASSIGN 				"="
 SEMI 				";"
 COMMA 				","
 RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"char"|"const"|"continue"|"default"|"enum"|"extends"|"final"|"finally"|"float"|"for"|"goto"|"implements"|"import"|"instanceof"|"interface"|"Integer"|"long"|"native"|"new"|"package"|"private"|"protected"|"short"|"strictfp"|"super"|"switch"|"synchronized"|"System"|"this"|"throw"|"throws"|"transient"|"try"|"volatile"
+
 
 
 %%
@@ -159,10 +160,12 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 <SINGLE>{LINETERMINATOR}											{BEGIN 0;LINHA;}
 <SINGLE>.															{COLUNA;}
 
-{ASPAS}{STRLIT}														{BEGIN STRINGLIT; save = yytext; l_actual= linha; c_actual= coluna;COLUNA;}
-<STRINGLIT>{INVALIDESCAPE}											{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;}
+{ASPAS}{STRLIT}														{BEGIN STRINGLIT; save = yytext; l_actual= linha; c_actual= coluna;COLUNA; error=0;}
+<STRINGLIT>{INVALIDESCAPE}											{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;error=1;}
 <STRINGLIT>{LINETERMINATOR}											{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
-<STRINGLIT>{ASPAS}													{BEGIN 0; print_with_content("STRLIT",save);COLUNA;}
+<STRINGLIT><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
+<STRINGLIT>{ASPAS}													{BEGIN 0; if(error==0){print_with_content("STRLIT",save);} COLUNA;}
+<STRINGLIT>.														{COLUNA;}
 
 
 
