@@ -50,8 +50,11 @@ DECLIT				([0]|([1-9]({SQ1}*{NUMBERS})*))
 
 REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|{DOT}{SQ2}(({EXPOENTE}{SQ2})?)|({SQ2}{EXPOENTE}{SQ2})
 
-STRLIT				([^\n"\r\\]|{NEWLINE}\|{TAB}|{BB}|(\\{ASPAS}))*
-INVALIDESCAPE		(\\.?|[^\n"\r\\ ]*)*
+
+STRLIT				([^\n\r\\"]|{ESCAPE})*
+INVALIDESCAPE 		(\\([^{STRLIT}]))*
+
+
 
 
 
