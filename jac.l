@@ -24,9 +24,9 @@ NUMBERS				[0-9]
 CHARACTERS			[a-zA-Z]
 UNDERSCORE			"_"
 DOLLAR				"$"
-NEWLINE 			\\n
+NEWLINE 			"\n"
 SPACE 				" "
-TAB					\\t
+TAB					"\t"
 CARRIAGERETURN 		"\r"
 FORMFEED			"\f"
 LINETERMINATOR		"\n"|{CARRIAGERETURN}|({CARRIAGERETURN})"\n"
@@ -42,7 +42,7 @@ SQ2					{NUMBERS}+({SQ1}*{NUMBERS})*
 EXPOENTE			("E"|"e")("+"|"-")?
 ASPAS				\"
 
-ESCAPE              {FORMFEED}|{BB}|{TAB}
+ESCAPE              \\n|\\f|\\r|\\\\|\\\"|\\t
 
 ID					({CHARACTERS}|{UNDERSCORE}|{DOLLAR})+({CHARACTERS}|{UNDERSCORE}|{DOLLAR}|{NUMBERS})*
 
@@ -50,8 +50,11 @@ DECLIT				([0]|([1-9]({SQ1}*{NUMBERS})*))
 
 REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|{DOT}{SQ2}(({EXPOENTE}{SQ2})?)|({SQ2}{EXPOENTE}{SQ2})
 
-STRLIT				([^\n"\r\\]|{NEWLINE}\|{TAB}|{BB}|(\\{ASPAS}))*
-INVALIDESCAPE		(\\.?|[^\n"\r\\ ]*)*
+
+STRLIT				([^\n\r\\"]|{ESCAPE})*
+INVALIDESCAPE 		(\\([^{STRLIT}]))*
+
+
 
 
 
@@ -146,9 +149,9 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 {RESERVED} 			{print_with_content("RESERVED",yytext); COLUNA;}
 {ID}				{print_with_content("ID", yytext); COLUNA;}
 {SPACE}						{COLUNA;}
-"\t"						{COLUNA;}
-{FORMFEED}					{COLUNA;}
+{TAB}						{COLUNA;}
 {LINETERMINATOR}			{LINHA;}
+{FORMFEED}					{COLUNA;}
 
 {INITCOM}															{BEGIN MULTICOM; l_actual= linha; c_actual= coluna;COLUNA;}
 <MULTICOM>{FINISHCOM}												{BEGIN 0; COLUNA;}
