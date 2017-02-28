@@ -160,7 +160,7 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 <SINGLE>.															{COLUNA;}
 
 {STRLIT}															{print_with_content("STRLIT",yytext);COLUNA;}
-{INVALIDESCAPE}														{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;}
+{INVALIDESCAPE}														{yytext++; yytext[strlen(yytext)-1] = 0; printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;}
 {UNTERMINATEDSTR}													{printf("Line %d, col %d: unterminated string literal\n", linha, coluna);COLUNA;}
 
 .																	{printf("Line %d, col %d: illegal character (%s)\n", linha, coluna, yytext);COLUNA};
