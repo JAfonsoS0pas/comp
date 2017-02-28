@@ -6,6 +6,7 @@
 	#define LINHA linha++; coluna=1;
 	#define COLUNA coluna+=yyleng;
 	int flag = 0;	
+	char *save;
 	
 	
 	void print_text(char* text);
@@ -49,9 +50,8 @@ DECLIT				([0]|([1-9]({SQ1}*{NUMBERS})*))
 
 REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|{DOT}{SQ2}(({EXPOENTE}{SQ2})?)|({SQ2}{EXPOENTE}{SQ2})
 
-STRLIT				{ASPAS}([^\n"\r\\]|{NEWLINE}|{TAB}|{BB}|(\\{ASPAS}))*{ASPAS}
-UNTERMINATEDSTR		{ASPAS}([^\n"\r\\]|{NEWLINE}|{TAB}|{BB}|(\\{ASPAS}))*
-INVALIDESCAPE		{ASPAS}(\\.|[^\n"\r\\]*)*{ASPAS}
+STRLIT				([^\n"\r\\]|{NEWLINE}|{TAB}|{BB}|(\\{ASPAS}))*
+INVALIDESCAPE		(\\.|[^\n"\r\\]*)*
 
 
 
@@ -159,9 +159,12 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 <SINGLE>{LINETERMINATOR}											{BEGIN 0;LINHA;}
 <SINGLE>.															{COLUNA;}
 
-{STRLIT}															{print_with_content("STRLIT",yytext);COLUNA;}
-{INVALIDESCAPE}														{yytext++; yytext[strlen(yytext)-1] = 0; printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;}
-{UNTERMINATEDSTR}													{printf("Line %d, col %d: unterminated string literal\n", linha, coluna);COLUNA;}
+{ASPAS}{STRLIT}														{BEGIN STRINGLIT; save = yytext; l_actual= linha; c_actual= coluna;COLUNA;}
+<STRINGLIT>{INVALIDESCAPE}											{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;}
+<STRINGLIT>{LINETERMINATOR}											{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
+<STRINGLIT>{ASPAS}													{BEGIN 0; print_with_content("STRLIT",save);COLUNA;}
+
+
 
 .																	{printf("Line %d, col %d: illegal character (%s)\n", linha, coluna, yytext);COLUNA};
 
