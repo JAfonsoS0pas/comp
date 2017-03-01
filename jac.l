@@ -35,6 +35,7 @@ DOUBLEDOT			":"
 INITCOM				"/*"
 FINISHCOM			"*/"
 SINGLECOM			"//"
+MAIS				[A-Z]
 
 BB					\\\\
 SQ1					({NUMBERS}|{UNDERSCORE})
@@ -52,7 +53,7 @@ REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|{DOT}
 
 
 STRLIT				([^\n\r\\"]|{ESCAPE})*
-INVALIDESCAPE 		(\\([^{STRLIT}nrft" ]))*
+INVALIDESCAPE 		(\\([^{STRLIT}]|{MAIS}))*
 
 
 
