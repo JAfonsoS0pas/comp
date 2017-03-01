@@ -50,9 +50,26 @@
 %token ID
 %token STRLIT
 
-
+%left {PLUS} {MINUS}
+%left {DIV}
 %%
 
 expression : ID;
 
+expression : Program;
+expression : FieldDecl;
+expression : Type;
+
+Type: {BOOL} {$$=$1;}
+	 | {INT} {$$=$1}
+	 | {DOUBLE} {$$=$1}
+
+;
+
+
+FieldDecl: {PUBLIC} {STATIC} 
+Program: {CLASS} {ID} {OBRACE} '{' 
+
 %%
+
+
