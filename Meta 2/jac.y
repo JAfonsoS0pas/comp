@@ -65,6 +65,11 @@ methoddecl : MethodDecl;
 methodheader : MethodHeader;
 methodheader : MethodHeader2;
 methodheader : MethodHeader3;
+methodbody : MethodBody;
+formalparams : FormalParams;
+formalparams : FormalALt;
+formalparams : FormalParams2;
+vardecl: VarDecl;
 type : Type;
 
 Type: BOOL {$$=$1;}
@@ -73,17 +78,16 @@ Type: BOOL {$$=$1;}
 ;
 
 FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI {$$=};
-FieldDecl2: Epsilon {$$=NULL;}
-			| COMMA {$$=$1;}
-			| ID 	{$$=$1;}
+FieldDecl2: Epsilon 			{$$=NULL;}
+			| COMMA FieldDecl2 	{$$=$1;}
+			| ID 	FieldDecl2 	{$$=$1;}
 ;
 
 Program: CLASS ID OBRACE ProgramL CBRACE {$$=};
-ProgramL: Epsilon 		{$$=NULL;}
-		| FieldDecl 	{$$=$1;}
-		| MethodDecl 	{$$=$1;}
-		| SEMI			{$$=$1;}
-		| ProgramL		{$$=$1;}
+ProgramL: Epsilon 					{$$=NULL;}
+		| FieldDecl 	ProgramL	{$$=$1;}
+		| MethodDecl 	ProgramL	{$$=$1;}
+		| SEMI			ProgramL	{$$=$1;}
 ;	
 
 
@@ -95,6 +99,28 @@ MethodHeader2: Type {$$=$1;}
 MethodHeader3: Epsilon {$$=NULL;}
 			| FormalParams {$$=$1;}
 ; 
+
+MethodBody: OBRACE MethodBody2 CBRACE {$$=};
+MethodBody2: Epsilon {$$=NULL;}
+			 | VarDecl 		MethodBody2 	{$$=$1;}
+			 | Statement 	MethodBody2		{$$=$1;}
+;
+
+FormalParams: Type ID FormalALt {$$=;};
+FormalALt: Epsilon {$$=NULL;}
+		   | COMMA 	FormalALt 	{$$=$1;}
+		   | Type 	FormalALt 	{$$=$1;}
+		   | ID     FormalALt 	{$$=$1;}
+;
+FormalParams2: STRING OSQUARE CSQUARE ID {$$=;};
+
+VarDecl: Type ID VarDecl2 SEMI {$$=;};
+VarDecl2: Episilon {$$=NULL;}
+		  | COMMA  	VarDecl2 	{$$=$1;}
+		  | ID 		VarDecl2 	{$$=$1;}
+;	
+
+
 
 %%
 
