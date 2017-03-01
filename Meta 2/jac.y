@@ -54,21 +54,47 @@
 %left {DIV}
 %%
 
+Epsilon: {};
 expression : ID;
 
-expression : Program;
-expression : FieldDecl;
-expression : Type;
+program : Program;
+program : ProgramL;
+fielddecl : FieldDecl;
+fielddecl : FieldDecl2;
+methoddecl : MethodDecl;
+methodheader : MethodHeader;
+methodheader : MethodHeader2;
+methodheader : MethodHeader3;
+type : Type;
 
-Type: {BOOL} {$$=$1;}
-	 | {INT} {$$=$1}
-	 | {DOUBLE} {$$=$1}
-
+Type: BOOL {$$=$1;}
+	 | INT {$$=$1;}
+	 | DOUBLE {$$=$1;}
 ;
 
+FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI {$$=};
+FieldDecl2: Epsilon {$$=NULL;}
+			| COMMA {$$=$1;}
+			| ID 	{$$=$1;}
+;
 
-FieldDecl: {PUBLIC} {STATIC} 
-Program: {CLASS} {ID} {OBRACE} '{' 
+Program: CLASS ID OBRACE ProgramL CBRACE {$$=};
+ProgramL: Epsilon 		{$$=NULL;}
+		| FieldDecl 	{$$=$1;}
+		| MethodDecl 	{$$=$1;}
+		| SEMI			{$$=$1;}
+		| ProgramL		{$$=$1;}
+;	
+
+
+MethodDecl: PUBLIC STATIC MethodHeader MethodBody {$$=};
+MethodHeader: MethodHeader2 ID OCURV MethodHeader3 CCURV {$$=};
+MethodHeader2: Type {$$=$1;}
+			   | VOID {$$=$1;}
+; 
+MethodHeader3: Epsilon {$$=NULL;}
+			| FormalParams {$$=$1;}
+; 
 
 %%
 
