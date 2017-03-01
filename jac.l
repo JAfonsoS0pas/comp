@@ -6,7 +6,7 @@
 	#define LINHA linha++; coluna=1;
 	#define COLUNA coluna+=yyleng;
 	int flag = 0,error =0;	
-	char *save;
+	char save[256];
 	
 	
 	void print_text(char* text);
@@ -30,12 +30,12 @@ TAB					"\t"
 CARRIAGERETURN 		"\r"
 FORMFEED			"\f"
 LINETERMINATOR		"\n"|{CARRIAGERETURN}|({CARRIAGERETURN})"\n"
+SPECIALTERMINATOR	r\\n
 DOT 				"."
 DOUBLEDOT			":"
 INITCOM				"/*"
 FINISHCOM			"*/"
 SINGLECOM			"//"
-MAIS				[A-Z]
 
 BB					\\\\
 SQ1					({NUMBERS}|{UNDERSCORE})
@@ -52,12 +52,8 @@ DECLIT				([0]|([1-9]({SQ1}*{NUMBERS})*))
 REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|{DOT}{SQ2}(({EXPOENTE}{SQ2})?)|({SQ2}{EXPOENTE}{SQ2})
 
 
-STRLIT				([^\n\r\\"]|{ESCAPE})*
-INVALIDESCAPE 		(\\([^{STRLIT}]|{MAIS}))*
-
-
-
-
+STRLIT				([^\n\r\\\"]|{ESCAPE})*
+INVALIDESCAPE 		\\[^"f\n\rt]
 
 BOOL 				"boolean"
 BOOLLIT				"true"|"false"
@@ -164,12 +160,12 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 <SINGLE>{LINETERMINATOR}											{BEGIN 0;LINHA;}
 <SINGLE>.															{COLUNA;}
 
-{ASPAS}{STRLIT}														{BEGIN STRINGLIT; save = yytext; l_actual= linha; c_actual= coluna;COLUNA; error=0;}
-<STRINGLIT>{INVALIDESCAPE}											{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;error=1;}
-<STRINGLIT>{LINETERMINATOR}											{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
-<STRINGLIT><<EOF>>													{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
-<STRINGLIT>{ASPAS}													{BEGIN 0; if(error==0){print_with_content("STRLIT",save);} COLUNA;}
-<STRINGLIT>.														{COLUNA;}
+{ASPAS}												{BEGIN STRINGLIT; strcat(save, yytext); l_actual= linha; c_actual= coluna;COLUNA; error=0;}
+<STRINGLIT>{STRLIT}									{COLUNA; strcat(save, yytext);}
+<STRINGLIT>\\(.?)									{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;error=1;}
+<STRINGLIT>{LINETERMINATOR}							{BEGIN 0; save[0]=0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
+<STRINGLIT>{ASPAS}									{BEGIN 0;  strcat(save, yytext); if(error==0){print_with_content("STRLIT",save);} COLUNA;save[0]=0;}
+<STRINGLIT><<EOF>>									{BEGIN 0; save[0]=0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
 
 
 
