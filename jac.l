@@ -53,7 +53,6 @@ REALLIT				({SQ2}{DOT}(({SQ2}|({EXPOENTE}{SQ2}))|({SQ2}{EXPOENTE}{SQ2}))?)|{DOT}
 
 
 STRLIT				([^\n\r\\\"]|{ESCAPE})*
-INVALIDESCAPE 		\\[^"f\n\rt]
 
 BOOL 				"boolean"
 BOOLLIT				"true"|"false"
