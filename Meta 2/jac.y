@@ -91,6 +91,7 @@ ProgramL: Epsilon 					{$$=NULL;}
 ;	
 
 
+
 MethodDecl: PUBLIC STATIC MethodHeader MethodBody {$$=};
 MethodHeader: MethodHeader2 ID OCURV MethodHeader3 CCURV {$$=};
 MethodHeader2: Type {$$=$1;}
