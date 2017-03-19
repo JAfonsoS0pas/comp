@@ -48,7 +48,7 @@ struct node* ynode;
 
 
 %%
-Program: CLASS ID OBRACE ProgramL CBRACE		 			{root=create(root_node, "","Program"); addnode(root, create(id_node,$2,"Id")); $$=root;}
+Program: CLASS ID OBRACE ProgramL CBRACE		 			{root=create(root_node, "","Program"); addnode(root, create(id_node,$2,"Id")); addbro(root,$4); $$=root;}
 		;
 ProgramL: %empty											{$$=NULL;}
 		| FieldDecl 	ProgramL							{$$=$1;addbro($$,$2);}
