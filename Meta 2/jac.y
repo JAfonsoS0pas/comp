@@ -94,15 +94,7 @@ MethodBody: OBRACE MethodBody2 CBRACE 						{$$=create(fdec_node,"", "MethodBody
 		;
 MethodBody2: %empty 										{$$=NULL;}
 		| VarDecl 		MethodBody2 						{$$=$1; addbro($$,$2);}
-		| Statement 	MethodBody2							{if($1!=NULL){
-																if($$->son==NULL){
-																	addnode($$,$1);
-																}
-																else{
-																	addbro($$->son, $1);
-																}
-															}
-															;}
+		| Statement 	MethodBody2							{$$=$1; addbro($$,$2);}
 		;
 
 FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl"); aux = create(id_node,$2,"Id"); addnode($$, aux); addbro(aux,$3);}
@@ -138,21 +130,13 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 		;
 
 
-Statement: OBRACE StatementZeroMais CBRACE					{if(cntbro($2)>1){
-																$$=create(stat_node,"","Statement"); 
-																addnode($$,$2);
-																}
-
-															else{
-																$$=$2;
-																}
-															}
-		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If");}
+Statement: OBRACE StatementZeroMais CBRACE					{;}
+		| IF OCURV Expr CCURV Statement 					{/*$$=create(stat_node,"","If"); addnode($$,$3); if(cntbro($5)>1){}*/;}
 		| IF OCURV Expr CCURV Statement ELSE Statement		{;}
 		| WHILE OCURV Expr CCURV Statement 					{;}
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{;}
 		| PRINT OCURV PrintAux CCURV SEMI  					{;}
-		| StatementAux SEMI 								{;}
+		| StatementAux SEMI 								{$$=$1;}
 		| RETURN ExprAux SEMI 								{;}
 		| error SEMI 										{$$=NULL;}
 		;
@@ -161,7 +145,7 @@ StatementZeroMais: %empty									{$$=NULL;}
 		;
 
 StatementAux: %empty										{$$=NULL;}
-		| Assignment 										{;}
+		| Assignment 										{$$=$1;}
 		| MethodInvocation 									{;}
 		| ParseArgs 										{;}
 		;
@@ -169,10 +153,10 @@ PrintAux: Expr 												{;}
 		| STRLIT 											{$$=create(ter_node,"","StrLit");}
 		;
 ExprAux: %empty 											{$$=NULL;}
-		| Expr 												{;}
+		| Expr 												{$$=$1;}
 		;
 
-Assignment: ID ASSIGN Expr 									{;}
+Assignment: ID ASSIGN Expr 									{$$=create(op_node,"","Assign"); aux = create(id_node,$1,"Id");addnode($$,aux); addbro(aux,$3);}
 		;
 MethodInvocation: ID OCURV MethodInvocation2 CCURV 			{;}
 		| ID OCURV error CCURV 								{;}
