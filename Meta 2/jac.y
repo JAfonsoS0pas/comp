@@ -29,7 +29,7 @@ struct node* ynode;
 %token BOOL BOOLLIT CLASS DO DOTLENGTH DOUBLE ELSE IF INT PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
 %token <string> STRLIT DECLIT REALLIT ID RESERVED
 
-%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader MethodHeader3 MethodBody MethodBody2 FormalParams FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr6 Expr7 VOID
+%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader MethodHeader3 MethodBody MethodBody2 FormalParams STRING FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr6 Expr7 VOID
 
 %left COMMA
 %right ASSIGN
@@ -48,7 +48,7 @@ struct node* ynode;
 
 
 %%
-Program: CLASS ID OBRACE ProgramL CBRACE		 			{root=create(root_node, "","Program"); addnode(root, create(id_node,$2,"Id")); addbro(root,$4); $$=root;}
+Program: CLASS ID OBRACE ProgramL CBRACE		 			{root=create(root_node, "","Program"); aux = create(id_node,$2,"Id");addnode(root, aux); addbro(aux,$4); $$=root;}
 		;
 ProgramL: %empty											{$$=NULL;}
 		| FieldDecl 	ProgramL							{$$=$1;addbro($$,$2);}
@@ -66,11 +66,11 @@ FieldDecl2: %empty 											{$$=NULL;}
 
 MethodDecl: PUBLIC STATIC MethodHeader MethodBody 			{$$=create(fdec_node,"","MethodDecl");addnode($$,$3); addbro($3,$4);printf("yo\n");}
 		;
-MethodHeader: Type ID OCURV MethodHeader3 CCURV 			{$$=create(fdec_node,"","MethodHeader");addnode($$,$1);addbro($1, create(id_node,$2,"Id")); addnode($1->son, create(fdec_node,"","MethodParams"));} 
-		| VOID ID OCURV MethodHeader3 CCURV 				{$$=create(fdec_node,"","MethodHeader");$1=create(ter_node,"","Void");addnode($$,$1); addnode($1,create(id_node,$2,"Id")); addnode($1->son, create(fdec_node,"","MethodParams"));}
+MethodHeader: Type ID OCURV MethodHeader3 CCURV 			{$$=create(fdec_node,"","MethodHeader");addnode($$,$1);addbro($1, create(id_node,$2,"Id")); addbro($1, create(fdec_node,"","MethodParams"));} 
+		| VOID ID OCURV MethodHeader3 CCURV 				{$$=create(fdec_node,"","MethodHeader");$1=create(ter_node,"","Void");addnode($$,$1); addbro($1,create(id_node,$2,"Id")); addbro($1, create(fdec_node,"","MethodParams"));}
 		;
 MethodHeader3: %empty 										{$$=NULL;}
-		| FormalParams 										{$$=$1;}
+		| FormalParams 										{printf("que bonito");$$=$1;}
 		; 
 
 MethodBody: OBRACE MethodBody2 CBRACE 						{$$=create(fdec_node,"", "MethodBody");}
@@ -96,8 +96,8 @@ MethodBody2: %empty 										{$$=NULL;}
 															;}
 		;
 
-FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl");addnode($$, create(id_node,$2,"Id"));addbro($$,$3);}
-		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDcl");addnode($$,create(id_node,$4,"Id"));}
+FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl"); aux = create(id_node,$2,"IdHUE"); addnode($$, aux); addbro(aux,$3);}
+		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDcl");aux =create(fdec_node,"","StringArray"); addnode($$, aux);addbro(aux,create(id_node,$4,"Id"));}
 		;
 FormalALt: %empty 											{$$=NULL;}
 	   	| COMMA Type ID FormalALt 							{$$=create(id_node,$3,"Id");addnode($$,$4);}

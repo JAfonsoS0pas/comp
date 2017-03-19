@@ -45,22 +45,24 @@ void addnode(no father, no new){
 
 }
 void addbro(no a, no b){
+	printf("entrou");
 	if ((a==NULL)||(b==NULL))
 	{
 		return;
 	}
 	no aux;
 	aux=a;
-	while(aux->son!=NULL){
-		aux = aux->son;
+	while(aux->bro!=NULL){
+		aux = aux->bro;
 	}
 	aux->bro=b;
-	printf("ganhei um");
 
 	if(a->father!=NULL){
 		b->father=a->father;
 		b->n++;
 	}
+	printf("adicionou o bro\n");
+
 
 }
 
