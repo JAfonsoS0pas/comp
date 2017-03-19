@@ -1,3 +1,4 @@
-class gcd {   
-	eror;
+class gcd {
+	public static void main(String[] args) {
+	}
 }

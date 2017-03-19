@@ -1,8 +1,21 @@
 %{
-	#include "arvo.h"
-    #include <stdio.h>
+    
+	#include "arvo.c"
+
+	int cnt;
+	no root;
+	no aux;
+    int print_flag = 0,flag = 0;
+    
     int yylex(void);
     void yyerror (const char *s);
+    no create(type_node type, char* value, char* stype);
+	void printftree(no n, int prof);
+	void addnode(no father, no new);  //criar no
+	void addbro(no a, no b); //criar irmao
+	int cntbro(no root);
+	void give_type(no novo, char* type);
+
 
 %}
 
@@ -10,14 +23,13 @@
 %union{
 int inteiro;
 char* string;
+struct node* ynode;
 }
-
-no *root;
 
 %token BOOL BOOLLIT CLASS DO DOTLENGTH DOUBLE ELSE IF INT PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
 %token <string> STRLIT DECLIT REALLIT ID RESERVED
 
-
+%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader MethodHeader3 MethodBody MethodBody2 FormalParams FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr6 Expr7 VOID
 
 %left COMMA
 %right ASSIGN
@@ -36,43 +48,59 @@ no *root;
 
 
 %%
-Program: CLASS ID OBRACE ProgramL CBRACE		 			{$$=create(root_node, "" ,"Program"); $$=root; addnode($$, $2);}
+Program: CLASS ID OBRACE ProgramL CBRACE		 			{root=create(root_node, "","Program"); addnode(root, create(id_node,$2,"Id")); $$=root;}
 		;
 ProgramL: %empty											{$$=NULL;}
-		| FieldDecl 	ProgramL							{$$=$1; addbro($$,$1);}
-		| MethodDecl 	ProgramL							{$$=$1; addbro($$,$1);}
-		| SEMI			ProgramL							{$$=$1; addbro($$,$1);}
+		| FieldDecl 	ProgramL							{$$=$1;addbro($$,$2);}
+		| MethodDecl 	ProgramL							{$$=$1;addbro($$,$2);}
+		| SEMI			ProgramL							{$$=NULL;}
 		;	
 
 FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{$$=create(var_node, "", "FieldDecl"); addnode($$,$3); addbro($3, create(id_node,$4,"Id"));}
 		| error SEMI 										{$$=NULL;}
 		;
 FieldDecl2: %empty 											{$$=NULL;}
-		| COMMA ID FieldDecl2 								{addbro($$, $1);addbro($1, create(id_node, $2, "Id"));}
+		| COMMA ID FieldDecl2 								{$$=create(id_node,$2,"Id");addnode($$,$3);}
 		;
 
 
-MethodDecl: PUBLIC STATIC MethodHeader MethodBody 			{$$=create(fdec_node,"","MethodDecl");}
+MethodDecl: PUBLIC STATIC MethodHeader MethodBody 			{$$=create(fdec_node,"","MethodDecl");addnode($$,$3); addbro($3,$4);printf("yo\n");}
 		;
-MethodHeader: Type ID OCURV MethodHeader3 CCURV 			{$$=create(fdec_node,"","MethodHeader");addnode($$,$1);} /*aqui*/
-		| VOID ID OCURV MethodHeader3 CCURV 				{;}
+MethodHeader: Type ID OCURV MethodHeader3 CCURV 			{$$=create(fdec_node,"","MethodHeader");addnode($$,$1);addbro($1, create(id_node,$2,"Id"));} /*aqui*/
+		| VOID ID OCURV MethodHeader3 CCURV 				{$$=create(fdec_node,"","MethodHeader");addnode($$,create(ter_node,"","Void"));addbro($1, create(id_node,$2,"Id"));}
 		;
 MethodHeader3: %empty 										{$$=NULL;}
 		| FormalParams 										{$$=$1;}
 		; 
 
-MethodBody: OBRACE MethodBody2 CBRACE 						{;}
+MethodBody: OBRACE MethodBody2 CBRACE 						{$$=create(fdec_node,"", "MethodBody");}
 		;
 MethodBody2: %empty 										{$$=NULL;}
-		| VarDecl 		MethodBody2 						{;}
-		| Statement 	MethodBody2							{;}
+		| VarDecl 		MethodBody2 						{if($1!=NULL){
+																if($$->son==NULL){
+																	addnode($$,$1);
+																}
+																else{
+																	addbro($$->son, $1);
+																}
+															}
+															;}
+		| Statement 	MethodBody2							{if($1!=NULL){
+																if($$->son==NULL){
+																	addnode($$,$1);
+																}
+																else{
+																	addbro($$->son, $1);
+																}
+															}
+															;}
 		;
 
-FormalParams: Type ID FormalALt 							{;}
-		| STRING OSQUARE CSQUARE ID 						{;}
+FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDecl");addnode($$, create(id_node,$2,"Id"));addbro($$,$3);}
+		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDecl");addnode($$,create(id_node,$4,"Id"));}
 		;
 FormalALt: %empty 											{$$=NULL;}
-	   	| COMMA Type ID FormalALt 							{;}
+	   	| COMMA Type ID FormalALt 							{$$=create(id_node,$3,"Id");addnode($$,$4);}
 		;
 
 VarDecl: Type ID VarDecl2 SEMI 								{;}
@@ -81,21 +109,30 @@ VarDecl2: %empty 											{$$=NULL;}
 		| COMMA ID VarDecl2 								{;}
 		;	
 
+
 Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 		| INT 												{$$=create(ter_node,"","Int");}
 		| DOUBLE 											{$$=create(ter_node,"","Double");}
 		;
 
 
-Statement: OBRACE StatementZeroMais CBRACE					{;}
-		| IF OCURV Expr CCURV Statement 					{;}
+Statement: OBRACE StatementZeroMais CBRACE					{if(cntbro($2)>1){
+																$$=create(stat_node,"","Statement"); 
+																addnode($$,$2);
+																}
+
+															else{
+																$$=$2;
+																}
+															}
+		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If");}
 		| IF OCURV Expr CCURV Statement ELSE Statement		{;}
 		| WHILE OCURV Expr CCURV Statement 					{;}
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{;}
 		| PRINT OCURV PrintAux CCURV SEMI  					{;}
 		| StatementAux SEMI 								{;}
 		| RETURN ExprAux SEMI 								{;}
-		| error SEMI 										{;}
+		| error SEMI 										{$$=NULL;}
 		;
 StatementZeroMais: %empty									{$$=NULL;}
 		| Statement StatementZeroMais						{;}
@@ -156,10 +193,33 @@ Expr1: Assignment											{;}
 Expr6: %empty 												{$$=NULL;}
 		| DOTLENGTH 										{;}
 		;
+
 Expr7: BOOLLIT 												{$$=create(ter_node,"","BoolLit");}
 		| DECLIT 											{$$=create(ter_node,"","DecLit");}
 		| REALLIT 											{$$=create(ter_node,"","RealLit");}
+
 		;
 %%
 
 
+int main(int argc, char *argv[]){
+	if(argc > 1){
+		if(strcmp(argv[1],"-l") == 0 || strcmp(argv[1],"-1") == 0){
+			if(strcmp(argv[1],"-l") == 0){
+				flag=1;
+			}
+			yylex();
+		}
+		if(strcmp(argv[1],"-t")==0){
+			print_flag=1;
+    	}
+	}
+	else{
+		flag=2;
+		yyparse();
+    	printftree(root,0);
+		
+	}
+	
+	return 0;
+}
