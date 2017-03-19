@@ -78,6 +78,7 @@ MethodBody: OBRACE MethodBody2 CBRACE 						{$$=create(fdec_node,"", "MethodBody
 MethodBody2: %empty 										{$$=NULL;}
 		| VarDecl 		MethodBody2 						{if($1!=NULL){
 																if($$->son==NULL){
+																	printf("ola");
 																	addnode($$,$1);
 																}
 																else{
@@ -87,6 +88,7 @@ MethodBody2: %empty 										{$$=NULL;}
 															;}
 		| Statement 	MethodBody2							{if($1!=NULL){
 																if($$->son==NULL){
+																	printf("ola2");
 																	addnode($$,$1);
 																}
 																else{
@@ -97,16 +99,16 @@ MethodBody2: %empty 										{$$=NULL;}
 		;
 
 FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl"); aux = create(id_node,$2,"IdHUE"); addnode($$, aux); addbro(aux,$3);}
-		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDcl");aux =create(fdec_node,"","StringArray"); addnode($$, aux);addbro(aux,create(id_node,$4,"Id"));}
+		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDclROGER");aux =create(fdec_node,"","StringArray"); addnode($$, aux);/*addbro(aux,create(id_node,$4,"Id"));*/}
 		;
 FormalALt: %empty 											{$$=NULL;}
-	   	| COMMA Type ID FormalALt 							{$$=create(id_node,$3,"Id");addnode($$,$4);}
+	   	| COMMA Type ID FormalALt 							{$$=create(id_node,$3,"IdWOWO");addnode($$,$4);}
 		;
 
-VarDecl: Type ID VarDecl2 SEMI 								{;}
+VarDecl: Type ID VarDecl2 SEMI 								{$$=create(id_node,$2,"Id");addnode($$,$3);}
 		;
 VarDecl2: %empty 											{$$=NULL;}
-		| COMMA ID VarDecl2 								{;}
+		| COMMA ID VarDecl2 								{$$=create(id_node,$2,"Id");addnode($$,$3);}
 		;	
 
 
