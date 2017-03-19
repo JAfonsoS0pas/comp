@@ -1,4 +1,4 @@
-typedef enum {root_node, var_node, fdec_node, stat_node, op_node, ter_node} type_node;
+typedef enum {root_node, var_node, fdec_node, stat_node, op_node, ter_node, id_node} type_node;
 typedef struct no{
 	struct no father;
 	struct no bro;

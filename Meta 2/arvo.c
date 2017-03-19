@@ -77,7 +77,7 @@ int cntbro(no *root){
 
 
 //no getbro(no a, int prof);
-void printftree(no *root, int d){
+void printftree(no *root, int prof){
 	if(root==NULL){
 		return;
 	}
@@ -100,7 +100,7 @@ void printftree(no *root, int d){
 
 	aux = root->son;
 	while(aux!=NULL){
-		printftree(aux, int d+1);
+		printftree(aux,prof+1);
 		aux=aux->bro;
 		
 	}
