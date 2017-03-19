@@ -50,6 +50,9 @@ no addbro(no a, no b){
 	}
 
 }
+
+
+
 int cntbro(no *root){
 	int cnt = 0;
 	no * aux;
@@ -76,6 +79,14 @@ void printftree(no *root, int d){
 		}
 		printf("%s(%s)\n", root-stype, root->value);
 	}
+	else if{
+		while(i<prof){
+			printf("..");
+			i++;
+		}
+		printf("%s\n", root->stype);
+	}
+
 	aux = root->son;
 	while(aux!=NULL){
 		printftree(aux, int d+1);
