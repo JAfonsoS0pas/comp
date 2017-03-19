@@ -66,8 +66,8 @@ FieldDecl2: %empty 											{$$=NULL;}
 
 MethodDecl: PUBLIC STATIC MethodHeader MethodBody 			{$$=create(fdec_node,"","MethodDecl");addnode($$,$3); addbro($3,$4);printf("yo\n");}
 		;
-MethodHeader: Type ID OCURV MethodHeader3 CCURV 			{$$=create(fdec_node,"","MethodHeader");addnode($$,$1);addbro($1, create(id_node,$2,"Id"));} /*aqui*/
-		| VOID ID OCURV MethodHeader3 CCURV 				{$$=create(fdec_node,"","MethodHeader");addnode($$,create(ter_node,"","Void"));addbro($1, create(id_node,$2,"Id"));}
+MethodHeader: Type ID OCURV MethodHeader3 CCURV 			{$$=create(fdec_node,"","MethodHeader");addnode($$,$1);addbro($1, create(id_node,$2,"Id")); addnode($1->son, create(fdec_node,"","MethodParams"));} 
+		| VOID ID OCURV MethodHeader3 CCURV 				{$$=create(fdec_node,"","MethodHeader");$1=create(ter_node,"","Void");addnode($$,$1); addnode($1,create(id_node,$2,"Id")); addnode($1->son, create(fdec_node,"","MethodParams"));}
 		;
 MethodHeader3: %empty 										{$$=NULL;}
 		| FormalParams 										{$$=$1;}
@@ -96,8 +96,8 @@ MethodBody2: %empty 										{$$=NULL;}
 															;}
 		;
 
-FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDecl");addnode($$, create(id_node,$2,"Id"));addbro($$,$3);}
-		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDecl");addnode($$,create(id_node,$4,"Id"));}
+FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl");addnode($$, create(id_node,$2,"Id"));addbro($$,$3);}
+		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDcl");addnode($$,create(id_node,$4,"Id"));}
 		;
 FormalALt: %empty 											{$$=NULL;}
 	   	| COMMA Type ID FormalALt 							{$$=create(id_node,$3,"Id");addnode($$,$4);}

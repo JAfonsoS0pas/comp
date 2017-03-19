@@ -55,6 +55,7 @@ void addbro(no a, no b){
 		aux = aux->son;
 	}
 	aux->bro=b;
+	printf("ganhei um");
 
 	if(a->father!=NULL){
 		b->father=a->father;
@@ -93,7 +94,9 @@ void printftree(no root, int prof){
 			printf("..");
 			i++;
 		}
-		printf("%s(%s)\n", root->stype, root->value);
+		
+			printf("%s(%s)\n", root->stype, root->value);
+		
 	}
 
 	aux = root->son;
