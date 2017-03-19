@@ -22,6 +22,17 @@ no *create(type_node type, char* value, char* stype){
 	
 
 }
+
+void give_type(no *no, char* type){
+	no *aux;
+	aux = no->bro;
+	while(aux!=NULL){
+		aux=aux->bro;
+	}
+	strcpy(aux->son->stype, type); 
+
+}
+
 void addnode(no *father, no *new){
 
 	if(new==NULL){

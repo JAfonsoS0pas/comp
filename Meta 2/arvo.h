@@ -16,6 +16,8 @@ void printftree(no *n, int prof);
 void addnode(no *father, no *new);  //criar no
 void addbro(no *old, no *new); //criar irmao
 int cntbro(no *root);
+void give_type(no *no, char* type);
+
 
 
 

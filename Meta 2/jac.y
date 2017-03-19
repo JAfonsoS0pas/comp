@@ -1,7 +1,9 @@
 %{
+	#include "arvo.h"
     #include <stdio.h>
     int yylex(void);
     void yyerror (const char *s);
+
 %}
 
  
@@ -9,6 +11,8 @@
 int inteiro;
 char* string;
 }
+
+no *root;
 
 %token BOOL BOOLLIT CLASS DO DOTLENGTH DOUBLE ELSE IF INT PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
 %token <string> STRLIT DECLIT REALLIT ID RESERVED
@@ -27,24 +31,24 @@ char* string;
 
 %right NOT
 %left OBRACE OCURV CCURV OSQUARE CSQUARE
-%nonassoc ELSE
+%nonassoc ELSE RETURN REALLIT STRLIT IF 
 
 
 
 %%
-Program: CLASS ID OBRACE ProgramL CBRACE		 			{;}
+Program: CLASS ID OBRACE ProgramL CBRACE		 			{create(root_node, "" ,"Program"); $$=root; addnode($$, $2);}
 		;
-ProgramL: %empty											{;}
-		| FieldDecl 	ProgramL							{;}
-		| MethodDecl 	ProgramL							{;}
-		| SEMI			ProgramL							{;}
+ProgramL: %empty											{$$=NULL;}
+		| FieldDecl 	ProgramL							{$$=$1; addbro($$,$1);}
+		| MethodDecl 	ProgramL							{$$=$1; addbro($$,$1);}
+		| SEMI			ProgramL							{$$=$1; addbro($$,$1);}
 		;	
 
-FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{;}
+FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{create(fdec_node, "", "FieldDecl"); addnode($$,$3); addbro($3, $4);}
 		| error SEMI 										{;}
 		;
-FieldDecl2: %empty 											{;}
-		| COMMA ID FieldDecl2 								{;}
+FieldDecl2: %empty 											{$$=NULL;}
+		| COMMA ID FieldDecl2 								{addbro($$, $1);addbro($1,$2);}
 		;
 
 
