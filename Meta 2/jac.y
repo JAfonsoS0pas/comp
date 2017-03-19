@@ -54,7 +54,7 @@ FieldDecl2: %empty 											{$$=NULL;}
 
 MethodDecl: PUBLIC STATIC MethodHeader MethodBody 			{$$=create(fdec_node,"","MethodDecl");}
 		;
-MethodHeader: Type ID OCURV MethodHeader3 CCURV 			{;}
+MethodHeader: Type ID OCURV MethodHeader3 CCURV 			{$$=create(fdec_node,"","MethodHeader");addnode($$,$1);} /*aqui*/
 		| VOID ID OCURV MethodHeader3 CCURV 				{;}
 		;
 MethodHeader3: %empty 										{$$=NULL;}
@@ -81,9 +81,9 @@ VarDecl2: %empty 											{$$=NULL;}
 		| COMMA ID VarDecl2 								{;}
 		;	
 
-Type: 	BOOL 												{$$=create(ter_node,"","Type");}
-		| INT 												{$$=create(ter_node,"","Type");}
-		| DOUBLE 											{$$=create(ter_node,"","Type");}
+Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
+		| INT 												{$$=create(ter_node,"","Int");}
+		| DOUBLE 											{$$=create(ter_node,"","Double");}
 		;
 
 
@@ -107,7 +107,7 @@ StatementAux: %empty										{$$=NULL;}
 		| ParseArgs 										{;}
 		;
 PrintAux: Expr 												{;}
-		| STRLIT 											{;}
+		| STRLIT 											{$$=create(ter_node,"","StrLit");}
 		;
 ExprAux: %empty 											{$$=NULL;}
 		| Expr 												{;}
@@ -146,7 +146,7 @@ Expr: Expr1													{$$=NULL;}
 		| NOT Expr 											{$$=create(op_node,"","Not");addnode($$,$2);}
 		| ID Expr6 											{$$=create(op_node,"","Length");addnode($$,create(id_node,"","Id"));}
 		| OCURV Expr CCURV 									{;}
-		| OCURV error CCURV 								{;}
+		| OCURV error CCURV 								{$$=NULL;}
 		| Expr7 											{;}
 		;
 Expr1: Assignment											{;}
@@ -156,9 +156,9 @@ Expr1: Assignment											{;}
 Expr6: %empty 												{$$=NULL;}
 		| DOTLENGTH 										{;}
 		;
-Expr7: BOOLLIT 												{$$=$1;}
-		| DECLIT 											{$$=$1;}
-		| REALLIT 											{$$=$1;}
+Expr7: BOOLLIT 												{$$=create(ter_node,"","BoolLit");}
+		| DECLIT 											{$$=create(ter_node,"","DecLit");}
+		| REALLIT 											{$$=create(ter_node,"","RealLit");}
 		;
 %%
 
