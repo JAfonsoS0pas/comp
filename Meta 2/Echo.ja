@@ -4,7 +4,16 @@ class gcd {
 		int a, b,c , d , e , f;
 		a = Integer.parseInt(args[0]);
 		b = Integer.parseInt(args[1]);
-		if (a == 0){}
+		if (a == 0){
+			System.out.println(1);
+		}
+		
+			while (b > 0){
+				a = a -b;
+			}
+				
+	
+		
 	}
 
 }
