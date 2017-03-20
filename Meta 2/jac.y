@@ -135,9 +135,9 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 
 
 Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
-		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If"); addnode($$,$3); if(cntbro($5)>1){addbro($3,$5);};}
+		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If"); addnode($$,$3);}
 		| IF OCURV Expr CCURV Statement ELSE Statement		{;}
-		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); addnode($$,$3); if(cntbro($5)!=1){addbro($3,$5);};}
+		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); addnode($$,$3);}
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{;}
 		| PRINT OCURV PrintAux CCURV SEMI  					{$$=create(stat_node,"","Print"); addnode($$,$3);}
 		| StatementAux SEMI 								{$$=$1;}
@@ -169,7 +169,7 @@ MethodInvocation2: %empty 									{$$=NULL;}
 		| Expr ExprAux2 									{;}
 		;
 ExprAux2: %empty 											{$$=NULL;}
-		| COMMA Expr ExprAux2 								{;}
+		| COMMA Expr ExprAux2 								{$$=$2; addbro($$,$3);}
 		;
 
 ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{$$=create(op_node,"","ParseArgs"); aux=create(id_node,$3,"Id"); addnode($$,aux); addbro(aux,$5);}
