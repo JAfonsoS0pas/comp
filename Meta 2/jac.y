@@ -147,7 +147,7 @@ StatementZeroMais: %empty									{$$=NULL;}
 StatementAux: %empty										{$$=NULL;}
 		| Assignment 										{$$=$1;}
 		| MethodInvocation 									{;}
-		| ParseArgs 										{;}
+		| ParseArgs 										{$$=$1;}
 		;
 PrintAux: Expr 												{;}
 		| STRLIT 											{$$=create(ter_node,"","StrLit");}
@@ -167,7 +167,7 @@ MethodInvocation2: %empty 									{$$=NULL;}
 ExprAux2: %empty 											{$$=NULL;}
 		| COMMA Expr ExprAux2 								{;}
 		;
-ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{;}
+ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{$$=create(op_node,"","ParseArgs"); addnode($$, create(id_node,$3,"Id")); addbro($$,$5);}
 		| PARSEINT OCURV error CCURV						{;}
 		;
 Expr: Expr1													{$$=NULL;}
@@ -188,7 +188,7 @@ Expr: Expr1													{$$=NULL;}
 		| MINUS Expr 										{$$=create(op_node,"","Minus");addnode($$,$2);}
 		| NOT Expr 											{$$=create(op_node,"","Not");addnode($$,$2);}
 		| ID Expr6 											{$$=create(op_node,"","Length");addnode($$,create(id_node,"","Id"));}
-		| OCURV Expr CCURV 									{;}
+		| OCURV Expr CCURV 									{$$=$2;}
 		| OCURV error CCURV 								{$$=NULL;}
 		| Expr7 											{;}
 		;
