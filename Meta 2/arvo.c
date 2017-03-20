@@ -65,12 +65,12 @@ void addbro(no a, no b){
 
 
 
-int cntbro(no root){
+int cntsons(no root){
 	int cnt = 0;
 	no aux;
 	aux=root;
 	while(aux!=NULL){
-		aux=aux->bro;
+		aux=aux->son;
 		cnt++;
 	}
 	return cnt;

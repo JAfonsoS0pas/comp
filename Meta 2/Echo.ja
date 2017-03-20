@@ -4,17 +4,22 @@ class gcd {
 		int a, b,c , d , e , f;
 		a = Integer.parseInt(args[0]);
 		b = Integer.parseInt(args[1]);
+		asd(1337,1338,a);
 		if (a == 0){
 			System.out.println(1);
 		}
-		
+		else{
 			while (b > 0){
-				a = a -b;
+				if (a > b)
+					a = a -b;
+				else{
+					b = b-a;
+				}
 			}
-				
-	
+			System.out.println(a);
+			
+		}
 		
 	}
-
 }
 
