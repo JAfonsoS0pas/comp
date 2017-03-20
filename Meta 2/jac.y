@@ -140,7 +140,7 @@ Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If"); addnode($$,$3);  addbro($3,$5); if((cntsons($7)>2)&&(cntsons($7)!=1)){aux = create(stat_node,"","Block"); addbro($5,aux); addnode(aux, $7);} else{addbro($5,$7);}}
 		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); addnode($$,$3); addbro($3,$5);}
 
-		| DO Statement WHILE OCURV Expr CCURV SEMI 			{;}
+		| DO Statement WHILE OCURV Expr CCURV SEMI 			{$$=create(stat_node,"","DoWhile");addnode($$,$2); addbro($2,$5);}
 		| PRINT OCURV PrintAux CCURV SEMI  					{$$=create(stat_node,"","Print"); addnode($$,$3);}
 		| StatementAux SEMI 								{$$=$1;}
 		| RETURN ExprAux SEMI 								{$$=create(stat_node,"","Return");addnode($$,$2);}

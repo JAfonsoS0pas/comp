@@ -5,22 +5,12 @@ class gcd {
 		a = Integer.parseInt(args[0]);
 		b = Integer.parseInt(args[1]);
 		asd(1337,1338,a);
-		if (a == 0){
-			System.out.println(1);
-		}
-		else{
-			while (b > 0){
-				if (a > b)
-					a = a -b;
-				else{
-					b = b-a;
-				}
-			}
-			System.out.println(a);
-			
-		}
 		
+		do{
+		   a = a+1;
+		}while (a < 10);
+
 	}
-	public static int xyz;
+	
 }
 
