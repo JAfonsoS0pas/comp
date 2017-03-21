@@ -1,5 +1,5 @@
 #!/bin/bash
 clear
 lex jac.l
-yacc -d jac.y
-cc -o y.tab.c lex.yy.c
+yacc -d -v jac.y
+cc -O0 -g -Wall -Wno-unused-function y.tab.c lex.yy.c

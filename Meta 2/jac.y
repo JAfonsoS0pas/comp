@@ -4,58 +4,24 @@
     void yyerror (const char *s);
 %}
 
-%token BOOL
-%token BOOLLIT
-%token CLASS
-%token DO
-%token DOTLENGTH
-%token DOUBLE
-%token ELSE
-%token IF
-%token INT
-%token PARSEINT
-%token PRINT
-%token PUBLIC
-%token RETURN
-%token STATIC
-%token STRING
-%token VOID
-%token WHILE
-%token OCURV
-%token CCURV
-%token OBRACE
-%token CBRACE
-%token OSQUARE
-%token CSQUARE
-%token AND
-%token OR
-%token LT
-%token GT
-%token EQ
-%token NEQ
-%token LEQ
-%token GEQ
-%token PLUS
-%token MINUS
-%token STAR
-%token DIV
-%token MOD
-%token NOT
-%token ASSIGN
-%token SEMI
-%token COMMA
-%token DECLIT
-%token REALLIT
-%token RESERVED
-%token ID
-%token STRLIT
+%token BOOL BOOLLIT CLASS DO DOTLENGTH DOUBLE ELSE IF INT PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA DECLIT REALLIT RESERVED ID STRLIT
 
+%left COMMA
 %right ASSIGN
+
+%left OR
+%left AND 
+%left EQ NEQ
+%left LT LEQ GEQ GT
 %left PLUS MINUS
-%left DIV STAR
+%left STAR DIV MOD
+
+%right NOT
+%left OBRACE OCURV CCURV OSQUARE CSQUARE
+
 %%
 
-program : Program 									{printf("YO%s\n",$$);};
+program : Program 									{;};
 
 
 
@@ -74,10 +40,9 @@ FieldDecl2: %empty 									{;}
 
 
 MethodDecl: PUBLIC STATIC MethodHeader MethodBody {;};
-MethodHeader: MethodHeader2 ID OCURV MethodHeader3 CCURV {;};
-MethodHeader2: Type 								{;}
-			| VOID 									{;}
-			; 
+MethodHeader: Type ID OCURV MethodHeader3 CCURV {;}
+			| VOID ID OCURV MethodHeader3 CCURV {;}
+			;
 MethodHeader3: %empty 								{;}
 			| FormalParams 							{;}
 			; 
@@ -107,7 +72,8 @@ Type: BOOL 											{;}
 
 
 Statement: OBRACE StatementZeroMais CBRACE					{;}
-		| IF OCURV Expr CCURV Statement StatementOpcional	{;}
+		| IF OCURV Expr CCURV Statement 					{;}
+		| IF OCURV Expr CCURV Statement ELSE Statement		{;}
 		| WHILE OCURV Expr CCURV Statement 					{;}
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{;}
 		| PRINT OCURV PrintAux CCURV SEMI  					{;}
@@ -117,9 +83,7 @@ Statement: OBRACE StatementZeroMais CBRACE					{;}
 StatementZeroMais: %empty									{;}
 		| Statement StatementZeroMais						{;}
 		;
-StatementOpcional: %empty									{;}
-		| Statement 				 						{;}
-		;
+
 StatementAux: %empty										{;}
 		| Assignment 										{;}
 		| MethodInvocation 									{;}
