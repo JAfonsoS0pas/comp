@@ -50,77 +50,137 @@
 %token ID
 %token STRLIT
 
-%left {PLUS} {MINUS}
-%left {DIV}
+%right ASSIGN
+%left PLUS MINUS
+%left DIV STAR
 %%
 
-Epsilon: {};
-expression : ID;
-
-program : Program;
-program : ProgramL;
-fielddecl : FieldDecl;
-fielddecl : FieldDecl2;
-methoddecl : MethodDecl;
-methodheader : MethodHeader;
-methodheader : MethodHeader2;
-methodheader : MethodHeader3;
-methodbody : MethodBody;
-formalparams : FormalParams;
-formalparams : FormalALt;
-formalparams : FormalParams2;
-vardecl: VarDecl;
-type : Type;
-
-Type: BOOL {$$=$1;}
-	 | INT {$$=$1;}
-	 | DOUBLE {$$=$1;}
-;
-
-FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI {$$=};
-FieldDecl2: Epsilon 			{$$=NULL;}
-			| COMMA FieldDecl2 	{$$=$1;}
-			| ID 	FieldDecl2 	{$$=$1;}
-;
-
-Program: CLASS ID OBRACE ProgramL CBRACE {$$=};
-ProgramL: Epsilon 					{$$=NULL;}
-		| FieldDecl 	ProgramL	{$$=$1;}
-		| MethodDecl 	ProgramL	{$$=$1;}
-		| SEMI			ProgramL	{$$=$1;}
-;	
+program : Program 									{printf("YO%s\n",$$);};
 
 
 
-MethodDecl: PUBLIC STATIC MethodHeader MethodBody {$$=};
-MethodHeader: MethodHeader2 ID OCURV MethodHeader3 CCURV {$$=};
-MethodHeader2: Type {$$=$1;}
-			   | VOID {$$=$1;}
-; 
-MethodHeader3: Epsilon {$$=NULL;}
-			| FormalParams {$$=$1;}
-; 
 
-MethodBody: OBRACE MethodBody2 CBRACE {$$=};
-MethodBody2: Epsilon {$$=NULL;}
-			 | VarDecl 		MethodBody2 	{$$=$1;}
-			 | Statement 	MethodBody2		{$$=$1;}
-;
+Program: CLASS ID OBRACE ProgramL CBRACE 			{;};
+ProgramL: %empty									{;}
+		| FieldDecl 	ProgramL					{;}
+		| MethodDecl 	ProgramL					{;}
+		| SEMI			ProgramL					{;}
+		;	
 
-FormalParams: Type ID FormalALt {$$=;};
-FormalALt: Epsilon {$$=NULL;}
-		   | COMMA 	FormalALt 	{$$=$1;}
-		   | Type 	FormalALt 	{$$=$1;}
-		   | ID     FormalALt 	{$$=$1;}
-;
-FormalParams2: STRING OSQUARE CSQUARE ID {$$=;};
+FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 	{;};
+FieldDecl2: %empty 									{;}
+			| COMMA ID FieldDecl2 					{;}
+			;
 
-VarDecl: Type ID VarDecl2 SEMI {$$=;};
-VarDecl2: Episilon {$$=NULL;}
-		  | COMMA  	VarDecl2 	{$$=$1;}
-		  | ID 		VarDecl2 	{$$=$1;}
-;	
 
+MethodDecl: PUBLIC STATIC MethodHeader MethodBody {;};
+MethodHeader: MethodHeader2 ID OCURV MethodHeader3 CCURV {;};
+MethodHeader2: Type 								{;}
+			| VOID 									{;}
+			; 
+MethodHeader3: %empty 								{;}
+			| FormalParams 							{;}
+			; 
+
+MethodBody: OBRACE MethodBody2 CBRACE 				{;};
+MethodBody2: %empty 								{;}
+			| VarDecl 		MethodBody2 			{;}
+			| Statement 	MethodBody2				{;}
+			;
+
+FormalParams: Type ID FormalALt 					{;}
+			| STRING OSQUARE CSQUARE ID 			{;}							{;}
+			;
+FormalALt: %empty 									{;}
+		   	| COMMA Type ID FormalALt 				{;}
+			;
+
+VarDecl: Type ID VarDecl2 SEMI 						{;};
+VarDecl2: %empty 									{;}
+		| COMMA ID VarDecl2 						{;}
+		;	
+
+Type: BOOL 											{;}
+	| INT 											{;}
+	| DOUBLE 										{;}
+	;
+
+
+Statement: OBRACE StatementZeroMais CBRACE					{;}
+		| IF OCURV Expr CCURV Statement StatementOpcional	{;}
+		| WHILE OCURV Expr CCURV Statement 					{;}
+		| DO Statement WHILE OCURV Expr CCURV SEMI 			{;}
+		| PRINT OCURV PrintAux CCURV SEMI  					{;}
+		| StatementAux SEMI 								{;}
+		| RETURN ExprAux SEMI 								{;}
+		;
+StatementZeroMais: %empty									{;}
+		| Statement StatementZeroMais						{;}
+		;
+StatementOpcional: %empty									{;}
+		| Statement 				 						{;}
+		;
+StatementAux: %empty										{;}
+		| Assignment 										{;}
+		| MethodInvocation 									{;}
+		| ParseArgs 										{;}
+		;
+PrintAux: Expr 												{;}
+		| STRLIT 											{;}
+		;
+ExprAux: %empty 											{;}
+		| Expr 												{;}
+		;
+
+Assignment: ID ASSIGN Expr 									{;};
+MethodInvocation: ID OCURV MethodInvocation2 CCURV 			{;};
+MethodInvocation2: %empty 									{;}
+		| Expr ExprAux2 									{;}
+		;
+ExprAux2: %empty 											{;}
+		| COMMA Expr ExprAux2 								{;}
+		;
+ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{;};
+Expr: Expr1													{;}
+	| Expr Expr2 Expr 										{;}
+	| Expr Expr3 Expr 										{;}
+	| Expr Expr4 Expr 										{;}
+	| Expr5 Expr 											{;}
+	| ID Expr6 												{;}
+	| OCURV Expr CCURV 										{;}
+	| Expr7 												{;}
+	;
+Expr1: Assignment											{;}
+	| MethodInvocation 										{;}
+	| ParseArgs 											{;}
+	;
+Expr2: AND 													{;}
+	| OR 													{;}
+	; 
+Expr3: EQ 													{;}
+	| GEQ 													{;}
+	| GT 													{;}
+	| LEQ 													{;}
+	| LT 													{;}
+	| NEQ 													{;}
+	;
+Expr4: PLUS 												{;}
+	| MINUS 												{;}
+	| STAR 													{;}
+	| DIV 													{;}
+	| MOD 													{;}
+	;
+Expr5: PLUS 												{;}
+	| MINUS 												{;}
+	| NOT 													{;}
+	;
+Expr6: %empty 												{;}
+	| DOTLENGTH 											{;}
+	;
+Expr7: BOOLLIT 												{;}
+	| DECLIT 												{;}
+	| REALLIT 												{;}
+	;	
 
 
 %%

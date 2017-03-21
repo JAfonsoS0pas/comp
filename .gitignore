@@ -1,4 +1,5 @@
 lex.yy.c
+y.tab.c
 jac
 *.txt
 analisador
