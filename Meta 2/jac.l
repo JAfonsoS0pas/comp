@@ -102,7 +102,7 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 %%
 
 {BOOL}				{print_text("BOOL"); COLUNA; if(flag==2) return BOOL;}	
-{BOOLLIT}			{print_with_content("BOOLLIT",yytext);COLUNA;yylval = atoi(yytext); if(flag==2) return BOOLLIT;}	
+{BOOLLIT}			{print_with_content("BOOLLIT",yytext);COLUNA; if(flag==2) return BOOLLIT;}	
 {CLASS}				{print_text("CLASS"); COLUNA;if(flag==2) return CLASS;}
 {DO}				{print_text("DO"); COLUNA;if(flag==2) return DO;}
 {DOTLENGTH}			{print_text("DOTLENGTH");  COLUNA;if(flag==2) return DOTLENGTH;}
@@ -141,10 +141,10 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 {ASSIGN}			{print_text("ASSIGN");COLUNA;if(flag==2) return ASSIGN;}
 {SEMI}				{print_text("SEMI");COLUNA;if(flag==2) return SEMI;}
 {COMMA}				{print_text("COMMA");COLUNA;if(flag==2) return COMMA;}
-{DECLIT}			{print_with_content("DECLIT",yytext); COLUNA; yylval = atoi(yytext);if(flag==2) return DECLIT;}
-{REALLIT}			{print_with_content("REALLIT",yytext); COLUNA;yylval = atof(yytext);if(flag==2) return REALLIT;}
-{RESERVED} 			{print_with_content("RESERVED",yytext); COLUNA; yylval = (*yytext);if(flag==2) return RESERVED;}
-{ID}				{print_with_content("ID", yytext); COLUNA; yylval = (*yytext);if(flag==2) return ID;}
+{DECLIT}			{print_with_content("DECLIT",yytext); COLUNA;if(flag==2){yylval.string=(char*)strdup(yytext); return DECLIT;}}
+{REALLIT}			{print_with_content("REALLIT",yytext); COLUNA;if(flag==2){yylval.string=(char*)strdup(yytext); return REALLIT;}}
+{RESERVED} 			{print_with_content("RESERVED",yytext); COLUNA;if(flag==2) {yylval.string=(char*)strdup(yytext); return RESERVED;}}
+{ID}				{print_with_content("ID", yytext); COLUNA; if(flag==2) {yylval.string=(char*)strdup(yytext); return ID;}}
 {SPACE}						{COLUNA;}
 {TAB}						{COLUNA;}
 {LINETERMINATOR}			{LINHA;}
@@ -164,7 +164,7 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 <STRINGLIT>{STRLIT}									{COLUNA; strcat(save, yytext);}
 <STRINGLIT>\\(.?)									{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;error=1;}
 <STRINGLIT>{LINETERMINATOR}							{BEGIN 0; save[0]=0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
-<STRINGLIT>{ASPAS}									{BEGIN 0;  strcat(save, yytext); if(error==0){print_with_content("STRLIT",save); yylval=(*yytext);} COLUNA; save[0]=0; if(flag==2) return STRLIT;}
+<STRINGLIT>{ASPAS}									{BEGIN 0;  strcat(save, yytext); if(error==0){print_with_content("STRLIT",save);} COLUNA;  if(flag==2){yylval.string=(char*)strdup(save); return STRLIT;} save[0]=0;}
 <STRINGLIT><<EOF>>									{BEGIN 0; save[0]=0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
 
 
