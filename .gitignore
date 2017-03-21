@@ -1,6 +1,6 @@
 lex.yy.c
-y.tab.c
-y.output
+Meta 2/y.tab.c
+Meta 2/y.output
 jac
 *.txt
 analisador

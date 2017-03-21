@@ -18,6 +18,8 @@
 
 %right NOT
 %left OBRACE OCURV CCURV OSQUARE CSQUARE
+%nonassoc ELSE
+
 
 %%
 
@@ -106,10 +108,22 @@ ExprAux2: %empty 											{;}
 		;
 ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{;};
 Expr: Expr1													{;}
-	| Expr Expr2 Expr 										{;}
-	| Expr Expr3 Expr 										{;}
-	| Expr Expr4 Expr 										{;}
-	| Expr5 Expr 											{;}
+	| Expr AND Expr 										{;}
+	| Expr OR Expr 										{;}
+	| Expr EQ Expr 										{;}
+	| Expr GEQ Expr 										{;}
+	| Expr GT Expr 										{;}
+	| Expr LEQ Expr 										{;}
+	| Expr LT Expr 										{;}
+	| Expr NEQ Expr 										{;}
+	| Expr PLUS Expr 										{;}
+	| Expr MINUS Expr 										{;}
+	| Expr STAR Expr 										{;}
+	| Expr DIV Expr 										{;}
+	| Expr MOD Expr 										{;}
+	| PLUS Expr 											{;}
+	| MINUS Expr 											{;}
+	| NOT Expr 											{;}
 	| ID Expr6 												{;}
 	| OCURV Expr CCURV 										{;}
 	| Expr7 												{;}
@@ -117,26 +131,6 @@ Expr: Expr1													{;}
 Expr1: Assignment											{;}
 	| MethodInvocation 										{;}
 	| ParseArgs 											{;}
-	;
-Expr2: AND 													{;}
-	| OR 													{;}
-	; 
-Expr3: EQ 													{;}
-	| GEQ 													{;}
-	| GT 													{;}
-	| LEQ 													{;}
-	| LT 													{;}
-	| NEQ 													{;}
-	;
-Expr4: PLUS 												{;}
-	| MINUS 												{;}
-	| STAR 													{;}
-	| DIV 													{;}
-	| MOD 													{;}
-	;
-Expr5: PLUS 												{;}
-	| MINUS 												{;}
-	| NOT 													{;}
 	;
 Expr6: %empty 												{;}
 	| DOTLENGTH 											{;}
