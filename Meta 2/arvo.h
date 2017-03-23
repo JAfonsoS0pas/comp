@@ -11,7 +11,7 @@ typedef struct no{
 
 //no tree;
 int cnt = 0;
-no create(type_node type, char* value, char* type);
+no create(type_node type, char* value, char* stype);
 void printftree(no *n, int prof);
 void addnode(no *father, no *new);  //criar no
 void addbro(no *old, no *new); //criar irmao

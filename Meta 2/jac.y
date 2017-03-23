@@ -3,6 +3,7 @@
     #include <stdio.h>
     int yylex(void);
     void yyerror (const char *s);
+    no* root;
 
 %}
 
@@ -10,13 +11,13 @@
 %union{
 int inteiro;
 char* string;
+no* node
 }
-
-no *root;
 
 %token BOOL BOOLLIT CLASS DO DOTLENGTH DOUBLE ELSE IF INT PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
 %token <string> STRLIT DECLIT REALLIT ID RESERVED
 
+%type <node> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader MethodHeader3 MethodBody MethodBody2 FormalParams FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr6 Expr7
 
 
 %left COMMA
@@ -36,7 +37,7 @@ no *root;
 
 
 %%
-Program: CLASS ID OBRACE ProgramL CBRACE		 			{create(root_node, "" ,"Program"); $$=root; addnode($$, $2);}
+Program: CLASS ID OBRACE ProgramL CBRACE		 			{create(root_node, "" ,"Program"); $$=root; addnode($$, $2);printftree(root, 1);}
 		;
 ProgramL: %empty											{$$=NULL;}
 		| FieldDecl 	ProgramL							{$$=$1; addbro($$,$1);}
