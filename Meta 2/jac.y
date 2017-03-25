@@ -25,8 +25,8 @@ char* string;
 struct node* ynode;
 }
 
-%token BOOL BOOLLIT CLASS DO DOTLENGTH DOUBLE ELSE IF INT PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
-%token <string> STRLIT DECLIT REALLIT ID RESERVED
+%token BOOLLIT CLASS DO DOTLENGTH ELSE IF PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
+%token <string> STRLIT DECLIT REALLIT ID RESERVED BOOL INT DOUBLE
 
 %type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader MethodHeader3 MethodBody MethodBody2 FormalParams FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr6 Expr7
 
@@ -47,19 +47,19 @@ struct node* ynode;
 
 
 %%
-Program: CLASS ID OBRACE ProgramL CBRACE		 			{root=create(root_node, "Program" ,""); addnode(root, create(id_node,$2,"Id")); $$=root;}
+Program: CLASS ID OBRACE ProgramL CBRACE		 			{root=create(root_node, "" ,"Program"); addnode(root, create(id_node,$2,"Id")); addbro(root,$4); $$=root;}
 		;
 ProgramL: %empty											{;}
-		| FieldDecl 	ProgramL							{;}
+		| FieldDecl 	ProgramL							{$$=$1;}
 		| MethodDecl 	ProgramL							{;}
 		| SEMI			ProgramL							{;}
 		;	
 
-FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{$$=create(var_node, "", "FieldDecl"); addnode($$,$3); addbro($3, create(id_node,$4,"Id"));}
+FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{printf("yo->%s-%s!\n",$4,$3->stype);$$=create(var_node, "", "FieldDecl"); addnode($$,$3); addbro($3, create(id_node,$4,"Id")); if($5!=NULL) addbro($$,$5);}
 		| error SEMI 										{$$=NULL;}
 		;
 FieldDecl2: %empty 											{$$=NULL;}
-		| COMMA ID FieldDecl2 								{}
+		| COMMA ID FieldDecl2 								{printf("%s -> %s\n",$2,$3);$$=create(id_node,$2,"Id");}
 		;
 
 
@@ -92,9 +92,9 @@ VarDecl2: %empty 											{$$=NULL;}
 		| COMMA ID VarDecl2 								{;}
 		;	
 
-Type: 	BOOL 												{;}
-		| INT 												{;}
-		| DOUBLE 											{;}
+Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
+		| INT 												{$$=create(ter_node,"","Int");}
+		| DOUBLE 											{$$=create(ter_node,"","Double");}
 		;
 
 
@@ -183,13 +183,14 @@ int main(int argc, char *argv[]){
 			yylex();
 		}
 		if(strcmp(argv[1],"-t")==0){
-			print_flag=1;
+			flag=2;
+			yyparse();
+    		printftree(root,0);
     	}
 	}
 	else{
 		flag=2;
 		yyparse();
-    	printftree(root,0);
 		
 	}
 	
