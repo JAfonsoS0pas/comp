@@ -1,12 +1,11 @@
-
 %{
 	#include <stdio.h>
-	#include <string.h>
 	#include "y.tab.h"
+	
 	
 	#define LINHA linha++; coluna=1;
 	#define COLUNA coluna+=yyleng;
-	int flag = 0,error =0;	
+	int flag ,error =0;	
 	char save[256];
 	
 	
@@ -187,22 +186,6 @@ void print_with_content(char* text, char* content){
 	}
 }
 
-int main(int argc, char *argv[]){
-	if(argc > 1){
-		if(strcmp(argv[1],"-l") == 0 || strcmp(argv[1],"-1") == 0){
-			if(strcmp(argv[1],"-l") == 0){
-				flag=1;
-			}
-			yylex();
-		}
-	}
-	else{
-		flag=2;
-		yyparse();	
-	}
-	
-	return 0;
-}
 
 int yywrap(){
 	return 1;

@@ -1,9 +1,20 @@
 %{
-	#include "arvo.h"
-    #include <stdio.h>
+    
+	#include "arvo.c"
+
+	int cnt;
+	no root;
+    int print_flag = 0,flag = 0;
+    
     int yylex(void);
     void yyerror (const char *s);
-    no* root;
+    no create(type_node type, char* value, char* stype);
+	void printftree(no n, int prof);
+	void addnode(no father, no new);  //criar no
+	void addbro(no a, no b); //criar irmao
+	int cntbro(no root);
+	void give_type(no novo, char* type);
+
 
 %}
 
@@ -11,14 +22,13 @@
 %union{
 int inteiro;
 char* string;
-no* node
+struct node* ynode;
 }
 
 %token BOOL BOOLLIT CLASS DO DOTLENGTH DOUBLE ELSE IF INT PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
 %token <string> STRLIT DECLIT REALLIT ID RESERVED
 
-%type <node> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader MethodHeader3 MethodBody MethodBody2 FormalParams FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr6 Expr7
-
+%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader MethodHeader3 MethodBody MethodBody2 FormalParams FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr6 Expr7
 
 %left COMMA
 %right ASSIGN
@@ -37,19 +47,19 @@ no* node
 
 
 %%
-Program: CLASS ID OBRACE ProgramL CBRACE		 			{$$=create(root_node, "" ,"Program"); $$=root; addnode($$, $2);}
+Program: CLASS ID OBRACE ProgramL CBRACE		 			{root=create(root_node, "Program" ,""); addnode(root, create(id_node,$2,"Id")); $$=root;}
 		;
-ProgramL: %empty											{$$=NULL;}
-		| FieldDecl 	ProgramL							{$$=$1; addbro($$,$1);}
-		| MethodDecl 	ProgramL							{$$=$1; addbro($$,$1);}
-		| SEMI			ProgramL							{$$=$1; addbro($$,$1);}
+ProgramL: %empty											{;}
+		| FieldDecl 	ProgramL							{;}
+		| MethodDecl 	ProgramL							{;}
+		| SEMI			ProgramL							{;}
 		;	
 
 FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{$$=create(var_node, "", "FieldDecl"); addnode($$,$3); addbro($3, create(id_node,$4,"Id"));}
 		| error SEMI 										{$$=NULL;}
 		;
 FieldDecl2: %empty 											{$$=NULL;}
-		| COMMA ID FieldDecl2 								{addbro($$, $1);addbro($1, create(id_node, $2, "Id"));}
+		| COMMA ID FieldDecl2 								{}
 		;
 
 
@@ -82,9 +92,9 @@ VarDecl2: %empty 											{$$=NULL;}
 		| COMMA ID VarDecl2 								{;}
 		;	
 
-Type: 	BOOL 												{$$=create(ter_node,"","Type");}
-		| INT 												{$$=create(ter_node,"","Type");}
-		| DOUBLE 											{$$=create(ter_node,"","Type");}
+Type: 	BOOL 												{;}
+		| INT 												{;}
+		| DOUBLE 											{;}
 		;
 
 
@@ -164,3 +174,24 @@ Expr7: BOOLLIT 												{;}
 %%
 
 
+int main(int argc, char *argv[]){
+	if(argc > 1){
+		if(strcmp(argv[1],"-l") == 0 || strcmp(argv[1],"-1") == 0){
+			if(strcmp(argv[1],"-l") == 0){
+				flag=1;
+			}
+			yylex();
+		}
+		if(strcmp(argv[1],"-t")==0){
+			print_flag=1;
+    	}
+	}
+	else{
+		flag=2;
+		yyparse();
+    	printftree(root,0);
+		
+	}
+	
+	return 0;
+}
