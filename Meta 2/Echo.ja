@@ -12,5 +12,6 @@ class gcd {
 			a = a -b;
 		}
 	}
+	public static int xyz;
 }
 

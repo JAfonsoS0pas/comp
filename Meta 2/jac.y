@@ -26,8 +26,8 @@ char* string;
 struct node* ynode;
 }
 
-%token BOOLLIT CLASS DO DOTLENGTH ELSE IF PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
-%token <string> STRLIT DECLIT REALLIT ID RESERVED BOOL INT DOUBLE
+%token CLASS DO DOTLENGTH ELSE IF PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
+%token <string> STRLIT DECLIT REALLIT ID RESERVED BOOL INT DOUBLE BOOLLIT
 
 %type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader MethodHeader3 MethodBody MethodBody2 FormalParams STRING FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr6 Expr7 VOID
 
@@ -141,16 +141,16 @@ Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{;}
 		| PRINT OCURV PrintAux CCURV SEMI  					{$$=create(stat_node,"","Print"); addnode($$,$3);}
 		| StatementAux SEMI 								{$$=$1;}
-		| RETURN ExprAux SEMI 								{;}
+		| RETURN ExprAux SEMI 								{$$=create(stat_node,"","Return");addnode($$,$2);}
 		| error SEMI 										{$$=NULL;}
 		;
 StatementZeroMais: %empty									{$$=NULL;}
-		| Statement StatementZeroMais						{;}
+		| Statement StatementZeroMais						{$$=$1;addbro($$,$2); }
 		;
 
 StatementAux: %empty										{$$=NULL;}
 		| Assignment 										{$$=$1;}
-		| MethodInvocation 									{;}
+		| MethodInvocation 									{$$=$1;}
 		| ParseArgs 										{$$=$1;}
 		;
 PrintAux: Expr 												{$$=$1;}
@@ -174,7 +174,7 @@ ExprAux2: %empty 											{$$=NULL;}
 
 ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{$$=create(op_node,"","ParseArgs"); aux=create(id_node,$3,"Id"); addnode($$,aux); addbro(aux,$5);}
 
-		| PARSEINT OCURV error CCURV						{;}
+		| PARSEINT OCURV error CCURV						{$$=NULL;}
 		;
 Expr: Expr1													{$$=$1;}
 		| Expr AND Expr 									{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
@@ -198,7 +198,7 @@ Expr: Expr1													{$$=$1;}
 		| OCURV error CCURV 								{$$=NULL;}
 		| Expr7 											{$$=$1;}
 		;
-Expr1: Assignment											{$$=create(op_node,"","Assign");}
+Expr1: Assignment											{$$=$1;}
 		| MethodInvocation 									{$$=$1;}
 		| ParseArgs 										{$$=$1;}
 		;
@@ -206,7 +206,7 @@ Expr6: %empty 												{$$=NULL;}
 		| DOTLENGTH 										{$$=create(op_node,"","Length");}
 		;
 
-Expr7: BOOLLIT 												{$$=create(ter_node,"","BoolLit");}
+Expr7: BOOLLIT 												{$$=create(ter_node,$1,"BoolLit");}
 		| DECLIT 											{$$=create(ter_node,$1,"DecLit");}
 		| REALLIT 											{$$=create(ter_node,$1,"RealLit");}
 		;
