@@ -56,17 +56,24 @@ ProgramL: %empty											{$$=NULL;}
 		| SEMI			ProgramL							{$$=NULL;}
 		;	
 
-FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{$$=create(var_node, "", "FieldDecl"); addnode($$,$3); addbro($3, create(id_node,$4,"Id")); if($5!=NULL){
-	no aux = create(var_node, "", "FieldDecl");
-	no aux2 = create($3->type, $3->value, $3->stype);
-	addnode(aux,aux2);
-	addbro(aux2,$5);
-	addbro($$,aux);
-	}}
+FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{$$=create(var_node, "", "FieldDecl"); addnode($$,$3); addbro($3, create(id_node,$4,"Id")); 
+	if($5!=NULL){
+		aux=$5;
+		while(aux!=NULL){
+			no aux1 = create(var_node, "", "FieldDecl");
+			no aux2 = create($3->type, $3->value, $3->stype);
+			addnode(aux1,aux2);
+			addbro(aux2,create(id_node,aux->value,"Id"));
+			addbro($$,aux1);
+			aux=aux->bro;
+		}
+		free(aux);
+	}
+}
 		| error SEMI 										{$$=NULL;}
 		;
 FieldDecl2: %empty 											{$$=NULL;}
-		| COMMA ID FieldDecl2 								{$$=create(id_node,$2,"Id");addnode($$,$3);}
+		|  COMMA ID FieldDecl2								{$$=create(id_node,$2,"Id"); addbro($$,$3);printf("oi\n");}
 		;
 
 MethodDecl: PUBLIC STATIC MethodHeader MethodBody 			{$$=create(fdec_node,"","MethodDecl");addnode($$,$3); addbro($3,$4);}
