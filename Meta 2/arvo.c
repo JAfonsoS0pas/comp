@@ -20,8 +20,8 @@ no create(type_node type, char* value, char* stype){
 	new->bro=NULL;
 	new->n = 0;
 
+	printf("node added! %s\n", stype);
 	return new;
-	
 
 }
 
@@ -85,13 +85,10 @@ void printftree(no root, int prof){
 	int i=0;
 	no aux;
 	if(root->type == root_node){
-		while(i<prof){
-			printf("..");
-			i++;
-		}
-		printf("%s(%s)\n", root->stype, root->value);
+		
+		printf("%s\n", root->stype);
 	}
-	else{
+	else {
 		while(i<prof){
 			printf("..");
 			i++;
