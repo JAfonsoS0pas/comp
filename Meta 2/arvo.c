@@ -20,7 +20,6 @@ no create(type_node type, char* value, char* stype){
 	new->bro=NULL;
 	new->n = 0;
 
-	printf("node added! %s\n", stype);
 	return new;
 
 }
@@ -51,8 +50,8 @@ void addbro(no a, no b){
 	}
 	no aux;
 	aux=a;
-	while(aux->son!=NULL){
-		aux = aux->son;
+	while(aux->bro!=NULL){
+		aux = aux->bro;
 	}
 	aux->bro=b;
 
@@ -60,6 +59,7 @@ void addbro(no a, no b){
 		b->father=a->father;
 		b->n++;
 	}
+
 
 }
 
@@ -93,7 +93,9 @@ void printftree(no root, int prof){
 			printf("..");
 			i++;
 		}
-		printf("%s(%s)\n", root->stype, root->value);
+		
+			printf("%s(%s)\n", root->stype, root->value);
+		
 	}
 
 	aux = root->son;
