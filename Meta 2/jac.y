@@ -73,7 +73,7 @@ FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{$$=create(var_node, "", "Fi
 		| error SEMI 										{$$=NULL;}
 		;
 FieldDecl2: %empty 											{$$=NULL;}
-		|  COMMA ID FieldDecl2								{$$=create(id_node,$2,"Id"); addbro($$,$3);printf("oi\n");}
+		|  COMMA ID FieldDecl2								{$$=create(id_node,$2,"Id"); addbro($$,$3);}
 		;
 
 MethodDecl: PUBLIC STATIC MethodHeader MethodBody 			{$$=create(fdec_node,"","MethodDecl");addnode($$,$3); addbro($3,$4);}

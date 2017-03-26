@@ -57,7 +57,7 @@ void addbro(no a, no b){
 
 	if(a->father!=NULL){
 		b->father=a->father;
-		b->n++;
+		b->father->n++;
 	}
 
 
@@ -93,9 +93,10 @@ void printftree(no root, int prof){
 			printf("..");
 			i++;
 		}
-		
+		if(strcmp(root->value,"")!=0)	
 			printf("%s(%s)\n", root->stype, root->value);
-		
+		else
+			printf("%s\n", root->stype);
 	}
 
 	aux = root->son;
