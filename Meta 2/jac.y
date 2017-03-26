@@ -57,19 +57,19 @@ ProgramL: %empty											{$$=NULL;}
 		;	
 
 FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{$$=create(var_node, "", "FieldDecl"); addnode($$,$3); addbro($3, create(id_node,$4,"Id")); 
-	if($5!=NULL){
-		aux=$5;
-		while(aux!=NULL){
-			no aux1 = create(var_node, "", "FieldDecl");
-			no aux2 = create($3->type, $3->value, $3->stype);
-			addnode(aux1,aux2);
-			addbro(aux2,create(id_node,aux->value,"Id"));
-			addbro($$,aux1);
-			aux=aux->bro;
-		}
-		free(aux);
-	}
-}
+																if($5!=NULL){
+																	aux=$5;
+																	while(aux!=NULL){
+																		no aux1 = create(var_node, "", "FieldDecl");
+																		no aux2 = create($3->type, $3->value, $3->stype);
+																		addnode(aux1,aux2);
+																		addbro(aux2,create(id_node,aux->value,"Id"));
+																		addbro($$,aux1);
+																		aux=aux->bro;
+																	}
+																	free(aux);
+																}
+															}
 		| error SEMI 										{$$=NULL;}
 		;
 FieldDecl2: %empty 											{$$=NULL;}
@@ -78,25 +78,22 @@ FieldDecl2: %empty 											{$$=NULL;}
 
 MethodDecl: PUBLIC STATIC MethodHeader MethodBody 			{$$=create(fdec_node,"","MethodDecl");addnode($$,$3); addbro($3,$4);}
 		;
-MethodHeader: Type ID OCURV MethodHeader3 CCURV 			{$$=create(fdec_node,"","MethodHeader");addnode($$,$1);addbro($1, create(id_node,$2,"Id")); aux = create(fdec_node,"","MethodParams"); addbro($1,aux); addnode(aux,$4);} 
-		| VOID ID OCURV MethodHeader3 CCURV 				{$$=create(fdec_node,"","MethodHeader");$1=create(ter_node,"","Void");addnode($$,$1); addbro($1,create(id_node,$2,"Id")); aux = create(fdec_node,"","MethodParams"); addbro($1, aux);addnode(aux,$4);}
+MethodHeader: Type ID OCURV MethodHeader3 CCURV 			{$$=create(fdec_node,"","MethodHeader");addnode($$,$1);addbro($1, create(id_node,$2,"Id")); 
+																aux = create(fdec_node,"","MethodParams"); addbro($1,aux); addnode(aux,$4);
+															} 
+		| VOID ID OCURV MethodHeader3 CCURV 				{$$=create(fdec_node,"","MethodHeader");$1=create(ter_node,"","Void"); addnode($$,$1); 
+																addbro($1,create(id_node,$2,"Id")); aux = create(fdec_node,"","MethodParams"); addbro($1, aux);
+																addnode(aux,$4);
+															}
 		;
 MethodHeader3: %empty 										{$$=NULL;}
 		| FormalParams 										{$$=$1;}
 		; 
 
-MethodBody: OBRACE MethodBody2 CBRACE 						{$$=create(fdec_node,"", "MethodBody");}
+MethodBody: OBRACE MethodBody2 CBRACE 						{$$=create(fdec_node,"", "MethodBody");addnode($$,$2);}
 		;
 MethodBody2: %empty 										{$$=NULL;}
-		| VarDecl 		MethodBody2 						{if($1!=NULL){
-																if($$->son==NULL){
-																	addnode($$,$1);
-																}
-																else{
-																	addbro($$->son, $1);
-																}
-															}
-															;}
+		| VarDecl 		MethodBody2 						{$$=$1; addbro($$,$2);}
 		| Statement 	MethodBody2							{if($1!=NULL){
 																if($$->son==NULL){
 																	addnode($$,$1);
@@ -112,13 +109,26 @@ FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl"); aux 
 		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDcl");aux =create(fdec_node,"","StringArray"); addnode($$, aux);addbro(aux,create(id_node,$4,"Id"));}
 		;
 FormalALt: %empty 											{$$=NULL;}
-	   	| COMMA Type ID FormalALt 							{$$=create(id_node,$3,"IdWOWO");addnode($$,$4);}
+	   	| COMMA Type ID FormalALt 							{$$=create(id_node,$3,"Id");addnode($$,$4);}
 		;
 
-VarDecl: Type ID VarDecl2 SEMI 								{$$=create(id_node,$2,"Id");addnode($$,$3);}
+VarDecl: Type ID VarDecl2 SEMI 								{$$=create(fdec_node,"", "VarDecl"); addnode($$,$1);addbro($1,create(id_node,$2,"Id")); 
+															if($3!=NULL){
+																	aux=$3;
+																	while(aux!=NULL){
+																		no aux1 = create(fdec_node,"", "VarDecl");
+																		no aux2 = create($1->type, $1->value, $1->stype);
+																		addnode(aux1,aux2);
+																		addbro(aux2,create(id_node,aux->value,"Id"));
+																		addbro($$,aux1);
+																		aux=aux->bro;
+																	}
+																	free(aux);
+																}
+															}
 		;
 VarDecl2: %empty 											{$$=NULL;}
-		| COMMA ID VarDecl2 								{$$=create(id_node,$2,"Id");addnode($$,$3);}
+		| COMMA ID VarDecl2 								{$$=create(id_node,$2,"Id"); addbro($$,$3);}
 		;	
 
 
