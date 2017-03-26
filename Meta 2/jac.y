@@ -134,8 +134,8 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 		;
 
 
-Statement: OBRACE StatementZeroMais CBRACE					{;}
-		| IF OCURV Expr CCURV Statement 					{/*$$=create(stat_node,"","If"); addnode($$,$3); if(cntbro($5)>1){}*/;}
+Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
+		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If"); addnode($$,$3); if(cntbro($5)>1){};}
 		| IF OCURV Expr CCURV Statement ELSE Statement		{;}
 		| WHILE OCURV Expr CCURV Statement 					{;}
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{;}
@@ -151,7 +151,7 @@ StatementZeroMais: %empty									{$$=NULL;}
 StatementAux: %empty										{$$=NULL;}
 		| Assignment 										{$$=$1;}
 		| MethodInvocation 									{;}
-		| ParseArgs 										{;}
+		| ParseArgs 										{$$=$1;}
 		;
 PrintAux: Expr 												{;}
 		| STRLIT 											{$$=create(ter_node,"","StrLit");}
@@ -171,7 +171,9 @@ MethodInvocation2: %empty 									{$$=NULL;}
 ExprAux2: %empty 											{$$=NULL;}
 		| COMMA Expr ExprAux2 								{;}
 		;
+
 ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{$$=create(op_node,"","ParseArgs"); aux=create(id_node,$3,"Id"); addnode($$,aux); addbro(aux,$5);}
+
 		| PARSEINT OCURV error CCURV						{;}
 		;
 Expr: Expr1													{$$=$1;}
@@ -191,8 +193,8 @@ Expr: Expr1													{$$=$1;}
 		| PLUS Expr 										{$$=create(op_node,"","Plus");addnode($$,$2);}
 		| MINUS Expr 										{$$=create(op_node,"","Minus");addnode($$,$2);}
 		| NOT Expr 											{$$=create(op_node,"","Not");addnode($$,$2);}
-		| ID Expr6 											{$$=create(op_node,"","Length");addnode($$,create(id_node,"","Id"));}
-		| OCURV Expr CCURV 									{;}
+		| ID Expr6 											{$$=create(id_node,$1,"Id");addnode($$,$2);}
+		| OCURV Expr CCURV 									{$$=$2;}
 		| OCURV error CCURV 								{$$=NULL;}
 		| Expr7 											{$$=$1;}
 		;
