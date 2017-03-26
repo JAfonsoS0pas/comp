@@ -1,6 +1,7 @@
 class gcd {
-
-	public static int x, ya;
+	public static int x , y , z, k , z , w ;
+	public static void main(String[] args) {
+	}
 
 }
 
