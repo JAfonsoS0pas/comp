@@ -135,7 +135,7 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 
 
 Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
-		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If"); addnode($$,$3); if(cntbro($5)>1){};}
+		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If"); addnode($$,$3); if(cntbro($5)>1){addbro($3,$5);};}
 		| IF OCURV Expr CCURV Statement ELSE Statement		{;}
 		| WHILE OCURV Expr CCURV Statement 					{;}
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{;}
