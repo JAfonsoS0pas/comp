@@ -153,7 +153,7 @@ StatementAux: %empty										{$$=NULL;}
 		| MethodInvocation 									{;}
 		| ParseArgs 										{$$=$1;}
 		;
-PrintAux: Expr 												{;}
+PrintAux: Expr 												{$$=$1;}
 		| STRLIT 											{$$=create(ter_node,"","StrLit");}
 		;
 ExprAux: %empty 											{$$=NULL;}
@@ -162,14 +162,14 @@ ExprAux: %empty 											{$$=NULL;}
 
 Assignment: ID ASSIGN Expr 									{$$=create(op_node,"","Assign"); aux = create(id_node,$1,"Id");addnode($$,aux); addbro(aux,$3);}
 		;
-MethodInvocation: ID OCURV MethodInvocation2 CCURV 			{$$=create(op_node,"","Call");aux= create(id_node,$1,"Id"); addnode($$,aux); addbro(aux,$3)}
+MethodInvocation: ID OCURV MethodInvocation2 CCURV 			{$$=create(op_node,"","Call");aux= create(id_node,$1,"Id"); addnode($$,aux); addbro(aux,$3);}
 		| ID OCURV error CCURV 								{$$=NULL;}
 		;
 MethodInvocation2: %empty 									{$$=NULL;}
 		| Expr ExprAux2 									{$$=$1; addbro($$,$2);}
 		;
 ExprAux2: %empty 											{$$=NULL;}
-		| COMMA Expr ExprAux2 								{;}
+		| COMMA Expr ExprAux2 								{$$=$2;addbro($$,$3);}
 		;
 
 ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{$$=create(op_node,"","ParseArgs"); aux=create(id_node,$3,"Id"); addnode($$,aux); addbro(aux,$5);}
