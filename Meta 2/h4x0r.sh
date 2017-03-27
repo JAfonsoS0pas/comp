@@ -2,5 +2,6 @@
 clear
 lex jac.l
 yacc -d -v jac.y
-clang-3.8 -Wall -Wno-unused-function *.c
-valgrind --leak-check=yes ./a.out < Echo.ja -t
+clang-3.8 -g -Wall -Wno-unused-function *.c
+zip jac.zip jac.l jac.y arvo.h arvo.c 
+./a.out < Echo.ja -t

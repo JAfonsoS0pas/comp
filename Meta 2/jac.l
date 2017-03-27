@@ -159,11 +159,11 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 <SINGLE>{LINETERMINATOR}											{BEGIN 0;LINHA;}
 <SINGLE>.															{COLUNA;}
 
-{ASPAS}												{BEGIN STRINGLIT; strcat(save, yytext); l_actual= linha; c_actual= coluna;COLUNA; error=0;}
+{ASPAS}												{BEGIN STRINGLIT; save[0]=0; strcat(save, yytext); l_actual= linha; c_actual= coluna;COLUNA; error=0;}
 <STRINGLIT>{STRLIT}									{COLUNA; strcat(save, yytext);}
-<STRINGLIT>\\(.?)									{printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;error=1;}
+<STRINGLIT>\\(.?)									{strcat(save, yytext);printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;error=1;}
 <STRINGLIT>{LINETERMINATOR}							{BEGIN 0; save[0]=0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
-<STRINGLIT>{ASPAS}									{BEGIN 0;  strcat(save, yytext); if(error==0){print_with_content("STRLIT",save);} COLUNA;  if(flag==2){yylval.string=(char*)strdup(save); return STRLIT;} save[0]=0;}
+<STRINGLIT>{ASPAS}									{BEGIN 0; strcat(save, yytext); if(error==0){print_with_content("STRLIT",save);} COLUNA;  if(flag==2){yylval.string=(char*)strdup(save);yytext=save; return STRLIT;}}
 <STRINGLIT><<EOF>>									{BEGIN 0; save[0]=0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
 
 

@@ -18,6 +18,7 @@ typedef struct node {
 
 int yylex(void);
 void yyerror (const char *s);
+int yylex_destroy();
 no create(type_node type, char* value, char* stype);
 void printftree(no n, int prof);
 void addnode(no father, no new);  //criar no

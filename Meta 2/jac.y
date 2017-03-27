@@ -9,7 +9,6 @@
 	no root;
 	no aux;
     int print_flag = 0,flag = 0;
-    
 %}
 
  
@@ -35,7 +34,7 @@ struct node* ynode;
 %left STAR DIV MOD
 
 %right NOT
-%left OBRACE OCURV CCURV OSQUARE CSQUARE
+%left OBRACE CBRACE OCURV CCURV OSQUARE CSQUARE
 %nonassoc ELSE RETURN REALLIT STRLIT IF 
 
 
@@ -130,7 +129,16 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 
 		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If"); addnode($$,$3); addbro($3,$5);}
-		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If"); addnode($$,$3);  addbro($3,$5); if((cntsons($7)>2)&&(cntsons($7)!=1)){aux = create(stat_node,"","Block"); addbro($5,aux); addnode(aux, $7);} else{addbro($5,$7);}}
+		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If"); addnode($$,$3);  addbro($3,$5); 
+																if((cntsons($7)>2)&&(cntsons($7)!=1)){
+																	aux = create(stat_node,"","Block"); 
+																	addbro($5,aux); 
+																	addnode(aux, $7);
+																} 
+																else{
+																	addbro($5,$7);
+																	}
+															}
 		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); addnode($$,$3); addbro($3,$5);}
 
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{$$=create(stat_node,"","DoWhile");addnode($$,$2); addbro($2,$5);}
@@ -221,6 +229,7 @@ int main(int argc, char *argv[]){
 		if(strcmp(argv[1],"-t")==0){
 			flag=2;
 			yyparse();
+			yylex_destroy();
 			if(!print_flag)
     			printftree(root,0);
     	}
@@ -228,6 +237,7 @@ int main(int argc, char *argv[]){
 	else{
 		flag=2;
 		yyparse();
+		yylex_destroy();
 		
 	}
 	
