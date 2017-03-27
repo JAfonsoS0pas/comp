@@ -163,7 +163,7 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 <STRINGLIT>{STRLIT}									{COLUNA; strcat(save, yytext);}
 <STRINGLIT>\\(.?)									{strcat(save, yytext);printf("Line %d, col %d: invalid escape sequence (%s)\n", linha, coluna, yytext);COLUNA;error=1;}
 <STRINGLIT>{LINETERMINATOR}							{BEGIN 0; save[0]=0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
-<STRINGLIT>{ASPAS}									{BEGIN 0; strcat(save, yytext); if(error==0){print_with_content("STRLIT",save);} COLUNA;  if(flag==2){yylval.string=(char*)strdup(save);yytext=save; return STRLIT;}}
+<STRINGLIT>{ASPAS}									{BEGIN 0; strcat(save, yytext); if(error==0){print_with_content("STRLIT",save);} COLUNA;  if(flag==2 && !error){yylval.string=(char*)strdup(save);yytext=save; return STRLIT;}}
 <STRINGLIT><<EOF>>									{BEGIN 0; save[0]=0; printf("Line %d, col %d: unterminated string literal\n", l_actual, c_actual);LINHA;}
 
 
