@@ -146,7 +146,7 @@ Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 																	addnode(aux, $7);
 																} 
 																else{
-																	if(strcmp($7->son->stype,"If")==0){
+																	if(strcmp($7->stype,"If")==0){
 																		aux = create(stat_node,"","Block"); 
 
 																		addbro($5,aux); 
