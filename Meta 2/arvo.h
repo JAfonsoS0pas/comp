@@ -25,4 +25,5 @@ void addnode(no father, no new);  //criar no
 void addbro(no a, no b); //criar irmao
 int cntsons(no root);
 void give_type(no novo, char* type);
-
+int verifica(no no, int sons);
+int cntbros(no root);

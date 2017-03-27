@@ -1,30 +1,19 @@
 class gcd {
-
-	public static boolean a,b;
-	public static int a(String[] b) {
-		
-		
+	public static void main(String[] args) {
+		int a, b;
+		a = Integer.parseInt(args[0]);
+		b = Integer.parseInt(args[1]);
+		if (a == 0)
+			System.out.println(b);
+		else {
+				if (a > b)
+					a = a-b;
+				else
+					b = b-a;
+					if(a=b){
+						a=c;
+					}
+			System.out.println(a);
+		}
 	}
-
-	public static boolean a(int b, int c) {
-		
-		
-	}
-	public static void a(int b, int c) {
-		
-		
-	}
-	public static void a(String[] a) {
-		
-		
-	}
-	public static int a(String[] a) {
-		
-		
-	}
-
-
-
-
-
 }

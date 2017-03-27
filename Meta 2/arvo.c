@@ -21,6 +21,19 @@ no create(type_node type, char* value, char* stype){
 
 }
 
+int verifica(no no, int sons){
+	int aux=sons;
+	while(aux!=0){
+		if(strcmp(no->bro->stype, "If")==0){
+			return 0;
+		}
+		else{
+			no->bro = no->bro->bro;
+		}
+	}
+	return 1;
+}
+
 void give_type(no novo, char* type){
 	no aux = novo->bro;
 	while(aux!=NULL){
@@ -72,6 +85,18 @@ int cntsons(no root){
 	}
 	return cnt;
 }
+
+int cntbros(no root){
+	int cnt = 0;
+	no aux;
+	aux=root;
+	while(aux!=NULL){
+		aux=aux->bro;
+		cnt++;
+	}
+	return cnt;
+}
+
 
 
 //no getbro(no a, int prof);
