@@ -89,7 +89,7 @@ MethodBody2: %empty 										{$$=NULL;}
 		| Statement 	MethodBody2							{$$=$1; addbro($$,$2);}
 		;
 
-FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl"); aux = create(id_node,$2,"Id"); addnode($$, aux); 
+FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl"); addnode($$,$1);aux = create(id_node,$2,"Id"); addbro($$, aux); 
 																addbro(aux,$3);
 															}
 		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDcl");aux =create(fdec_node,"","StringArray"); addnode($$, aux);
