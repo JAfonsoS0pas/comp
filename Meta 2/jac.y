@@ -21,7 +21,7 @@ struct node* ynode;
 %token CLASS DO DOTLENGTH ELSE IF PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
 %token <string> STRLIT DECLIT REALLIT ID RESERVED BOOL INT DOUBLE BOOLLIT
 
-%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader MethodHeader3 MethodBody MethodBody2 FormalParams STRING FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr6 Expr7 VOID
+%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader MethodHeader3 MethodBody MethodBody2 FormalParams STRING FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr7 VOID
 
 %left COMMA
 %right ASSIGN
@@ -89,21 +89,21 @@ MethodBody2: %empty 										{$$=NULL;}
 		| Statement 	MethodBody2							{$$=$1; addbro($$,$2);}
 		;
 
-FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl"); 
+FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDecl"); 
 																addnode($$,$1); 
 																aux = create(id_node,$2,"Id"); 
 																addbro($1, aux); 
 																addbro($$,$3);
 															}
-		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDcl");aux =create(fdec_node,"","StringArray"); addnode($$, aux);
+		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDecl");aux =create(fdec_node,"","StringArray"); addnode($$, aux);
 																addbro(aux,create(id_node,$4,"Id"));
 															}
 		;
 FormalALt: %empty 											{$$=NULL;}
-	   	| COMMA Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl"); 
+	   	| COMMA Type ID FormalALt 							{$$=create(fdec_node,"","ParamDecl"); 
 	   															aux=create(id_node,$3,"Id");
 	   															addnode($$,$2); 
-	   															addbro($2,aux); addbro($2,$4);}
+	   															addbro($2,aux); addbro($$,$4);}
 		;
 
 VarDecl: Type ID VarDecl2 SEMI 								{$$=create(fdec_node,"", "VarDecl"); addnode($$,$1);addbro($1,create(id_node,$2,"Id")); 
@@ -133,7 +133,6 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 
 
 Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
-
 		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If"); addnode($$,$3); addbro($3,$5);}
 		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If"); addnode($$,$3);  addbro($3,$5); 
 																if((cntsons($7)>2)&&(cntsons($7)!=1)){
@@ -146,7 +145,6 @@ Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 																	}
 															}
 		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); addnode($$,$3); addbro($3,$5);}
-
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{$$=create(stat_node,"","DoWhile");addnode($$,$2); addbro($2,$5);}
 		| PRINT OCURV PrintAux CCURV SEMI  					{$$=create(stat_node,"","Print"); addnode($$,$3);}
 		| StatementAux SEMI 								{$$=$1;}
@@ -204,7 +202,8 @@ Expr: Expr1													{$$=$1;}
 		| PLUS Expr 										{$$=create(op_node,"","Plus");addnode($$,$2);}
 		| MINUS Expr 										{$$=create(op_node,"","Minus");addnode($$,$2);}
 		| NOT Expr 											{$$=create(op_node,"","Not");addnode($$,$2);}
-		| ID Expr6 											{$$=create(id_node,$1,"Id");addnode($$,$2);}
+		| ID 	 											{$$=create(id_node,$1,"Id");}
+		| ID DOTLENGTH										{$$=create(op_node,"","Length");addnode($$,create(id_node,$1,"Id"));}
 		| OCURV Expr CCURV 									{$$=$2;}
 		| OCURV error CCURV 								{$$=NULL;print_flag=1;}
 		| Expr7 											{$$=$1;}
@@ -213,10 +212,6 @@ Expr1: Assignment											{$$=$1;}
 		| MethodInvocation 									{$$=$1;}
 		| ParseArgs 										{$$=$1;}
 		;
-Expr6: %empty 												{$$=NULL;}
-		| DOTLENGTH 										{$$=create(op_node,"","Length");}
-		;
-
 Expr7: BOOLLIT 												{$$=create(ter_node,$1,"BoolLit");}
 		| DECLIT 											{$$=create(ter_node,$1,"DecLit");}
 		| REALLIT 											{$$=create(ter_node,$1,"RealLit");}

@@ -1,30 +1,34 @@
-class gcd {
-
-	public static boolean a,b;
-	public static int a(String[] b) {
-		
-		
+class gcd {   
+	public static boolean isCenas;
+	public static void main(String[] args) {   
+		return a=Exp; // Exp1
+		return a(Exprecursiva); //Exp1
+		return a(a(b(a=Exp)));
+		return Integer.parseInt(a[a(a(b(a=b)))]); //Exp1
+		return Exp && Exp;
+		return Exp || Exp;
+		return Exp == Exp;
+		return Exp >= Exp;
+		return Exp > Exp;
+		return Exp <= Exp;
+		return Exp < Exp;
+		return Exp != Exp;
+		return Exp + Exp;
+		return Exp - Exp;
+		return Exp * Exp;
+		return Exp / Exp;
+		return Exp % Exp;
+		return +Exp;
+		return -Exp;
+		return !Exp;
+		return a.length;
+		return (Exp);
+		return true;
+		return false;
+		return 1;
+		return 1.2;
 	}
+	public static int ficoFodido(int x, int y, boolean trueI,double ya){
 
-	public static boolean a(int b, int c) {
-		
-		
 	}
-	public static void a(int b, int c) {
-		
-		
-	}
-	public static void a(String[] a) {
-		
-		
-	}
-	public static int a(String[] a) {
-		
-		
-	}
-
-
-
-
-
 }

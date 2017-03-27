@@ -101,7 +101,7 @@ RESERVED 			"++"|"null"|"--"|"abstract"|"assert"|"break"|"byte"|"case"|"catch"|"
 %%
 
 {BOOL}				{print_text("BOOL"); COLUNA; if(flag==2) return BOOL;}	
-{BOOLLIT}			{print_with_content("BOOLLIT",yytext);COLUNA; if(flag==2) return BOOLLIT;}	
+{BOOLLIT}			{print_with_content("BOOLLIT",yytext);COLUNA; if(flag==2){yylval.string=(char*)strdup(yytext); return BOOLLIT;}}	
 {CLASS}				{print_text("CLASS"); COLUNA;if(flag==2) return CLASS;}
 {DO}				{print_text("DO"); COLUNA;if(flag==2) return DO;}
 {DOTLENGTH}			{print_text("DOTLENGTH");  COLUNA;if(flag==2) return DOTLENGTH;}
