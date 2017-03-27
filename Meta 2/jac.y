@@ -1,22 +1,15 @@
 %{
-    
-	#include "arvo.c"
+    #include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <stdarg.h>
+	#include "arvo.h"
 
 	int cnt;
 	no root;
 	no aux;
     int print_flag = 0,flag = 0;
     
-    int yylex(void);
-    void yyerror (const char *s);
-    no create(type_node type, char* value, char* stype);
-	void printftree(no n, int prof);
-	void addnode(no father, no new);  //criar no
-	void addbro(no a, no b); //criar irmao
-	int cntbro(no root);
-	void give_type(no novo, char* type);
-
-
 %}
 
  
@@ -70,7 +63,7 @@ FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{$$=create(var_node, "", "Fi
 																	free(aux);
 																}
 															}
-		| error SEMI 										{$$=NULL;}
+		| error SEMI 										{$$=NULL;print_flag=1;}
 		;
 FieldDecl2: %empty 											{$$=NULL;}
 		|  COMMA ID FieldDecl2								{$$=create(id_node,$2,"Id"); addbro($$,$3);}
@@ -137,21 +130,14 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 
 		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If"); addnode($$,$3); addbro($3,$5);}
-		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If"); addnode($$,$3); addbro($3,$5); 
-																printf("SONS %d -> %s\n",cntsons($7),$3->stype);
-																if(cntsons($7)>1){
-																	aux = create(stat_node,"","Block"); 
-																	addbro($5,aux);
-																	addnode(aux, $7);
-																}
-															}
+		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If"); addnode($$,$3);  addbro($3,$5); if((cntsons($7)>2)&&(cntsons($7)!=1)){aux = create(stat_node,"","Block"); addbro($5,aux); addnode(aux, $7);} else{addbro($5,$7);}}
 		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); addnode($$,$3); addbro($3,$5);}
 
-		| DO Statement WHILE OCURV Expr CCURV SEMI 			{;}
+		| DO Statement WHILE OCURV Expr CCURV SEMI 			{$$=create(stat_node,"","DoWhile");addnode($$,$2); addbro($2,$5);}
 		| PRINT OCURV PrintAux CCURV SEMI  					{$$=create(stat_node,"","Print"); addnode($$,$3);}
 		| StatementAux SEMI 								{$$=$1;}
 		| RETURN ExprAux SEMI 								{$$=create(stat_node,"","Return");addnode($$,$2);}
-		| error SEMI 										{$$=NULL;}
+		| error SEMI 										{$$=NULL;print_flag=1;}
 		;
 StatementZeroMais: %empty									{$$=NULL;}
 		| Statement StatementZeroMais						{$$=$1;addbro($$,$2); }
@@ -172,7 +158,7 @@ ExprAux: %empty 											{$$=NULL;}
 Assignment: ID ASSIGN Expr 									{$$=create(op_node,"","Assign"); aux = create(id_node,$1,"Id");addnode($$,aux); addbro(aux,$3);}
 		;
 MethodInvocation: ID OCURV MethodInvocation2 CCURV 			{$$=create(op_node,"","Call");aux= create(id_node,$1,"Id"); addnode($$,aux); addbro(aux,$3);}
-		| ID OCURV error CCURV 								{$$=NULL;}
+		| ID OCURV error CCURV 								{$$=NULL;print_flag=1;}
 		;
 MethodInvocation2: %empty 									{$$=NULL;}
 		| Expr ExprAux2 									{$$=$1; addbro($$,$2);}
@@ -185,7 +171,7 @@ ExprAux2: %empty 											{$$=NULL;}
 
 ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{$$=create(op_node,"","ParseArgs"); aux=create(id_node,$3,"Id"); addnode($$,aux); addbro(aux,$5);}
 
-		| PARSEINT OCURV error CCURV						{$$=NULL;}
+		| PARSEINT OCURV error CCURV						{$$=NULL;print_flag=1;}
 		;
 Expr: Expr1													{$$=$1;}
 		| Expr AND Expr 									{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
@@ -206,7 +192,7 @@ Expr: Expr1													{$$=$1;}
 		| NOT Expr 											{$$=create(op_node,"","Not");addnode($$,$2);}
 		| ID Expr6 											{$$=create(id_node,$1,"Id");addnode($$,$2);}
 		| OCURV Expr CCURV 									{$$=$2;}
-		| OCURV error CCURV 								{$$=NULL;}
+		| OCURV error CCURV 								{$$=NULL;print_flag=1;}
 		| Expr7 											{$$=$1;}
 		;
 Expr1: Assignment											{$$=$1;}
@@ -235,7 +221,8 @@ int main(int argc, char *argv[]){
 		if(strcmp(argv[1],"-t")==0){
 			flag=2;
 			yyparse();
-    		printftree(root,0);
+			if(!print_flag)
+    			printftree(root,0);
     	}
 	}
 	else{

@@ -1,18 +1,4 @@
 class gcd {
-	public static void main(String[] args) {
-		if (a == 0){
-			System.out.println(1);
-		}
-		else{
-			while (b > 0){
-				if (a > b)
-					a = a -b;
-				else{
-					b = b-a;
-				}
-			}
-			System.out.println(a);		
-		}
-	}
+	public static int x;
+	dude;
 }
-
