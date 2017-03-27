@@ -89,15 +89,21 @@ MethodBody2: %empty 										{$$=NULL;}
 		| Statement 	MethodBody2							{$$=$1; addbro($$,$2);}
 		;
 
-FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl"); aux = create(id_node,$2,"Id"); addnode($$, aux); 
-																addbro(aux,$3);
+FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl"); 
+																addnode($$,$1); 
+																aux = create(id_node,$2,"Id"); 
+																addbro($1, aux); 
+																addbro($$,$3);
 															}
 		| STRING OSQUARE CSQUARE ID 						{$$=create(fdec_node,"","ParamDcl");aux =create(fdec_node,"","StringArray"); addnode($$, aux);
 																addbro(aux,create(id_node,$4,"Id"));
 															}
 		;
 FormalALt: %empty 											{$$=NULL;}
-	   	| COMMA Type ID FormalALt 							{$$=create(id_node,$3,"Id");addnode($$,$4);}
+	   	| COMMA Type ID FormalALt 							{$$=create(fdec_node,"","ParamDcl"); 
+	   															aux=create(id_node,$3,"Id");
+	   															addnode($$,$2); 
+	   															addbro($2,aux); addbro($2,$4);}
 		;
 
 VarDecl: Type ID VarDecl2 SEMI 								{$$=create(fdec_node,"", "VarDecl"); addnode($$,$1);addbro($1,create(id_node,$2,"Id")); 

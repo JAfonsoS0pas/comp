@@ -1,10 +1,30 @@
-class gcd {   
-	public static void main(String[] args) {   
-		call(1,"a");
-		if "asdasds\a"
-		b = "asdas\das ;
-		b;
-		;;;;;;;;;;;;;;;;
-		;;;;;;;;;;;;;;;;
-		}
+class gcd {
+
+	public static boolean a,b;
+	public static int a(String[] b) {
+		
+		
+	}
+
+	public static boolean a(int b, int c) {
+		
+		
+	}
+	public static void a(int b, int c) {
+		
+		
+	}
+	public static void a(String[] a) {
+		
+		
+	}
+	public static int a(String[] a) {
+		
+		
+	}
+
+
+
+
+
 }
