@@ -137,7 +137,14 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 
 		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If"); addnode($$,$3); addbro($3,$5);}
-		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If"); addnode($$,$3);  addbro($3,$5); if(cntsons($7)>1){aux = create(stat_node,"","Block"); addbro($5,aux); addnode(aux, $7);};}
+		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If"); addnode($$,$3); addbro($3,$5); 
+																printf("SONS %d -> %s\n",cntsons($7),$3->stype);
+																if(cntsons($7)>1){
+																	aux = create(stat_node,"","Block"); 
+																	addbro($5,aux);
+																	addnode(aux, $7);
+																}
+															}
 		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); addnode($$,$3); addbro($3,$5);}
 
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{;}
@@ -189,9 +196,9 @@ Expr: Expr1													{$$=$1;}
 		| Expr LEQ Expr 									{$$=create(op_node,"","Leq");addnode($$,$1);addbro($1,$3);}
 		| Expr LT Expr 										{$$=create(op_node,"","Lt");addnode($$,$1);addbro($1,$3);}
 		| Expr NEQ Expr 									{$$=create(op_node,"","Neq");addnode($$,$1);addbro($1,$3);}
-		| Expr PLUS Expr 									{$$=create(op_node,"","Plus");addnode($$,$1);addbro($1,$3);}
-		| Expr MINUS Expr 									{$$=create(op_node,"","Minus");addnode($$,$1);addbro($1,$3);}
-		| Expr STAR Expr 									{$$=create(op_node,"","Star");addnode($$,$1);addbro($1,$3);}
+		| Expr PLUS Expr 									{$$=create(op_node,"","Add");addnode($$,$1);addbro($1,$3);}
+		| Expr MINUS Expr 									{$$=create(op_node,"","Sub");addnode($$,$1);addbro($1,$3);}
+		| Expr STAR Expr 									{$$=create(op_node,"","Mul");addnode($$,$1);addbro($1,$3);}
 		| Expr DIV Expr 									{$$=create(op_node,"","Div");addnode($$,$1);addbro($1,$3);}
 		| Expr MOD Expr 									{$$=create(op_node,"","Mod");addnode($$,$1);addbro($1,$3);}
 		| PLUS Expr 										{$$=create(op_node,"","Plus");addnode($$,$2);}
