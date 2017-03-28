@@ -8,6 +8,7 @@
 	int cnt;
 	no root;
 	no aux;
+	no aux2;
     int print_flag = 0,flag = 0;
 %}
 
@@ -135,10 +136,22 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 
 
 Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
-		| IF OCURV Expr CCURV Statement 					{aux=create(stat_node,"","If"); addnode(aux,$3); addbro($3,$5);$$=aux;
-																}
-		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If"); addnode($$,$3); addbro($3,$5);
-																if((cntsons($7)>2)/*&&((verifica($5,cntbros($5)))==0)*/){
+		| IF OCURV Expr CCURV Statement 					{
+															aux=create(stat_node,"","If"); 
+															if((cntsons(aux)>2)||(aux==NULL)){
+																aux2 = create(stat_node,"","Block"); 
+																addnode(aux,aux2); 
+																addbro(aux2,$3); 
+																addbro($3,$5);
+															}
+															else{
+																addnode(aux,$3); 
+																addbro($3,$5);
+															}
+															$$=aux;}
+														
+		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If");if((cntsons($7)>2)||(cntsons($7)==0)){ aux = create(stat_node,"","Block"); }/*if(cntsons(aux)>=3){*/addnode($$,$3); addbro($3,$5);
+																if((cntsons($7)>2)||($7==NULL))/*&&((verifica($5,cntbros($5)))==0)*/{
 
 																	aux = create(stat_node,"","Block"); 
 
@@ -148,10 +161,19 @@ Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 																else{
 																	
 																	addbro($5,$7);
-																	}
+																	/*}*/}
 															}
-		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); addnode($$,$3); addbro($3,$5);}
-		| DO Statement WHILE OCURV Expr CCURV SEMI 			{$$=create(stat_node,"","DoWhile");addnode($$,$2); addbro($2,$5);}
+		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); 
+															if((cntsons($$)>2)){
+																aux = create(stat_node,"","Block");
+																addnode($$,aux);
+																addbro(aux,$3);
+																addbro($3,$5);
+															}
+															else{
+																addnode($$,$3); addbro($3,$5);
+															}}
+		| DO Statement WHILE OCURV Expr CCURV SEMI 			{$$=create(stat_node,"","DoWhile");if((cntsons($$)>2)||(cntsons($$)==0)){aux = create(stat_node,"","Block");}addnode($$,$2); addbro($2,$5);}
 		| PRINT OCURV PrintAux CCURV SEMI  					{$$=create(stat_node,"","Print"); addnode($$,$3);}
 		| StatementAux SEMI 								{$$=$1;}
 		| RETURN ExprAux SEMI 								{$$=create(stat_node,"","Return");addnode($$,$2);}
@@ -195,23 +217,23 @@ Expr: Assignment													{$$=$1;}
 		| Expr2                                                    {$$=$1;}
 		;
 
-Expr2: Expr1													{$$=$1;}
+Expr2: Expr1												{$$=$1;}
 		| Expr2 AND Expr2 									{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
-		| Expr2 OR Expr2 										{$$=create(op_node,"","Or");addnode($$,$1);addbro($1,$3);}
-		| Expr2 EQ Expr2 										{$$=create(op_node,"","Eq");addnode($$,$1);addbro($1,$3);}
+		| Expr2 OR Expr2 									{$$=create(op_node,"","Or");addnode($$,$1);addbro($1,$3);}
+		| Expr2 EQ Expr2 									{$$=create(op_node,"","Eq");addnode($$,$1);addbro($1,$3);}
 		| Expr2 GEQ Expr2 									{$$=create(op_node,"","Geq");addnode($$,$1);addbro($1,$3);}
-		| Expr2 GT Expr2 										{$$=create(op_node,"","Gt");addnode($$,$1);addbro($1,$3);}
+		| Expr2 GT Expr2 									{$$=create(op_node,"","Gt");addnode($$,$1);addbro($1,$3);}
 		| Expr2 LEQ Expr2 									{$$=create(op_node,"","Leq");addnode($$,$1);addbro($1,$3);}
-		| Expr2 LT Expr2 										{$$=create(op_node,"","Lt");addnode($$,$1);addbro($1,$3);}
+		| Expr2 LT Expr2 									{$$=create(op_node,"","Lt");addnode($$,$1);addbro($1,$3);}
 		| Expr2 NEQ Expr2 									{$$=create(op_node,"","Neq");addnode($$,$1);addbro($1,$3);}
 		| Expr2 PLUS Expr2 									{$$=create(op_node,"","Add");addnode($$,$1);addbro($1,$3);}
-		| Expr2 MINUS Expr2 									{$$=create(op_node,"","Sub");addnode($$,$1);addbro($1,$3);}
+		| Expr2 MINUS Expr2 								{$$=create(op_node,"","Sub");addnode($$,$1);addbro($1,$3);}
 		| Expr2 STAR Expr2 									{$$=create(op_node,"","Mul");addnode($$,$1);addbro($1,$3);}
 		| Expr2 DIV Expr2 									{$$=create(op_node,"","Div");addnode($$,$1);addbro($1,$3);}
 		| Expr2 MOD Expr2 									{$$=create(op_node,"","Mod");addnode($$,$1);addbro($1,$3);}
 		| PLUS Expr2 										{$$=create(op_node,"","Plus");addnode($$,$2);}
-		| MINUS Expr2 %prec NOT							{$$=create(op_node,"","Minus");addnode($$,$2);}
-		| NOT Expr2 											{$$=create(op_node,"","Not");addnode($$,$2);}
+		| MINUS Expr2 %prec NOT								{$$=create(op_node,"","Minus");addnode($$,$2);}
+		| NOT Expr2 										{$$=create(op_node,"","Not");addnode($$,$2);}
 		| ID 	 											{$$=create(id_node,$1,"Id");}
 		| ID DOTLENGTH										{$$=create(op_node,"","Length");addnode($$,create(id_node,$1,"Id"));}
 		| OCURV Expr CCURV 									{$$=$2;}
