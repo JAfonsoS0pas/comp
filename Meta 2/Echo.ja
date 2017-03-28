@@ -8,13 +8,8 @@ if (a == 0){
 	a= c;
 	c=b;
 }
-else {
-while (b > 0)
-if (a > b)
-a = a-b;
-else
-b = b-a;
-System.out.println(a);
+while(x=9){
+	System.out.println(x);
 }
 }
 }
