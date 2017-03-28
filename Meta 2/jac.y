@@ -22,7 +22,7 @@ struct node* ynode;
 %token CLASS DO DOTLENGTH ELSE IF PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
 %token <string> STRLIT DECLIT REALLIT ID RESERVED BOOL INT DOUBLE BOOLLIT
 
-%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader Expr2 MethodHeader3 MethodBody MethodBody2 FormalParams STRING FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr7 VOID
+%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader Expr2 Expr1 MethodHeader3 MethodBody MethodBody2 FormalParams STRING FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr7 VOID
 
 %right ASSIGN
 %left OR
@@ -241,11 +241,11 @@ ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{$$=create(op_node,"","
 		| PARSEINT OCURV error CCURV						{$$=NULL;print_flag=1;}
 		;
 Expr: Assignment											{$$=$1;}
-		| MethodInvocation 									{$$=$1;}
-		| ParseArgs 										{$$=$1;}
+		
 		| Expr2                                             {$$=$1;}
 		;
-Expr2: Expr2 AND Expr2 										{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
+Expr2: Expr1												{$$=$1;}
+		|Expr2 AND Expr2 										{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
 		| Expr2 OR Expr2 									{$$=create(op_node,"","Or");addnode($$,$1);addbro($1,$3);}
 		| Expr2 EQ Expr2 									{$$=create(op_node,"","Eq");addnode($$,$1);addbro($1,$3);}
 		| Expr2 GEQ Expr2 									{$$=create(op_node,"","Geq");addnode($$,$1);addbro($1,$3);}
@@ -270,6 +270,10 @@ Expr2: Expr2 AND Expr2 										{$$=create(op_node,"","And");addnode($$,$1);add
 Expr7: BOOLLIT 												{$$=create(ter_node,$1,"BoolLit");}
 		| DECLIT 											{$$=create(ter_node,$1,"DecLit");}
 		| REALLIT 											{$$=create(ter_node,$1,"RealLit");}
+		;
+
+Expr1:  MethodInvocation 									{$$=$1;}
+		| ParseArgs 										{$$=$1;}
 		;
 %%
 
