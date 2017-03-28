@@ -137,20 +137,30 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 
 Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 		| IF OCURV Expr CCURV Statement 					{
-															aux=create(stat_node,"","If"); 
+															aux=create(stat_node,"","If");
+															addnode(aux,$3); 
 															if((cntsons(aux)>2)||(aux==NULL)){
 																aux2 = create(stat_node,"","Block"); 
-																addnode(aux,aux2); 
-																addbro(aux2,$3); 
+																addnode($3,aux2); 
 																addbro($3,$5);
 															}
 															else{
-																addnode(aux,$3); 
+																
 																addbro($3,$5);
 															}
 															$$=aux;}
 														
-		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If");if((cntsons($7)>2)||(cntsons($7)==0)){ aux = create(stat_node,"","Block"); }/*if(cntsons(aux)>=3){*/addnode($$,$3); addbro($3,$5);
+		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If");
+																addnode($$,$3); 
+																if((cntsons($$)>2)||($$==NULL)){
+																	aux2 = create(stat_node,"","Block"); 
+																	addbro($3,aux2); 
+																	addnode(aux2,$5);
+																}
+																else{
+																	addbro($3,$5);
+																}
+
 																if((cntsons($7)>2)||($7==NULL))/*&&((verifica($5,cntbros($5)))==0)*/{
 
 																	aux = create(stat_node,"","Block"); 
