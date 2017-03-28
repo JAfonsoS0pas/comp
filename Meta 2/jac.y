@@ -45,7 +45,7 @@ Program: CLASS ID OBRACE ProgramL CBRACE		 			{root=create(root_node, "","Progra
 ProgramL: %empty											{$$=NULL;}
 		| FieldDecl 	ProgramL							{$$=$1;addbro($$,$2);}
 		| MethodDecl 	ProgramL							{$$=$1;addbro($$,$2);}
-		| SEMI			ProgramL							{$$=NULL;}
+		| SEMI			ProgramL							{$$=$2;}
 		;	
 
 FieldDecl: PUBLIC STATIC Type ID FieldDecl2 SEMI 			{$$=create(var_node, "", "FieldDecl"); addnode($$,$3); addbro($3, create(id_node,$4,"Id")); 
