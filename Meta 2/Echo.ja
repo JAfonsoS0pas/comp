@@ -1,14 +1,43 @@
 class gcd {   
-	public static boolean isCenas,segundoCenas;
-	public static int x;
-	public static boolean y,a,b,c,d,effffffff;;;;;;
+	public static boolean isCenas;
 	public static void main(String[] args) {   
+		return a(Exprecursiva); //Exp1
+		return a(a(b(a=Exp)));
+		return Integer.parseInt(a[a(a(b(a=b)))]); //Exp1
+		return Exp && Exp;
+		return Exp || Exp;
+		return Exp == Exp;
+		return Exp >= Exp;
+		return Exp > Exp;
+		return Exp <= Exp;
+		return Exp < Exp;
+		return Exp != Exp;
+		return Exp + Exp;
+		return Exp - Exp;
+		return Exp * Exp;
+		return Exp / Exp;
+		return Exp % Exp;
+		return +Exp;
+		return -Exp;
+		return !Exp;
+		return a.length;
+		return (Exp);
+		return true;
+		return false;
+		return 1;
+		return 1.2;
 		
+		a = a + b;
+	    b = 1 + 3;
+	    c = a + b + c + d;
+	    d = 1 + a + c;
+	    e = a * 2;
+	    f = a * b *c;
+	    g = a * b / 2;
+	    h = a - a - b * c;
+	    i = p % 20 + c % 30;
+	    m = (a + b) + (z - p);
+	    p = bla(b, c, z);
+	    q = b < c % 20 * c - a + q - aass(b == c + p);
 	}
-	public static int ficoFodido(int x, int y, boolean trueI,double ya){
-
-	}
-	public static double duuuuuuuuuuude(){}
-	public static boolean fds(){}
-
 }

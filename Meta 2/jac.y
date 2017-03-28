@@ -133,8 +133,9 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 
 
 Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
-		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If"); addnode($$,$3); addbro($3,$5);}
-		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If"); addnode($$,$3);  addbro($3,$5); 
+		| IF OCURV Expr CCURV Statement 					{aux=create(stat_node,"","If"); addnode(aux,$3); addbro($3,$5);$$=aux;
+																}
+		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If"); addnode($$,$3); addbro($3,$5); 
 																if((cntsons($7)>2)&&(cntsons($7)!=1)){
 																	aux = create(stat_node,"","Block"); 
 																	addbro($5,aux); 
