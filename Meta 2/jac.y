@@ -21,7 +21,7 @@ struct node* ynode;
 %token CLASS DO DOTLENGTH ELSE IF PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
 %token <string> STRLIT DECLIT REALLIT ID RESERVED BOOL INT DOUBLE BOOLLIT
 
-%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader MethodHeader3 MethodBody MethodBody2 FormalParams STRING FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr7 VOID
+%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader Expr2 MethodHeader3 MethodBody MethodBody2 FormalParams STRING FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr7 VOID
 
 %left COMMA
 %right ASSIGN
@@ -146,15 +146,8 @@ Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 																	addnode(aux, $7);
 																} 
 																else{
-																	if(strcmp($7->stype,"If")==0){
-																		aux = create(stat_node,"","Block"); 
-
-																		addbro($5,aux); 
-																		addnode(aux, $7);
-																	}
-																	else{
-																		addbro($5,$7);
-																	}
+																	
+																	addbro($5,$7);
 																	}
 															}
 		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); addnode($$,$3); addbro($3,$5);}
@@ -198,31 +191,35 @@ ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{$$=create(op_node,"","
 
 		| PARSEINT OCURV error CCURV						{$$=NULL;print_flag=1;}
 		;
-Expr: Expr1													{$$=$1;}
-		| Expr AND Expr 									{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
-		| Expr OR Expr 										{$$=create(op_node,"","Or");addnode($$,$1);addbro($1,$3);}
-		| Expr EQ Expr 										{$$=create(op_node,"","Eq");addnode($$,$1);addbro($1,$3);}
-		| Expr GEQ Expr 									{$$=create(op_node,"","Geq");addnode($$,$1);addbro($1,$3);}
-		| Expr GT Expr 										{$$=create(op_node,"","Gt");addnode($$,$1);addbro($1,$3);}
-		| Expr LEQ Expr 									{$$=create(op_node,"","Leq");addnode($$,$1);addbro($1,$3);}
-		| Expr LT Expr 										{$$=create(op_node,"","Lt");addnode($$,$1);addbro($1,$3);}
-		| Expr NEQ Expr 									{$$=create(op_node,"","Neq");addnode($$,$1);addbro($1,$3);}
-		| Expr PLUS Expr 									{$$=create(op_node,"","Add");addnode($$,$1);addbro($1,$3);}
-		| Expr MINUS Expr 									{$$=create(op_node,"","Sub");addnode($$,$1);addbro($1,$3);}
-		| Expr STAR Expr 									{$$=create(op_node,"","Mul");addnode($$,$1);addbro($1,$3);}
-		| Expr DIV Expr 									{$$=create(op_node,"","Div");addnode($$,$1);addbro($1,$3);}
-		| Expr MOD Expr 									{$$=create(op_node,"","Mod");addnode($$,$1);addbro($1,$3);}
-		| PLUS Expr 										{$$=create(op_node,"","Plus");addnode($$,$2);}
-		| MINUS Expr 										{$$=create(op_node,"","Minus");addnode($$,$2);}
-		| NOT Expr 											{$$=create(op_node,"","Not");addnode($$,$2);}
+Expr: Assignment													{$$=$1;}
+		| Expr2                                                    {$$=$1;}
+		;
+
+Expr2: Expr1													{$$=$1;}
+		| Expr2 AND Expr2 									{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
+		| Expr2 OR Expr2 										{$$=create(op_node,"","Or");addnode($$,$1);addbro($1,$3);}
+		| Expr2 EQ Expr2 										{$$=create(op_node,"","Eq");addnode($$,$1);addbro($1,$3);}
+		| Expr2 GEQ Expr2 									{$$=create(op_node,"","Geq");addnode($$,$1);addbro($1,$3);}
+		| Expr2 GT Expr2 										{$$=create(op_node,"","Gt");addnode($$,$1);addbro($1,$3);}
+		| Expr2 LEQ Expr2 									{$$=create(op_node,"","Leq");addnode($$,$1);addbro($1,$3);}
+		| Expr2 LT Expr2 										{$$=create(op_node,"","Lt");addnode($$,$1);addbro($1,$3);}
+		| Expr2 NEQ Expr2 									{$$=create(op_node,"","Neq");addnode($$,$1);addbro($1,$3);}
+		| Expr2 PLUS Expr2 									{$$=create(op_node,"","Add");addnode($$,$1);addbro($1,$3);}
+		| Expr2 MINUS Expr2 									{$$=create(op_node,"","Sub");addnode($$,$1);addbro($1,$3);}
+		| Expr2 STAR Expr2 									{$$=create(op_node,"","Mul");addnode($$,$1);addbro($1,$3);}
+		| Expr2 DIV Expr2 									{$$=create(op_node,"","Div");addnode($$,$1);addbro($1,$3);}
+		| Expr2 MOD Expr2 									{$$=create(op_node,"","Mod");addnode($$,$1);addbro($1,$3);}
+		| PLUS Expr2 										{$$=create(op_node,"","Plus");addnode($$,$2);}
+		| MINUS Expr2 %prec NOT							{$$=create(op_node,"","Minus");addnode($$,$2);}
+		| NOT Expr2 											{$$=create(op_node,"","Not");addnode($$,$2);}
 		| ID 	 											{$$=create(id_node,$1,"Id");}
 		| ID DOTLENGTH										{$$=create(op_node,"","Length");addnode($$,create(id_node,$1,"Id"));}
 		| OCURV Expr CCURV 									{$$=$2;}
 		| OCURV error CCURV 								{$$=NULL;print_flag=1;}
 		| Expr7 											{$$=$1;}
 		;
-Expr1: Assignment											{$$=$1;}
-		| MethodInvocation 									{$$=$1;}
+Expr1:
+		 MethodInvocation 									{$$=$1;}
 		| ParseArgs 										{$$=$1;}
 		;
 Expr7: BOOLLIT 												{$$=create(ter_node,$1,"BoolLit");}
