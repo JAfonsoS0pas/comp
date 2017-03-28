@@ -135,7 +135,15 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 		;
 
 
-Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
+Statement: OBRACE StatementZeroMais CBRACE					{aux = create(stat_node,"","Block");
+																if(cntbros($2)==1 && $2!=NULL){ // caso seja so 1 statement
+																	$$=$2;
+																}
+																else{
+																	$$=aux;
+																	addnode(aux,$2);
+																}																	
+															}
 		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If");
 																addnode($$,$3); 
 																aux = create(stat_node,"","Block");
@@ -187,7 +195,7 @@ Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 															}
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{$$=create(stat_node,"","DoWhile");
 																aux = create(stat_node,"","Block");
-																if(cntbros($2)==1 && $5!=NULL){ // caso seja so 1 statement
+																if(cntbros($2)==1 && $2!=NULL){ // caso seja so 1 statement
 																	addnode($$,$2);
 																	addbro($2,$5);
 																}

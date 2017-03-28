@@ -1,7 +1,11 @@
 class gcd {
 	public static void main(String[] args) {
-		do{
+		{
 			a=b;
-		}while(a>b);
+		}
+		{
+			a=b;
+			a=b;
+		}
 	}
 }
