@@ -174,7 +174,7 @@ Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 															}
 		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); 
 															addnode($$,$3);
-															if((cntsons($$)>2)){
+															if((cntsons($$)>2)||($$==NULL)){
 																aux = create(stat_node,"","Block");
 																addbro($3,aux);
 																addnode(aux,$5);
@@ -182,7 +182,17 @@ Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 															else{
 																 addbro($3,$5);
 															}}
-		| DO Statement WHILE OCURV Expr CCURV SEMI 			{$$=create(stat_node,"","DoWhile");if((cntsons($$)>2)||(cntsons($$)==0)){aux = create(stat_node,"","Block");}addnode($$,$2); addbro($2,$5);}
+		| DO Statement WHILE OCURV Expr CCURV SEMI 			{$$=create(stat_node,"","DoWhile");
+															addnode($$,$2); 
+															if((cntsons($$)>2)||NULL){
+																aux = create(stat_node,"","Block");
+																addbro($2,aux);
+																addnode(aux,$5);
+															}
+															else{
+																addbro($2,$5);
+															}
+															}
 		| PRINT OCURV PrintAux CCURV SEMI  					{$$=create(stat_node,"","Print"); addnode($$,$3);}
 		| StatementAux SEMI 								{$$=$1;}
 		| RETURN ExprAux SEMI 								{$$=create(stat_node,"","Return");addnode($$,$2);}
