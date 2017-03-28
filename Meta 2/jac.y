@@ -22,7 +22,7 @@ struct node* ynode;
 %token CLASS DO DOTLENGTH ELSE IF PARSEINT PRINT PUBLIC RETURN STATIC STRING VOID WHILE OCURV CCURV OBRACE CBRACE OSQUARE CSQUARE AND OR LT GT EQ NEQ LEQ GEQ PLUS MINUS STAR DIV MOD NOT ASSIGN SEMI COMMA
 %token <string> STRLIT DECLIT REALLIT ID RESERVED BOOL INT DOUBLE BOOLLIT
 
-%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader Expr2 MethodHeader3 MethodBody MethodBody2 FormalParams STRING FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr1 Expr7 VOID
+%type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader Expr2 MethodHeader3 MethodBody MethodBody2 FormalParams STRING FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr7 VOID
 
 %left COMMA
 %right ASSIGN
@@ -137,16 +137,28 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 
 Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 		| IF OCURV Expr CCURV Statement 					{
-															$$=create(stat_node,"","If");
-																addnode($$,$3); 
-																if((cntsons($$)>2)||($$==NULL)){
+															aux=create(stat_node,"","If");
+
+																addnode(aux,$3); 
+																if((cntsons(aux)>2)||(aux==NULL)){
 																	aux2 = create(stat_node,"","Block"); 
 																	addbro($3,aux2); 
 																	addnode(aux2,$5);
 																}
 																else{
+
 																	addbro($3,$5);
 																}
+
+																if(cntsons(aux)>=3){
+																	$$=aux;
+																}else{
+																	int a = 3 - cntsons(aux);
+																	while(a!=0){
+																		addnode($$,create(stat_node,"","Block"));
+																	}
+																}
+
 															}
 														
 		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If");
@@ -170,7 +182,7 @@ Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
 																else{
 																	
 																	addbro($5,$7);
-																	/*}*/}
+																}
 															}
 		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); 
 															addnode($$,$3);
@@ -232,12 +244,13 @@ ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{$$=create(op_node,"","
 
 		| PARSEINT OCURV error CCURV						{$$=NULL;print_flag=1;}
 		;
-Expr: Assignment													{$$=$1;}
-		| Expr2                                                    {$$=$1;}
+Expr: Assignment											{$$=$1;}
+		| MethodInvocation 									{$$=$1;}
+		| ParseArgs 										{$$=$1;}
+		| Expr2                                             {$$=$1;}
 		;
 
-Expr2: Expr1												{$$=$1;}
-		| Expr2 AND Expr2 									{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
+Expr2: Expr2 AND Expr2 										{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
 		| Expr2 OR Expr2 									{$$=create(op_node,"","Or");addnode($$,$1);addbro($1,$3);}
 		| Expr2 EQ Expr2 									{$$=create(op_node,"","Eq");addnode($$,$1);addbro($1,$3);}
 		| Expr2 GEQ Expr2 									{$$=create(op_node,"","Geq");addnode($$,$1);addbro($1,$3);}
@@ -258,10 +271,6 @@ Expr2: Expr1												{$$=$1;}
 		| OCURV Expr CCURV 									{$$=$2;}
 		| OCURV error CCURV 								{$$=NULL;print_flag=1;}
 		| Expr7 											{$$=$1;}
-		;
-Expr1:
-		 MethodInvocation 									{$$=$1;}
-		| ParseArgs 										{$$=$1;}
 		;
 Expr7: BOOLLIT 												{$$=create(ter_node,$1,"BoolLit");}
 		| DECLIT 											{$$=create(ter_node,$1,"DecLit");}
