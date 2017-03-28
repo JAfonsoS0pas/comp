@@ -8,5 +8,15 @@ do {return a;}
 while(x=9);{
 	System.out.println(x);
 	}
+
+if(a=b){
+	c=x;
+	System.out.println(x);
+}else{
+	System.out.println(x);
+}
+while(x>b){
+	System.out.println(x);
+}
 }
 }
