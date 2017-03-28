@@ -136,74 +136,66 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 
 
 Statement: OBRACE StatementZeroMais CBRACE					{$$=$2;}
-		| IF OCURV Expr CCURV Statement 					{
-															aux=create(stat_node,"","If");
-
-																addnode(aux,$3); 
-																if((cntsons(aux)>2)||(aux==NULL)){
-																	aux2 = create(stat_node,"","Block"); 
-																	addbro($3,aux2); 
-																	addnode(aux2,$5);
+		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If");
+																addnode($$,$3); 
+																aux = create(stat_node,"","Block");
+																if(cntbros($5)==1 && $5!=NULL){ // caso seja so 1 statement
+																	addbro($3,$5);
+																	addbro($5,aux);
 																}
 																else{
-
-																	addbro($3,$5);
+																	addbro($3,aux);
+																	addnode(aux,$5);
+																	addbro(aux,create(stat_node,"","Block"));
 																}
-
-																if(cntsons(aux)>=3){
-																	$$=aux;
-																}else{
-																	int a = 3 - cntsons(aux);
-																	while(a!=0){
-																		addnode($$,create(stat_node,"","Block"));
-																	}
-																}
-
 															}
 														
 		| IF OCURV Expr CCURV Statement ELSE Statement		{$$=create(stat_node,"","If");
 																addnode($$,$3); 
-																if((cntsons($$)>2)||($$==NULL)){
-																	aux2 = create(stat_node,"","Block"); 
-																	addbro($3,aux2); 
-																	addnode(aux2,$5);
-																}
-																else{
+																aux = create(stat_node,"","Block");
+																if(cntbros($5)==1 && $5!=NULL){ // caso seja so 1 statement
 																	addbro($3,$5);
+																	if(cntbros($7)==1 && $7!=NULL){
+																		addbro($5,$7);
+																	}else{
+																		addbro($5,aux);
+																		addnode(aux,$7);
+																	}
 																}
-
-																if((cntsons($7)>2)||($7==NULL))/*&&((verifica($5,cntbros($5)))==0)*/{
-
-																	aux = create(stat_node,"","Block"); 
-
-																	addbro($5,aux); 
-																	addnode(aux, $7);
-																} 
 																else{
-																	
-																	addbro($5,$7);
+																	addbro($3,aux);
+																	addnode(aux,$5);
+																	if(cntbros($7)==1 && $7!=NULL){
+																		addbro(aux,$7);
+																	}else{
+																		aux2 = create(stat_node,"","Block");
+																		addbro(aux,aux2);
+																		addnode(aux2,$7);
+																	}
 																}
 															}
 		| WHILE OCURV Expr CCURV Statement 					{$$=create(stat_node,"","While"); 
-															addnode($$,$3);
-															if((cntsons($$)>2)||($$==NULL)){
-																aux = create(stat_node,"","Block");
-																addbro($3,aux);
-																addnode(aux,$5);
+																addnode($$,$3);
+																if(cntbros($5)==1 && $5!=NULL){ // caso seja so 1 statement
+																	addbro($3,$5);
+																}
+																else{
+																	aux = create(stat_node,"","Block");
+																	addbro($3,aux);
+																	addnode(aux,$5);
+																}
 															}
-															else{
-																 addbro($3,$5);
-															}}
 		| DO Statement WHILE OCURV Expr CCURV SEMI 			{$$=create(stat_node,"","DoWhile");
-															addnode($$,$2); 
-															if((cntsons($$)>2)||NULL){
 																aux = create(stat_node,"","Block");
-																addbro($2,aux);
-																addnode(aux,$5);
-															}
-															else{
-																addbro($2,$5);
-															}
+																if(cntbros($2)==1 && $5!=NULL){ // caso seja so 1 statement
+																	addnode($$,$2);
+																	addbro($2,$5);
+																}
+																else{
+																	addnode($$,aux);
+																	addnode(aux,$2);
+																	addbro(aux,$5);
+																}
 															}
 		| PRINT OCURV PrintAux CCURV SEMI  					{$$=create(stat_node,"","Print"); addnode($$,$3);}
 		| StatementAux SEMI 								{$$=$1;}
