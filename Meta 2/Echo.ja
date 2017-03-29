@@ -1,16 +1,9 @@
 class main{
-  public static boolean variavel(String[]as){
-      {{{{{{{{{{{{a=b;{a=b;
-      	a=c;}}}}}}}}}}}}}
-  }
-  public static void variavel(int a,boolean b,double c){
-      double a,b,c,d;
-      boolean a,b,c,d;
-      int a,b,c,d;
-      if (a==b){
-        while(a==b){
-          System.out.println("teste");
-        }
-      }
-  }
+  	public static boolean variavel(String[]as){
+ 		System.out.println("String das cenas ya");
+ 		a=b;
+ 		;;;;
+ 		a=b;
+ 		;	 
+  	}
 }

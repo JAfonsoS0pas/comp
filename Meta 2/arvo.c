@@ -94,7 +94,6 @@ void printftree(no root, int prof){
 	int i=0;
 	no aux;
 	if(root->type == root_node){
-		
 		printf("%s\n", root->stype);
 	}
 	else {
@@ -102,20 +101,19 @@ void printftree(no root, int prof){
 			printf("..");
 			i++;
 		}
-		if(strcmp(root->value,"")!=0)	
+		if(strcmp(root->value,"")!=0)
 			printf("%s(%s)\n", root->stype, root->value);
 		else
 			printf("%s\n", root->stype);
 	}
-
 	aux = root->son;
 	while(aux!=NULL){
 		printftree(aux, prof+1);
 		aux=aux->bro;
-		
 	}
-
-
+	free(root->stype);
+	free(root->value);
+	free(root);
 
 }
 

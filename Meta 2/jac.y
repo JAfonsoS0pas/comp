@@ -87,7 +87,7 @@ MethodBody: OBRACE MethodBody2 CBRACE 						{$$=create(fdec_node,"", "MethodBody
 		;
 MethodBody2: %empty 										{$$=NULL;}
 		| VarDecl 		MethodBody2 						{$$=$1; addbro($$,$2);}
-		| Statement 	MethodBody2							{$$=$1; addbro($$,$2);}
+		| Statement 	MethodBody2							{$$=$1; addbro($$,$2);printf("fds\n");}
 		;
 
 
@@ -214,13 +214,13 @@ StatementZeroMais: %empty									{$$=NULL;}
 		| Statement StatementZeroMais						{$$=$1;addbro($$,$2); }
 		;
 
-StatementAux: %empty										{$$=NULL;}
-		| Assignment 										{$$=$1;}
+StatementAux: %empty										{$$=NULL;printf("ya\n");}
+		| Assignment 										{$$=$1;printf("yo\n");}
 		| MethodInvocation 									{$$=$1;}
 		| ParseArgs 										{$$=$1;}
 		;
 PrintAux: Expr 												{$$=$1;}
-		| STRLIT 											{$$=create(ter_node,"","StrLit");}
+		| STRLIT 											{$$=create(ter_node,$1,"StrLit");}
 		;
 ExprAux: %empty 											{$$=NULL;}
 		| Expr 												{$$=$1;}
