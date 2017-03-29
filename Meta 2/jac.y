@@ -87,10 +87,8 @@ MethodBody: OBRACE MethodBody2 CBRACE 						{$$=create(fdec_node,"", "MethodBody
 		;
 MethodBody2: %empty 										{$$=NULL;}
 		| VarDecl 		MethodBody2 						{$$=$1; addbro($$,$2);}
-		| Statement 	MethodBody2							{$$=$1; addbro($$,$2);}
+		| Statement 	MethodBody2							{if($1!=NULL){$$=$1; addbro($$,$2);}else{$$=$2;}}
 		;
-
-
 FormalParams: Type ID FormalALt 							{$$=create(fdec_node,"","ParamDecl"); 
 																addnode($$,$1); 
 																aux = create(id_node,$2,"Id"); 
@@ -262,7 +260,7 @@ Expr2: Expr2 AND Expr2 										{$$=create(op_node,"","And");addnode($$,$1);add
 		| Expr2 STAR Expr2 									{$$=create(op_node,"","Mul");addnode($$,$1);addbro($1,$3);}
 		| Expr2 DIV Expr2 									{$$=create(op_node,"","Div");addnode($$,$1);addbro($1,$3);}
 		| Expr2 MOD Expr2 									{$$=create(op_node,"","Mod");addnode($$,$1);addbro($1,$3);}
-		| PLUS Expr2 										{$$=create(op_node,"","Plus");addnode($$,$2);}
+		| PLUS Expr2 %prec NOT								{$$=create(op_node,"","Plus");addnode($$,$2);}
 		| MINUS Expr2 %prec NOT								{$$=create(op_node,"","Minus");addnode($$,$2);}
 		| NOT Expr2 										{$$=create(op_node,"","Not");addnode($$,$2);}
 		| ID 	 											{$$=create(id_node,$1,"Id");}

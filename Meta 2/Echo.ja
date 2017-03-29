@@ -3,7 +3,9 @@ class main{
  		System.out.println("String das cenas ya");
  		a=b;
  		;;;;
- 		a=b;
- 		;	 
+ 		a=c;
+ 		;	
+ 		a=d;
+ 		{{{{{{a=e;a=f;}}}}}} 
   	}
 }
