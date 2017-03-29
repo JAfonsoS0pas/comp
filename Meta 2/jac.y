@@ -135,13 +135,13 @@ Type: 	BOOL 												{$$=create(ter_node,"","Bool");}
 		;
 
 
-Statement: OBRACE StatementZeroMais CBRACE					{aux = create(stat_node,"","Block");
-																if(cntbros($2)==1 && $2!=NULL){ // caso seja so 1 statement
-																	$$=$2;
-																}
-																else{
+Statement: OBRACE StatementZeroMais CBRACE					{if(cntbros($2)>1){ // caso seja so 1 statement
+																	aux = create(stat_node,"","Block");
 																	$$=aux;
 																	addnode(aux,$2);
+																}
+																else{
+																	$$=$2;
 																}																	
 															}
 		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If");
