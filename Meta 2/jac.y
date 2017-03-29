@@ -87,7 +87,7 @@ MethodBody: OBRACE MethodBody2 CBRACE 						{$$=create(fdec_node,"", "MethodBody
 		;
 MethodBody2: %empty 										{$$=NULL;}
 		| VarDecl 		MethodBody2 						{$$=$1; addbro($$,$2);}
-		| Statement 	MethodBody2							{$$=$1; addbro($$,$2);printf("fds\n");}
+		| Statement 	MethodBody2							{$$=$1; addbro($$,$2);}
 		;
 
 
@@ -214,8 +214,8 @@ StatementZeroMais: %empty									{$$=NULL;}
 		| Statement StatementZeroMais						{$$=$1;addbro($$,$2); }
 		;
 
-StatementAux: %empty										{$$=NULL;printf("ya\n");}
-		| Assignment 										{$$=$1;printf("yo\n");}
+StatementAux: %empty										{$$=NULL;}
+		| Assignment 										{$$=$1;}
 		| MethodInvocation 									{$$=$1;}
 		| ParseArgs 										{$$=$1;}
 		;
@@ -249,7 +249,6 @@ Expr: Assignment											{$$=$1;}
 		| ParseArgs 										{$$=$1;}
 		| Expr2                                             {$$=$1;}
 		;
-
 Expr2: Expr2 AND Expr2 										{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
 		| Expr2 OR Expr2 									{$$=create(op_node,"","Or");addnode($$,$1);addbro($1,$3);}
 		| Expr2 EQ Expr2 									{$$=create(op_node,"","Eq");addnode($$,$1);addbro($1,$3);}
