@@ -39,7 +39,9 @@ struct node* ynode;
 
 
 %%
-Program: CLASS ID OBRACE ProgramL CBRACE		 			{root=create(root_node, "","Program"); aux = create(id_node,$2,"Id");addnode(root, aux); addbro(aux,$4); $$=root;}
+Program: CLASS ID OBRACE ProgramL CBRACE		 			{root=create(root_node, "","Program"); 
+																aux = create(id_node,$2,"Id");addnode(root, aux); addbro(aux,$4); $$=root;
+															}
 		;
 ProgramL: %empty											{$$=NULL;}
 		| FieldDecl 	ProgramL							{$$=$1;addbro($$,$2);}
@@ -207,7 +209,7 @@ Statement: OBRACE StatementZeroMais CBRACE					{if(cntbros($2)>1){ // caso seja 
 		| error SEMI 										{$$=NULL;print_flag=1;}
 		;
 StatementZeroMais: %empty									{$$=NULL;}
-		| Statement StatementZeroMais						{$$=$1;addbro($$,$2); }
+		| Statement StatementZeroMais						{if($1!=NULL){$$=$1; addbro($$,$2);}else{$$=$2;} }
 		;
 
 StatementAux: %empty										{$$=NULL;}
@@ -232,8 +234,7 @@ MethodInvocation2: %empty 									{$$=NULL;}
 		;
 ExprAux2: %empty 											{$$=NULL;}
 
-		| COMMA Expr ExprAux2 								{$$=$2;addbro($$,$3);}
-
+		| COMMA Expr ExprAux2 								{if($2!=NULL){$$=$2;addbro($$,$3);}else{$$=$2;}}
 		;
 
 ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{$$=create(op_node,"","ParseArgs"); aux=create(id_node,$3,"Id"); addnode($$,aux); addbro(aux,$5);}
@@ -241,11 +242,10 @@ ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV 	{$$=create(op_node,"","
 		| PARSEINT OCURV error CCURV						{$$=NULL;print_flag=1;}
 		;
 Expr: Assignment											{$$=$1;}
-		
 		| Expr2                                             {$$=$1;}
 		;
 Expr2: Expr1												{$$=$1;}
-		|Expr2 AND Expr2 										{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
+		|Expr2 AND Expr2 									{$$=create(op_node,"","And");addnode($$,$1);addbro($1,$3);}
 		| Expr2 OR Expr2 									{$$=create(op_node,"","Or");addnode($$,$1);addbro($1,$3);}
 		| Expr2 EQ Expr2 									{$$=create(op_node,"","Eq");addnode($$,$1);addbro($1,$3);}
 		| Expr2 GEQ Expr2 									{$$=create(op_node,"","Geq");addnode($$,$1);addbro($1,$3);}
