@@ -24,19 +24,17 @@ struct node* ynode;
 
 %type <ynode> Program ProgramL FieldDecl FieldDecl2 MethodDecl MethodHeader Expr2 MethodHeader3 MethodBody MethodBody2 FormalParams STRING FormalALt VarDecl VarDecl2 Type Statement StatementAux StatementZeroMais PrintAux ExprAux Assignment MethodInvocation MethodInvocation2 ExprAux2 ParseArgs Expr Expr7 VOID
 
-%left COMMA
 %right ASSIGN
-
 %left OR
 %left AND 
 %left EQ NEQ
 %left LT LEQ GEQ GT
 %left PLUS MINUS
 %left STAR DIV MOD
-
 %right NOT
-%left OBRACE CBRACE OCURV CCURV OSQUARE CSQUARE
-%nonassoc ELSE RETURN REALLIT STRLIT IF 
+%right OCURV 
+%left CCURV
+%right ELSE  
 
 
 
@@ -142,7 +140,7 @@ Statement: OBRACE StatementZeroMais CBRACE					{if(cntbros($2)>1){ // caso seja 
 																	$$=$2;
 																}																	
 															}
-		| IF OCURV Expr CCURV Statement 					{$$=create(stat_node,"","If");
+		| IF OCURV Expr CCURV Statement %prec ELSE			{$$=create(stat_node,"","If");
 																addnode($$,$3); 
 																aux = create(stat_node,"","Block");
 																if(cntbros($5)==1 && $5!=NULL){ // caso seja so 1 statement
@@ -265,7 +263,7 @@ Expr2: Expr2 AND Expr2 										{$$=create(op_node,"","And");addnode($$,$1);add
 		| NOT Expr2 										{$$=create(op_node,"","Not");addnode($$,$2);}
 		| ID 	 											{$$=create(id_node,$1,"Id");}
 		| ID DOTLENGTH										{$$=create(op_node,"","Length");addnode($$,create(id_node,$1,"Id"));}
-		| OCURV Expr CCURV 									{$$=$2;}
+		| OCURV Expr CCURV	 								{$$=$2;}
 		| OCURV error CCURV 								{$$=NULL;print_flag=1;}
 		| Expr7 											{$$=$1;}
 		;

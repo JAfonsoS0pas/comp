@@ -1,11 +1,5 @@
 class main{
   	public static boolean variavel(String[]as){
- 		System.out.println("String das cenas ya");
- 		a=b;
- 		;;;;
- 		a=c;
- 		;	
- 		a=d;
- 		{{{{{{a=e;a=f;}}}}}} 
+  		abc(abc(abc(abc(abc(abc(abc(abc(abc(abc(abc(a)))))))))));	
   	}
 }
