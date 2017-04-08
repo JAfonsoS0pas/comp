@@ -108,12 +108,14 @@ void printftree(no root, int prof){
 	}
 	aux = root->son;
 	while(aux!=NULL){
+		no auxToFree = aux;
 		printftree(aux, prof+1);
 		aux=aux->bro;
+		
+		free(auxToFree->stype);
+		free(auxToFree->value);
+		free(auxToFree);
 	}
-	free(root->stype);
-	free(root->value);
-	free(root);
 
 }
 
