@@ -17,7 +17,6 @@ void init_class_table(char* name){
   symbol_table->name = (char*)calloc((strlen(name)+1),sizeof(char));
   strcpy(symbol_table->name,name);
 
-  symbol_table->exists = 1;
 }
 
 
@@ -31,7 +30,6 @@ void init_method_table(char* name ){
   new_node->name = (char*)calloc((strlen(name)+1),sizeof(char));
   strcpy(new_node->name,name);
 
-  new_node->exists = 1;
 
   table head = symbol_table;
   if(head==NULL){
@@ -47,7 +45,7 @@ void init_method_table(char* name ){
 table search_table(char* name){
   table head = symbol_table;
   while(head){
-    if(strcmp(head->type,name)==0){
+    if(strcmp(head->name,name)==0){
       return head;
     }
     head=head->next; 
@@ -56,23 +54,31 @@ table search_table(char* name){
 }
 
 
-void insert_el(char *value, char* stype,char* params, char* table_to)
+void insert_el(char *value, char* stype,char* params,char* flag, char* table_to)
 {
   table_node new_node= calloc(1,sizeof(tn));
   new_node->value = value;
   new_node->stype = stype;
-  new_node->exists=1;
-
+  new_node->next=NULL;
   if(params){
     new_node->params = params;
   }
   else{
     new_node->params = "";
   }
+  if(flag){
+    new_node->flag= flag;
+  }
+  else{
+    new_node->flag= "";
+  }
 
-  new_node->next=NULL;
-
-  table look =  search_table(table_to);
+  table look = NULL;
+  if(strcmp(table_to,"Class")==0)
+    look = symbol_table;
+  else
+    look =  search_table(table_to);
+  
   if(!look->my_table){
     look->my_table = new_node; 
   }else{
@@ -94,13 +100,10 @@ void print_tables(){
     printf("===== %s %s Symbol Table =====\n",aux->type, aux->name);
     aux_nodes = aux->my_table;
     while(aux_nodes){
-      
-      if(strcmp(aux_nodes->params,"")!=0){
+      if(strcmp(aux_nodes->flag,"")!=0)
+        printf("%s\t%s\t%s\t%s\n", aux_nodes->value, aux_nodes->params, aux_nodes->stype,aux_nodes->flag);
+      else
         printf("%s\t%s\t%s\n", aux_nodes->value, aux_nodes->params, aux_nodes->stype);
-      }
-      else{
-        printf("%s\t\t%s\n", aux_nodes->value, aux_nodes->stype);
-      }
       aux_nodes=aux_nodes->next;
     }
     printf("\n");

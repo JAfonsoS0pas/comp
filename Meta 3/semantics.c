@@ -19,8 +19,7 @@ void check_program(no root){
 		check_field_decl(root);
 	}
 	if (strcmp(root->stype, "MethodDecl")==0){
-		char* name = check_method_decl(root->son);
-		init_method_table(name);
+		check_method_decl(root->son);
 
 		//check_declaration(root, "Method");
 	}
@@ -47,11 +46,11 @@ void check_field_decl(no root){
 		}
 	}
     char *value = (char*)strdup(root->son->bro->value);
-    insert_el(value,stype,NULL,"Class");
+    insert_el(value,stype,NULL,NULL,"Class");
 }
 
 
-char* check_method_decl(no root){
+void check_method_decl(no root){
 	char *stype = (char*)strdup(root->son->stype);
 	char *value = (char*)strdup(root->son->bro->value);
 	char *params = check_method_params(root->son->bro->bro);
@@ -65,8 +64,41 @@ char* check_method_decl(no root){
 	    strcat(new_str,value);
 	    strcat(new_str,params);
 	}
-    insert_el(value,stype,params,"Class");
-    return new_str;
+    insert_el(value,stype,params,NULL,"Class");
+    init_method_table(new_str);
+    insert_el("return",stype,NULL,NULL,new_str);
+    add_method_params(root->son->bro->bro,new_str);
+
+}
+
+
+void add_method_params(no root,char* table_to){
+	no head=NULL;
+	char *stype;
+	if(root->son){
+		head=root->son;
+	}
+	while(head){
+		if(strcmp(head->son->stype,"StringArray")==0){
+			stype = (char*)calloc((strlen("String[]")+1),sizeof(char));
+			strcpy(stype,"String[]");
+		}
+		else if(strcmp(head->son->stype,"Int")==0){
+			stype = (char*)calloc((strlen("int")+1),sizeof(char));
+			strcpy(stype,"int");
+		}
+		else if(strcmp(head->son->stype,"Double")==0){
+			stype = (char*)calloc((strlen("double")+1),sizeof(char));
+			strcpy(stype,"double");
+		}
+		else if(strcmp(head->son->stype,"Bool")==0){
+			stype = (char*)calloc((strlen("boolean")+1),sizeof(char));
+			strcpy(stype,"boolean");
+		}
+		insert_el(head->son->bro->value,stype,NULL,"param",table_to);
+		head=head->bro;
+	}
+
 }
 
 char* check_method_params(no root){
@@ -96,5 +128,5 @@ void check_declaration(no root,char* table_to){
     char *value = (char*)strdup(root->value);
 
     
-    insert_el(value,stype,NULL,table_to);
+    insert_el(value,stype,NULL,NULL,table_to);
 }
