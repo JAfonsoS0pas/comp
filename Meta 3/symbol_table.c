@@ -101,9 +101,10 @@ void print_tables(){
     aux_nodes = aux->my_table;
     while(aux_nodes){
       if(strcmp(aux_nodes->flag,"")!=0)
-        printf("%s\t%s\t%s\t%s\n", aux_nodes->value, aux_nodes->params, aux_nodes->stype,aux_nodes->flag);
-      else
+        printf("%s\t\t%s\t%s\n", aux_nodes->value, aux_nodes->stype,aux_nodes->flag);
+      else{
         printf("%s\t%s\t%s\n", aux_nodes->value, aux_nodes->params, aux_nodes->stype);
+      }
       aux_nodes=aux_nodes->next;
     }
     printf("\n");

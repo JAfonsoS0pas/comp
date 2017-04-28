@@ -35,29 +35,17 @@ void check_program(no root){
 
 
 void check_field_decl(no root){
-	char *stype = NULL;
-	if(strcmp(root->son->stype,"Bool")==0){
-		stype = (char*)strdup("boolean");
-	}else{
-		stype = (char*)strdup(root->son->stype);
-		int i ;
-		for(i= 0; stype[i]; i++){
-		  stype[i] = tolower(stype[i]);
-		}
-	}
+	char *stype = check_stype(root->son->stype);
     char *value = (char*)strdup(root->son->bro->value);
     insert_el(value,stype,NULL,NULL,"Class");
 }
 
 
 void check_method_decl(no root){
-	char *stype = (char*)strdup(root->son->stype);
+	char *stype = check_stype(root->son->stype);
 	char *value = (char*)strdup(root->son->bro->value);
 	char *params = check_method_params(root->son->bro->bro);
-	int i ;
-	for(i= 0; stype[i]; i++){
-	  stype[i] = tolower(stype[i]);
-	}
+	
     char * new_str ;
 	if((new_str = malloc(strlen(value)+strlen(params)+1)) != NULL){
 	    new_str[0] = '\0';   // ensures the memory is an empty string
@@ -71,30 +59,39 @@ void check_method_decl(no root){
 
 }
 
+char* check_stype(char* root){
+	char *stype = NULL;
+	if(strcmp(root,"StringArray")==0){
+			stype = (char*)calloc((strlen("String[]")+1),sizeof(char));
+			strcpy(stype,"String[]");
+	}
+	else if(strcmp(root,"Int")==0){
+		stype = (char*)calloc((strlen("int")+1),sizeof(char));
+		strcpy(stype,"int");
+	}
+	else if(strcmp(root,"Double")==0){
+		stype = (char*)calloc((strlen("double")+1),sizeof(char));
+		strcpy(stype,"double");
+	}
+	else if(strcmp(root,"Bool")==0){
+		stype = (char*)calloc((strlen("boolean")+1),sizeof(char));
+		strcpy(stype,"boolean");
+	}
+	else if(strcmp(root,"Void")==0){
+		stype = (char*)calloc((strlen("void")+1),sizeof(char));
+		strcpy(stype,"void");
+	}
+	return stype;
+}
+
 
 void add_method_params(no root,char* table_to){
 	no head=NULL;
-	char *stype;
 	if(root->son){
 		head=root->son;
 	}
 	while(head){
-		if(strcmp(head->son->stype,"StringArray")==0){
-			stype = (char*)calloc((strlen("String[]")+1),sizeof(char));
-			strcpy(stype,"String[]");
-		}
-		else if(strcmp(head->son->stype,"Int")==0){
-			stype = (char*)calloc((strlen("int")+1),sizeof(char));
-			strcpy(stype,"int");
-		}
-		else if(strcmp(head->son->stype,"Double")==0){
-			stype = (char*)calloc((strlen("double")+1),sizeof(char));
-			strcpy(stype,"double");
-		}
-		else if(strcmp(head->son->stype,"Bool")==0){
-			stype = (char*)calloc((strlen("boolean")+1),sizeof(char));
-			strcpy(stype,"boolean");
-		}
+		char *stype = check_stype(head->son->stype);
 		insert_el(head->son->bro->value,stype,NULL,"param",table_to);
 		head=head->bro;
 	}
@@ -121,12 +118,4 @@ char* check_method_params(no root){
 	}
 	strcat(params,")");
 	return strdup(params);
-}
-
-void check_declaration(no root,char* table_to){
-    char *stype = (char*)strdup(root->stype);
-    char *value = (char*)strdup(root->value);
-
-    
-    insert_el(value,stype,NULL,NULL,table_to);
 }
