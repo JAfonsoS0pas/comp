@@ -4,22 +4,27 @@
 
 typedef struct tn* table_node;
 typedef struct tn{
-  char* value;
-  char* stype;
-  type_node type;
-  table_node next;
+	int exists;
+  	char* value;
+  	char* stype;
+  	char* params;
+  	table_node next;
 }tn;
 
 typedef struct t* table;
 typedef struct t{
-  char* name;
-  table_node my_table;
-  table next;
+	int exists;
+	char* type;
+	char* name;
+	table_node my_table;
+	table next;
 }t;
 
 
-void init_tables();
-void insert_el(char *value, char* stype,type_node type,char* table_to);
+void init_class_table(char* name);
+void init_method_table(char* name);
+void insert_el(char *value, char* stype,char* params, char* table_to);
+table search_table(char* name);
 void print_tables();
 
 #endif

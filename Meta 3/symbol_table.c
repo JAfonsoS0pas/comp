@@ -8,55 +8,101 @@
 extern table symbol_table;
 
 
-void init_tables(){
-	symbol_table = malloc(sizeof(t));
-  symbol_table->name = (char*)malloc((strlen("Class")+1)*sizeof(char));
-  strcpy(symbol_table->name,"Class");
-  
+void init_class_table(char* name){
+	symbol_table = calloc(1,sizeof(t));
+
+  symbol_table->type = (char*)calloc((strlen("Class")+1),sizeof(char));
+  strcpy(symbol_table->type,"Class");
+
+  symbol_table->name = (char*)calloc((strlen(name)+1),sizeof(char));
+  strcpy(symbol_table->name,name);
+
+  symbol_table->exists = 1;
 }
 
 
-void insert_el(char *value, char* stype, type_node type,char* table_to)
+void init_method_table(char* name ){
+
+  table new_node = calloc(1,sizeof(t));
+
+  new_node->type = (char*)calloc((strlen("Method")+1),sizeof(char));
+  strcpy(new_node->type,"Method");
+
+  new_node->name = (char*)calloc((strlen(name)+1),sizeof(char));
+  strcpy(new_node->name,name);
+
+  new_node->exists = 1;
+
+  table head = symbol_table;
+  if(head==NULL){
+    symbol_table = new_node; 
+  }else{
+    while(head->next){
+      head=head->next; 
+    }
+    head->next=new_node;
+  }
+}
+
+table search_table(char* name){
+  table head = symbol_table;
+  while(head){
+    if(strcmp(head->type,name)==0){
+      return head;
+    }
+    head=head->next; 
+  }
+  return NULL;
+}
+
+
+void insert_el(char *value, char* stype,char* params, char* table_to)
 {
-  table_node new_node= malloc(sizeof(tn));
+  table_node new_node= calloc(1,sizeof(tn));
   new_node->value = value;
   new_node->stype = stype;
-  new_node->type = type;
+  new_node->exists=1;
+
+  if(params){
+    new_node->params = params;
+  }
+  else{
+    new_node->params = "";
+  }
+
   new_node->next=NULL;
 
-  table_node head = NULL;
-  if(strcmp(table_to,"Class") == 0){
-    head = symbol_table->my_table;
-    if(head==NULL){
-      head = new_node; 
-      printf("FDS\n");
-    }else{
-      table_node current = head;
-      while(current->next){
-        current=current->next; 
-        printf("YO\n");
-      }
-      current->next=new_node;
-    }
+  table look =  search_table(table_to);
+  if(!look->my_table){
+    look->my_table = new_node; 
   }else{
-    printf("ENTREI NOS METHODS\n");
+    table_node head = look->my_table ;
+    while(head->next){
+      head=head->next; 
+    }
+    head->next=new_node;
   }
 }
 
 
-void print_tables(){
 
-  table aux = symbol_table;
+void print_tables(){
+  table aux ;
   table_node aux_nodes;
   
-  while(aux!=NULL){
-    printf("TABLEA PRINCIPAL -> %s\n",aux->name);
-    aux_nodes=aux->my_table;
-    while(aux_nodes!=NULL){
-      printf("NOS-> value: %s - type: %u - stype: %s\n", aux_nodes->value, aux_nodes->type, aux_nodes->stype); 
+  for(aux = symbol_table;aux;aux=aux->next){
+    printf("===== %s %s Symbol Table =====\n",aux->type, aux->name);
+    aux_nodes = aux->my_table;
+    while(aux_nodes){
+      
+      if(strcmp(aux_nodes->params,"")!=0){
+        printf("%s\t%s\t%s\n", aux_nodes->value, aux_nodes->params, aux_nodes->stype);
+      }
+      else{
+        printf("%s\t\t%s\n", aux_nodes->value, aux_nodes->stype);
+      }
       aux_nodes=aux_nodes->next;
     }
-    printf("ACABOU A TABELA PRINCIPAL\n");
-    aux=aux->next;
+    printf("\n");
   }
 }

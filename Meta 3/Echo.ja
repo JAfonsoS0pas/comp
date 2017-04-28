@@ -1,6 +1,12 @@
-class gcd {
+class gcd2 {  
 	public static int gcd;
-	public static void main2(String[] args){
+	public static double x;
+	public static boolean y,z;
 
-		}
+	public static void main(String[] args){
+
+	}
+	public static int metodo(int x,boolean z,double yz) {}
+
+	public static void fds(){}
 }

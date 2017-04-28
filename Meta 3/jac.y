@@ -305,9 +305,10 @@ int main(int argc, char *argv[]){
 			flag=2;
 			yyparse();
 			yylex_destroy();
-			init_tables();
 			check_program(root);
 			print_tables();
+			if(!print_flag)
+    			printftree(root,0);
     	}
 	}
 	else{
