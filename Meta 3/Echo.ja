@@ -2,5 +2,14 @@ class gcd2 {
 	public static double foo6() {}
 	public static void foo5(int x,double y, boolean z){}
 	public static int foo7(){}
-	public static boolean foo8(){}
+	public static boolean foo8(){
+		a = Integer.parseInt(args[0]);
+
+        b = Integer.parseInt(args[1]);
+        System.out.println(gcd);
+        System.out.println("Error: two parameters required.");
+
+        int fgh;
+        double g, df, ghh, wewer, fd4;
+	}
 }

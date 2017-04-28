@@ -56,6 +56,7 @@ void check_method_decl(no root){
     init_method_table(new_str);
     insert_el("return",stype,NULL,NULL,new_str);
     add_method_params(root->son->bro->bro,new_str);
+    check_method_body(root->bro,new_str);
 
 }
 
@@ -80,6 +81,10 @@ char* check_stype(char* root){
 	else if(strcmp(root,"Void")==0){
 		stype = (char*)calloc((strlen("void")+1),sizeof(char));
 		strcpy(stype,"void");
+	}
+	else if(strcmp(root,"ParseArgs")==0){
+		stype = (char*)calloc((strlen("int")+1),sizeof(char));
+		strcpy(stype,"int");
 	}
 	return stype;
 }
@@ -118,4 +123,18 @@ char* check_method_params(no root){
 	}
 	strcat(params,")");
 	return strdup(params);
+}
+
+void check_method_body(no root, char* table_to){
+	no head=NULL;
+	if(root->son){
+		head=root->son;
+	}
+	while(head){
+		if(strcmp(head->stype,"VarDecl")==0){
+			char *stype = check_stype(head->son->stype);
+			insert_el(head->son->bro->value,stype,NULL,NULL,table_to);
+		}
+		head=head->bro;
+	}
 }
