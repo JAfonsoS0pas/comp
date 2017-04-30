@@ -142,9 +142,9 @@ void check_method_body(no root, char* table_to){
 void insert(no root, char * name){
 
 	no aux  = root;
-	char * symbol_type;
-	char * str_aux = (char * )calloc(200, sizeof(char));
-	int len = 0;
+	//char * symbol_type;
+	//char * str_aux = (char * )calloc(200, sizeof(char));
+	//int len = 0;
 
 	if(aux == NULL){
 		return;

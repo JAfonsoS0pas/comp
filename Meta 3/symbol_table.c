@@ -54,7 +54,7 @@ table search_table(char* name){
 }
 
 
-char search_char_table(char * name, char * t_name){
+char * search_char_table(char * name, char * t_name){
 	int i;
 	table aux =NULL;
 	table_node aux_table = NULL;
@@ -70,13 +70,18 @@ char search_char_table(char * name, char * t_name){
 		}
 	}
 
-	for(aux = symbol_table->my_table; aux!=NULL; aux=aux->next){
+	for(aux_table = symbol_table->my_table; aux_table!=NULL; aux_table=aux_table->next){
 		if(strcmp(name, aux_table->name)==0){
 			str = (char*)calloc(200,sizeof(char));
 			if(aux_table->params != NULL){
 				strcpy(str, aux_table->stype);
 				strcat(str,"(");
-				//for(i=0;i<aux_table->)
+				for(i=0;i<aux_table->parametros;i++){
+					if(i>0){
+						strcat(str, ",");
+					}
+					//strcat(str, aux_table->)
+				}
 			}
 		}
 	}
