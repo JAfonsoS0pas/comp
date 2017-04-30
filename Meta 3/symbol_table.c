@@ -70,13 +70,13 @@ char search_char_table(char * name, char * t_name){
 		}
 	}
 
-	for(aux_table = symbol_table>my_table; aux_table!=NULL; aux_table=aux_table->next){
+	for(aux = symbol_table->my_table; aux!=NULL; aux=aux->next){
 		if(strcmp(name, aux_table->name)==0){
 			str = (char*)calloc(200,sizeof(char));
 			if(aux_table->params != NULL){
 				strcpy(str, aux_table->stype);
 				strcat(str,"(");
-				for(i=0;i<aux_table->)
+				//for(i=0;i<aux_table->)
 			}
 		}
 	}

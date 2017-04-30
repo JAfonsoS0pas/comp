@@ -158,10 +158,13 @@ void insert(no root, char * name){
 
 	if(aux->type == op_node){
 		insert(aux->son, name);
-		verify(aux);
+		//verify(aux);
 		insert(aux->bro, name);
-
 	}
 
+	if(aux->type == id_node){
+		//symbol_type = 
+	}
 
 }
+
