@@ -308,7 +308,7 @@ int main(int argc, char *argv[]){
 			check_program(root);
 			print_tables();
 			if(!print_flag)
-    			printftree(root,0);
+    			printftreetype(root,0);
     	}
 	}
 	else{

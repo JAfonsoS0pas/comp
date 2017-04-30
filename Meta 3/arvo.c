@@ -10,7 +10,7 @@ no create(type_node type, char* value, char* stype){
 	new->value = (char*)malloc(1+strlen(value)*sizeof(char));
 	strcpy(new->value,value);
 	new->type= type;
-
+	new->type_t=NULL;
 	new->father=NULL;
 	new->son=NULL;
 	new->bro=NULL;
@@ -85,7 +85,39 @@ int cntbros(no root){
 
 
 
-//no getbro(no a, int prof);
+void printftreetype(no root, int prof){
+	if(root==NULL){
+		return;
+	}
+	int i=0;
+	no aux;
+	if((root->type == root_node) &&(root->type_t!=NULL)){
+		printf("%s\n", root->stype);
+	}
+	else {
+		while(i<prof){
+			printf("..");
+			i++;
+		}
+		if((strcmp(root->value,"")!=0) && (root->type_t!=NULL))
+			printf("%s(%s) - %s\n", root->stype, root->value, root->type_t);
+		else
+			printf("%s\n", root->stype);
+	}
+	aux = root->son;
+	while(aux!=NULL){
+		no auxToFree = aux;
+		printftree(aux, prof+1);
+		aux=aux->bro;
+		
+		free(auxToFree->stype);
+		free(auxToFree->value);
+		free(auxToFree);
+	}
+
+}
+
+
 void printftree(no root, int prof){
 	if(root==NULL){
 		return;

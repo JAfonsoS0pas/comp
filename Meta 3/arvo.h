@@ -13,6 +13,7 @@ typedef struct node {
 	no father;
 	no bro;
 	no son;
+	char* type_t;
 }node;
 
 int yylex(void);

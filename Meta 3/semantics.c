@@ -138,3 +138,30 @@ void check_method_body(no root, char* table_to){
 		head=head->bro;
 	}
 }
+
+void insert(no root, char * name){
+
+	no aux  = root;
+	char * symbol_type;
+	char * str_aux = (char * )calloc(200, sizeof(char));
+	int len = 0;
+
+	if(aux == NULL){
+		return;
+	}
+
+
+	if(aux->type == stat_node){
+		insert(aux->son, name);
+		insert(aux->bro, name);
+	}
+
+	if(aux->type == op_node){
+		insert(aux->son, name);
+		verify(aux);
+		insert(aux->bro, name);
+
+	}
+
+
+}

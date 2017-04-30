@@ -54,6 +54,35 @@ table search_table(char* name){
 }
 
 
+char search_char_table(char * name, char * t_name){
+	int i;
+	table aux =NULL;
+	table_node aux_table = NULL;
+	char * str = NULL;
+
+	for(aux = symbol_table->next; aux!= NULL; aux = aux->next){
+		if(strcmp(aux->name, t_name)==0){
+			for(aux_table = aux->my_table; aux_table!=NULL; aux_table= aux_table ->next){
+				if(strcmp(name, aux_table->name)==0){
+					return aux_table->stype;
+				}
+			}
+		}
+	}
+
+	for(aux_table = symbol_table>my_table; aux_table!=NULL; aux_table=aux_table->next){
+		if(strcmp(name, aux_table->name)==0){
+			str = (char*)calloc(200,sizeof(char));
+			if(aux_table->params != NULL){
+				strcpy(str, aux_table->stype);
+				strcat(str,"(");
+				for(i=0;i<aux_table->)
+			}
+		}
+	}
+
+}
+
 void insert_el(char *value, char* stype,char* params,char* flag, char* table_to)
 {
   table_node new_node= calloc(1,sizeof(tn));
@@ -110,3 +139,26 @@ void print_tables(){
     printf("\n");
   }
 }
+
+/*
+void verify(no root){
+	//int i, j;
+	no aux = root->son;
+	table aux_table =  symbol_table;
+	char * type = NULL;
+
+	if(strcmp(root->stype,'Call')==0){
+		for(;aux_table->my_table!=NULL && strcmp(aux_table->name, aux_table->my_table->value)!=0;aux_table->my_table = aux_table->my_table->next);
+			if(aux_table->my_table!=NULL)
+				root->type_t = aux_table->type;
+
+	}
+	else if(strcmp(root->stype,"Mul")==0 || strcmp(root->stype, "Div") == 0 || strcmp(root->stype, "Mod")==0){
+		if(aux->type_t!=NULL){
+			root->type_t = (char * )calloc(5,sizeof(char));
+			strcpy(root->type_t,"int");
+		}
+	}
+
+
+}*/
