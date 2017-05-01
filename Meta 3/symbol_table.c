@@ -59,10 +59,8 @@ char* search_table_call(no root, char * yes){
   char str[500] = " - ";
   while(head){
     if((root->value!=NULL) && (head->value!=NULL)&&(yes!=NULL) && (head->params!=NULL)){
-      printf("yoyoyoyoyo %s - %s - %s - %s\n",root->value,head->value,yes,head->params );
       if(strcmp(root->value,head->value)==0 && strcmp(head->params,yes)==0 && strcmp(head->params,"")!=0){
             strcat(str,head->params);
-            printf("yoyoyo%s\n", str);
             return strdup(str);
         }
     }

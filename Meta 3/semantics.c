@@ -78,38 +78,56 @@ void check_program(no root){
 }
 
 void check_calls(no root){
+
+	
 	if(root==NULL){
 		return;
 	}
+
 	if(root->stype!=NULL){
+
+		
 		if(strcmp(root->stype,"Call")==0){
+
+			
 			if(root->son->bro!=NULL){
+				
 				no aux=root->son->bro;
 				char params[500] = "(";
+
+
 				while(aux){
-					printf("WHILE %s\n",aux->type_t );
-					char aux_str[100];
-					if(strcmp(aux->type_t,"")!=0){
-						strcpy(aux_str,aux->type_t);
-						char * token;
-						char search[]="  - ";
-						token=strtok(aux_str, search);
-						strcat(params, token);
-						if(aux->bro!=NULL)
-							strcat(params,",");
+						char aux_str[100];
+						if(aux->type_t!=NULL){
+
+							strcpy(aux_str,aux->type_t);
+							char * token;
+							char search[]="  - ";
+							
+							token=strtok(aux_str, search);
+							if(token!=NULL){
+								strcat(params, token);
+
+								if(aux->bro!=NULL)
+									strcat(params,",");
+							}
+
 						}
 						aux=aux->bro;
+						
 				}
 				strcat(params, ")");
 				char * wowo = strdup(params);
 				if(root->son!=NULL){
 					root->son->type_t = search_table_call(root->son, wowo);
-					printf("ANTES DAS CENAS %s\n",root->son->type_t );
 					root->type_t = search_table_return(root->son,wowo);
-					printf("CENAS %s\n",root->type_t );
 				}
+				
 			}
+			
 		}
+
+		
 	}
 	no aux = root->son;
 	while(aux!=NULL){
