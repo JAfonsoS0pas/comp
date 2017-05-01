@@ -26,7 +26,7 @@ void check_program(no root){
 		root->type_t = cenas;
 	}
 	if(strcmp(root->stype, "StrLit")==0){
-		char * cenas = (char*)strdup(" - String[]");
+		char * cenas = (char*)strdup(" - String");
 		root->type_t = cenas;
 	}
 	if(strcmp(root->stype, "BoolLit")==0){
@@ -96,14 +96,20 @@ void check_calls(no root){
 
 void check_field_decl(no root){
 	char *stype = check_stype(root->son->stype);
-    char *value = (char*)strdup(root->son->bro->value);
+	char *value =NULL;
+	if(root->son->bro!=NULL){
+    	value = (char*)strdup(root->son->bro->value);
+	}
     insert_el(value,stype,NULL,NULL,"Class");
 }
 
 
 void check_method_decl(no root){
 	char *stype = check_stype(root->son->stype);
-	char *value = (char*)strdup(root->son->bro->value);
+	char *value=NULL;
+	if(root->son->bro!=NULL){
+		 value = (char*)strdup(root->son->bro->value);
+	}
 	char *params = check_method_params(root->son->bro->bro);
 	
     char * new_str ;
@@ -193,13 +199,18 @@ void check_method_body(no root, char* table_to){
 		}
 		
 		else{
-			
+			//printf("entrou\n");
 			check_method_body_ids(head,table_to);
 			
 			
+			
 		}
-
-		head=head->bro;
+		if(head->bro){
+			head=head->bro;
+		}else{
+			break;
+		}
+		
 
 	}
 }
@@ -207,6 +218,9 @@ void check_method_body(no root, char* table_to){
 
 
 void check_method_body_ids(no root, char* table_to){
+
+
+	//printf("value do id actual %s\n", root->value);
 	if(root==NULL){
 		return;
 	}
@@ -215,13 +229,29 @@ void check_method_body_ids(no root, char* table_to){
 		root->type_t = symbol_type;
 	}
 	
+	
+		no aux = root->son;
 
-	no aux = root->son;
-	while(aux){
-		check_method_body_ids(aux,table_to);
-		check_type(aux);
-		aux=aux->bro;
-	}
+		while(aux){
+
+			check_method_body_ids(aux,table_to);
+			//printf("saiu\n");
+			if(aux!=NULL){
+			//	printf("well i tried\n");
+				check_type(aux);}
+			//printf("aux value %s\n",aux->value);
+			if(aux->bro!=NULL){
+				aux=aux->bro;
+			}
+			else{
+				break;
+			}
+			//printf("aux bro value %s\n",aux->value);
+			
+
+		}
+	
+	//printf("yolo2\n");
 }
 
 
@@ -241,42 +271,73 @@ void check_type(no root){
   int cnt = 0;
 
 if((strcmp(root->stype, "Assign")==0)){
+
+
   
-  root->type_t = strdup(root->son->type_t);
-  root = root->son;
+  if(root->son->type_t!=NULL){
+  	root->type_t = strdup(root->son->type_t);
+
+  	root = root->son;
+  }
   
 }  
 
   if((strcmp(root->stype, "Sub")==0) || (strcmp(root->stype, "Add"))==0 || (strcmp(root->stype, "Mul"))==0 || (strcmp(root->stype, "Div"))==0) {
     no aux  = root->son;
-
+    //printf("OPERAÇAO DEBUG : son %s \n",aux->value);
     while(aux!=NULL){
+
+    	if(aux->type_t!=NULL){
+		    //printf("aux value %s\n",aux->value);
+		     //printf("passou\n");
+		     //printf("tipo do filho : %s\n ", aux->type_t);
+		      if(cnt == 0){
+		      		//printf("passou1\n");
+		         if(strcmp(aux->type_t," - int")==0){
+		         	//printf("passou2\n");
+		          root->type_t  = strdup(aux->type_t);
+
+		        }
+		        if(strcmp(aux->type_t," - double")==0){
+		        	//printf("passou3\n");
+		          root->type_t  = strdup(aux->type_t);
+		        }
+		        cnt++;
+		        
+		      }
+		      
+		      else{
+		      	//printf("passou4");
+		      	if((aux->type_t!=NULL)){
+		      		//printf("root->type_t %s\n", root->type_t);
+		      		//printf("aux->type_t %s\n", aux->type_t);
+
+			        if(strcmp(aux->type_t, root->type_t ) !=0){
+			          
+			          root->type_t  = strdup(" - double");
+			         
+			        }
+			    }
+			}
+		}
+      	//printf("booh2\n");
+		if(aux->bro!=NULL){
+		//	printf("entrouwelwlwlwlwl\n");
+			aux = aux->bro;
+		}
+		else{
+			//printf("booh5\n");
+			break;
+		}
+				
+
      
-     //printf("tipo do filho : %s\n ", aux->type_t);
-      if(cnt == 0){
-         if(strcmp(aux->type_t," - int")==0){
-
-          root->type_t  = strdup(aux->type_t);
-
-        }
-        if(strcmp(aux->type_t," - double")==0){
-
-          root->type_t  = strdup(aux->type_t);
-        }
-        cnt++;
-        
-      }
-      else{
-        if(strcmp(aux->type_t, root->type_t ) !=0){
-          
-          root->type_t  = strdup(" - double");
-         
-        }
-      }
-     aux = aux->bro;
+    	// printf("booh\n");
     }
 
-  }  
+  } 
+
+  //printf("adeus \n"); 
 
 
 }
