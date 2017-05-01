@@ -97,6 +97,7 @@ void check_calls(no root){
 
 
 				while(aux){
+
 						char aux_str[100];
 						if(aux->type_t!=NULL){
 
@@ -115,6 +116,7 @@ void check_calls(no root){
 						}
 						aux=aux->bro;
 						
+
 				}
 				strcat(params, ")");
 				char * wowo = strdup(params);
@@ -234,7 +236,6 @@ void check_method_body(no root, char* table_to){
 	if(root->son){
 		head=root->son;
 	}
-
 	while(head){
 		if(strcmp(head->stype,"VarDecl")==0){
 			char *stype = check_stype(head->son->stype);

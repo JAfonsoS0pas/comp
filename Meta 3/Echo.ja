@@ -1,3 +1,4 @@
+
 class gcd2 {  
 	
 	public static void main(){
@@ -11,3 +12,4 @@ class gcd2 {
 
 
 }
+

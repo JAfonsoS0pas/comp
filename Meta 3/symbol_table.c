@@ -54,7 +54,6 @@ table search_table(char* name){
 }
 
 char* search_table_call(no root, char * yes){
-
   table_node head = symbol_table->my_table;
   char str[500] = " - ";
   while(head){
@@ -66,7 +65,7 @@ char* search_table_call(no root, char * yes){
     }
     head=head->next;  
   }
-  return NULL;
+  return strdup(" - undef");
 }
 
 char * search_table_return(no root, char * yes){
@@ -79,7 +78,7 @@ char * search_table_return(no root, char * yes){
     }
     head=head->next;
   }
-  return NULL;
+  return strdup(" - undef");
 }
 
 char * search_char_table(char * name, char * t_name){
