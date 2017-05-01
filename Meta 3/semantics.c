@@ -175,7 +175,7 @@ void check_method_body(no root, char* table_to){
 			char *stype = check_stype(head->son->stype);
 			insert_el(head->son->bro->value,stype,NULL,NULL,table_to);
 		}
-
+		
 		else{
 			check_method_body_ids(head,table_to);
 		}

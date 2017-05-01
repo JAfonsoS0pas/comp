@@ -139,3 +139,35 @@ void print_tables(){
     printf("\n");
   }
 }
+
+
+
+void check_type(no root){
+  
+  
+  char * type = NULL;
+  int cnt = 0;
+  if((strcmp(root->stype, "Add")==0)){
+    while(root->son!=NULL){
+      if(cnt == 0){
+         if(strcmp(root->son->stype,"int")==0){
+          strcpy(type, root->son->stype);
+
+        }
+        if(strcmp(root->son->stype,"double")==0){
+          strcpy(type, root->son->stype);
+        }
+
+        root->son = root->son->bro;
+      }
+      else{
+        if(strcmp(root->son->stype, type) !=0){
+          strcpy(type, "double");
+        }
+      }
+     
+    }
+  }
+  strcpy(root->type_t, type);
+
+}
