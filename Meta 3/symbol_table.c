@@ -55,18 +55,15 @@ table search_table(char* name){
 
 
 char * search_char_table(char * name, char * t_name){
-	printf("VOU PROCURAR %s\n", name);
 	table aux =NULL;
 	table_node aux_nodes = NULL;
   char str[500] = " - ";
 
 	for(aux = symbol_table;aux;aux=aux->next){
       if(strcmp(aux->name, t_name)==0){
-        printf("ENCONTREI A TABELA %s\n",aux->name );
   	    aux_nodes = aux->my_table;
   	    while(aux_nodes){
           if(strcmp(aux_nodes->value, name)==0){
-            printf("ENCONTREI O MANO %s\n",aux_nodes->value );
   	    	  if(aux_nodes->stype != NULL){
                 strcat(str,aux_nodes->stype);
   						  return strdup(str);
@@ -74,9 +71,19 @@ char * search_char_table(char * name, char * t_name){
   				}
   	      aux_nodes=aux_nodes->next;
   	    }
-
       }
-    
+      else{
+        aux_nodes= aux->my_table;
+        while(aux_nodes){
+          if(strcmp(aux_nodes->value, name)==0){
+            if(aux_nodes->stype != NULL){
+                strcat(str,aux_nodes->stype);
+                return strdup(str);
+              }
+          }
+          aux_nodes=aux_nodes->next;
+        }
+      }
   }
 	return NULL;
 
