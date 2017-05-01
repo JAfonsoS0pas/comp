@@ -9,7 +9,6 @@ typedef struct tn{
   	char* stype;
   	char* params;
   	char* flag;
-  	int parametros; //lembrar de ir alterar nas funções
   	table_node next;
 }tn;
 
@@ -27,5 +26,6 @@ void init_method_table(char* name);
 void insert_el(char *value, char* stype,char* params, char* flag, char* table_to);
 table search_table(char* name);
 void print_tables();
+char * search_char_table(char * name, char * t_name);
 
 #endif

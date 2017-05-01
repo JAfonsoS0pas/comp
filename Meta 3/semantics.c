@@ -58,6 +58,8 @@ void check_method_decl(no root){
     add_method_params(root->son->bro->bro,new_str);
     check_method_body(root->bro,new_str);
 
+
+
 }
 
 char* check_stype(char* root){
@@ -139,32 +141,123 @@ void check_method_body(no root, char* table_to){
 	}
 }
 
-void insert(no root, char * name){
+void ast(no root){
 
-	no aux  = root;
-	//char * symbol_type;
-	//char * str_aux = (char * )calloc(200, sizeof(char));
-	//int len = 0;
+	printf("vai construir a ast\n");
+	printf("root type %s\n", root->stype);
 
-	if(aux == NULL){
+	printf("ROOT TYPE %s\n ", root->stype);
+
+	if(root==NULL){
+		printf("root null\n");
 		return;
 	}
 
+	if(strcmp(root->stype, "MethodDecl")==0){
+		printf("Encontrou MethodDecl\n");
+		no aux = root->son; //methodheader
+		no aux2 = NULL;
+		char * name = (char * ) calloc(200, sizeof(char));
+		
 
+		/*while((aux!=NULL) && (strcmp(aux->stype,"MethodHeader")!=0)){
+			aux= aux->bro;
+		}
+		strcpy(name, aux->value);
+		printf("name %s\n", name);*/
+		
+		while((aux!=NULL) && (strcmp(aux->stype,"MethodBody")!=0)){
+
+			aux= aux->bro;
+		}
+		printf("encontrou methodbody!\n");
+		
+		if(aux->son!=NULL){
+
+			aux2 = aux->son;
+
+			while((aux2!=NULL)&&(aux2->type==var_node)){
+				
+				aux2 = aux2->bro;
+			}
+
+			aux2= aux2->son;
+			if(aux2!=NULL){
+				insert(aux2,name);
+			}
+			
+			printf("adicionou a` ast");
+		}
+
+	}
+	if((strcmp(root->stype, "Program")==0)){
+		root= root->son;
+		ast(root);
+	}
+	else{
+		if(root->bro==NULL){
+			return;
+		}else{
+			ast(root->bro);
+		}
+		
+	}
+	
+
+}
+
+
+
+void insert(no root, char * name){
+	printf("entrou no insert\n");
+	no aux  = root;
+	char * symbol_type =  NULL;
+
+
+	printf("root type %s\n ", aux->stype);
 	if(aux->type == stat_node){
 		insert(aux->son, name);
 		insert(aux->bro, name);
 	}
 
-	if(aux->type == op_node){
-		insert(aux->son, name);
-		//verify(aux);
-		insert(aux->bro, name);
-	}
+	if(aux->type== id_node){
 
-	if(aux->type == id_node){
-		//symbol_type = 
+		printf(" encontrou id\n");
+		
+		symbol_type = search_char_table(aux->value, name);
+		
+		printf("olsaaaaaa %s\n", symbol_type);
+
+		if(symbol_type == NULL){ 
+
+
+			if(strcmp(aux->stype,"StrLit")==0){
+				symbol_type = (char*) calloc(strlen("String")+1,sizeof(char));
+				strcpy(symbol_type, "String");
+			}
+
+			if(strcmp(aux->stype,"DecLit")==0){
+				symbol_type = (char*) calloc(strlen("int")+1, sizeof(char));
+				strcpy(symbol_type, "int");
+			}
+
+			if(strcmp(aux->stype, "RealLit")==0){
+				symbol_type = (char* ) calloc(strlen("int")+1, sizeof(char));
+				strcpy(symbol_type, "int");
+			}
+		}
 	}
+	aux->type_t = symbol_type;
+	printf("aux->type_t %s\n", aux->type_t);
+	if(aux->bro!=NULL){
+		insert(aux->bro,name);
+	}
+	else{
+		return;
+	}
+	
 
 }
+
+
 

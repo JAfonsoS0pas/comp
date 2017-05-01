@@ -8,3 +8,5 @@ void check_method_decl(no root);
 void add_method_params(no root,char* table_to);
 char* check_stype(char* root);
 void check_method_body(no root, char* table_to);
+void insert(no root, char * name);
+void ast(no root);

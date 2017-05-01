@@ -307,9 +307,12 @@ int main(int argc, char *argv[]){
 			yylex_destroy();
 			check_program(root);
 			print_tables();
+			ast(root);
+    		printftreetype(root,0);
+
 			if(!print_flag)
     			printftree(root,0);
-    			//printftreetype(root,0);
+				
     	}
 	}
 	else{

@@ -27,6 +27,7 @@ int cntsons(no root);
 void give_type(no novo, char* type);
 int verifica(no no, int sons);
 int cntbros(no root);
+void printftreetype(no root, int prof);
 
 
 #endif

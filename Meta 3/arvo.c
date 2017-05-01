@@ -99,15 +99,22 @@ void printftreetype(no root, int prof){
 			printf("..");
 			i++;
 		}
-		if((strcmp(root->value,"")!=0) && (root->type_t!=NULL))
+		if((strcmp(root->value,"")!=0) && (root->type_t!=NULL)){
 			printf("%s(%s) - %s\n", root->stype, root->value, root->type_t);
-		else
+		}
+		
+		else if((strcmp(root->value,"")!=0)&&(root->type_t!=NULL)){
 			printf("%s\n", root->stype);
+		}
+
+		else{
+			printf("%s\n", root->stype);
+		}
 	}
 	aux = root->son;
 	while(aux!=NULL){
 		no auxToFree = aux;
-		printftree(aux, prof+1);
+		printftreetype(aux, prof+1);
 		aux=aux->bro;
 		
 		free(auxToFree->stype);
@@ -116,6 +123,7 @@ void printftreetype(no root, int prof){
 	}
 
 }
+
 
 
 void printftree(no root, int prof){
