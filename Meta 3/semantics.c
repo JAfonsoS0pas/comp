@@ -106,6 +106,8 @@ void check_method_decl(no root){
 
 
 
+
+
 }
 
 char* check_stype(char* root){
@@ -174,6 +176,7 @@ void check_method_body(no root, char* table_to){
 	if(root->son){
 		head=root->son;
 	}
+
 	while(head){
 		if(strcmp(head->stype,"VarDecl")==0){
 			char *stype = check_stype(head->son->stype);
@@ -181,9 +184,14 @@ void check_method_body(no root, char* table_to){
 		}
 		
 		else{
+			
 			check_method_body_ids(head,table_to);
+			
+			
 		}
+
 		head=head->bro;
+
 	}
 }
 
@@ -196,11 +204,15 @@ void check_method_body_ids(no root, char* table_to){
 	if(strcmp(root->stype,"Id")==0){
 			char * symbol_type =  search_char_table(root->value,table_to);
 			root->type_t = symbol_type;
+
+
 	}
+	
 
 	no aux = root->son;
 	while(aux){
 		check_method_body_ids(aux,table_to);
+		check_type(root);
 		aux=aux->bro;
 	}
 }

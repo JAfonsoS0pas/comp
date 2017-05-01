@@ -150,31 +150,64 @@ void print_tables(){
 
 
 void check_type(no root){
+
+
   
+  //printf("entrou vai checkar %s\n", root->stype);
+
+  if((strcmp(root->stype, "If")==0)|| (strcmp(root->stype, "Block")==0)|| (strcmp(root->stype, "While")==0)||(strcmp(root->stype, "Return")==0)){
+    return;
+  }
   
-  char * type = NULL;
+ 
+
   int cnt = 0;
-  if((strcmp(root->stype, "Add")==0)){
-    while(root->son!=NULL){
+
+if((strcmp(root->stype, "Assign")==0)){
+  
+  printf("Assign!!  %s %s \n",root->son->value,  root->son->type_t);
+  root->type_t = strdup(root->son->type_t);
+  root = root->son;
+  
+}  
+
+  if((strcmp(root->stype, "Sub")==0) || (strcmp(root->stype, "Add"))){
+    printf("encontrou add");
+    no aux  = root->son;
+
+    while(aux!=NULL){
+     
+     //printf("tipo do filho : %s\n ", aux->type_t);
       if(cnt == 0){
-         if(strcmp(root->son->stype,"int")==0){
-          strcpy(type, root->son->stype);
+         if(strcmp(aux->type_t," - int")==0){
+
+          root->type_t  = strdup(aux->type_t);
+          printf("ADD %s %s\n", root->type_t, root->stype);
 
         }
-        if(strcmp(root->son->stype,"double")==0){
-          strcpy(type, root->son->stype);
-        }
+        if(strcmp(aux->type_t," - double")==0){
 
-        root->son = root->son->bro;
+          root->type_t  = strdup(aux->type_t);
+          printf("ADD %s %s\n", root->type_t, root->stype);
+        }
+        cnt++;
+        
       }
       else{
-        if(strcmp(root->son->stype, type) !=0){
-          strcpy(type, "double");
+        if(strcmp(aux->type_t, root->type_t ) !=0){
+          
+          root->type_t  = strdup(" - double");
+         
         }
       }
-     
+     aux = aux->bro;
     }
-  }
-  strcpy(root->type_t, type);
 
+  }
+
+
+
+
+  
+  
 }
