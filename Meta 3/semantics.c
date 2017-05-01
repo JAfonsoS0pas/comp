@@ -33,6 +33,10 @@ void check_program(no root){
 		char * cenas = (char*)strdup(" - boolean");
 		root->type_t = cenas;
 	}
+	if(strcmp(root->stype, "RealLit")==0){
+		char * cenas = (char*)strdup(" - int");
+		root->type_t = cenas;
+	}
 	no aux = root->son;
 	while(aux!=NULL){
 		check_program(aux);
@@ -278,24 +282,6 @@ void insert(no root, char * name){
 		
 		printf("olsaaaaaa %s\n", symbol_type);
 
-		if(symbol_type == NULL){ 
-
-
-			if(strcmp(aux->stype,"StrLit")==0){
-				symbol_type = (char*) calloc(strlen("String")+1,sizeof(char));
-				strcpy(symbol_type, "String");
-			}
-
-			if(strcmp(aux->stype,"DecLit")==0){
-				symbol_type = (char*) calloc(strlen("int")+1, sizeof(char));
-				strcpy(symbol_type, "int");
-			}
-
-			if(strcmp(aux->stype, "RealLit")==0){
-				symbol_type = (char* ) calloc(strlen("int")+1, sizeof(char));
-				strcpy(symbol_type, "int");
-			}
-		}
 	}
 
 	if(aux->type == stat_node){
