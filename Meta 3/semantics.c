@@ -37,6 +37,33 @@ void check_program(no root){
 		char * cenas = (char*)strdup(" - int");
 		root->type_t = cenas;
 	}
+	if(strcmp(root->stype, "Gt")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
+	}
+	if(strcmp(root->stype, "Eq")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
+	}
+	if(strcmp(root->stype, "Geq")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
+	}
+	if(strcmp(root->stype, "Lt")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
+	}
+	if(strcmp(root->stype, "Leq")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
+	}
+	if(strcmp(root->stype, "Neq")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
+	}
+	
+
+
 	no aux = root->son;
 	while(aux!=NULL){
 		check_program(aux);
@@ -148,12 +175,15 @@ void check_method_body(no root, char* table_to){
 			char *stype = check_stype(head->son->stype);
 			insert_el(head->son->bro->value,stype,NULL,NULL,table_to);
 		}
+
 		else{
 			check_method_body_ids(head,table_to);
 		}
 		head=head->bro;
 	}
 }
+
+
 
 void check_method_body_ids(no root, char* table_to){
 	if(root==NULL){
