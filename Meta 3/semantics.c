@@ -34,7 +34,7 @@ void check_program(no root){
 		root->type_t = cenas;
 	}
 	if(strcmp(root->stype, "RealLit")==0){
-		char * cenas = (char*)strdup(" - int");
+		char * cenas = (char*)strdup(" - double");
 		root->type_t = cenas;
 	}
 	if(strcmp(root->stype, "Gt")==0){

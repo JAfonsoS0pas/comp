@@ -1,18 +1,12 @@
-class gcd {
-public static void main(String[] args) {
-int a, b;
-double c;
-a = Integer.parseInt(args[0]);
-b = Integer.parseInt(args[1]);
-if (a == 0)
-System.out.println(b);
-else {
-while (b > 0)
-if (a > b)
-a = a-b*c;
-else
-b = b-a;
-System.out.println(a);
-}
-}
+class gcd2{
+	public static double gdc2;
+	public static int gcd2 (int a, int b){
+		if (a==0 && a==b)
+			return b;
+		
+		if (a>b){
+		double d;
+			a=b+c+d;
+			}
+	}
 }
