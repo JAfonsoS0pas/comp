@@ -89,8 +89,20 @@ void printftree(no root, int prof){
 			printf("..");
 			i++;
 		}
-		if(strcmp(root->value,"")!=0)
-			printf("%s(%s)%s\n", root->stype, root->value,root->type_t);
+		if(strcmp(root->value,"")!=0){
+			
+			if(root->type_t!=NULL){
+				if(strcmp(root->type_t,"(null)")!=0){
+					
+					printf("%s(%s)%s\n", root->stype, root->value,root->type_t);
+				}else{
+					
+					printf("%s\n", root->stype);
+				}
+			}else{
+				printf("%s\n", root->stype);
+			}
+		}
 		else
 			printf("%s%s\n", root->stype, root->type_t);
 	}

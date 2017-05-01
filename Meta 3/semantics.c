@@ -238,7 +238,11 @@ void check_method_body_ids(no root, char* table_to){
 			//printf("saiu\n");
 			if(aux!=NULL){
 			//	printf("well i tried\n");
-				check_type(aux);}
+				check_type(aux);
+				
+
+			}
+
 			//printf("aux value %s\n",aux->value);
 			if(aux->bro!=NULL){
 				aux=aux->bro;
@@ -260,7 +264,7 @@ void check_type(no root){
 
 
   
-  //printf("entrou vai checkar %s\n", root->stype);
+  printf("entrou vai checkar %s %s\n", root->stype, root->value);
 
   if((strcmp(root->stype, "If")==0)|| (strcmp(root->stype, "Block")==0)|| (strcmp(root->stype, "While")==0)||(strcmp(root->stype, "Return")==0)){
     return;
@@ -275,6 +279,8 @@ if((strcmp(root->stype, "Assign")==0)){
 
   
   if(root->son->type_t!=NULL){
+  	printf("root type: %s\n ", root->stype);
+  	printf("filho type t: %s\n ", root->son->type_t);
   	root->type_t = strdup(root->son->type_t);
 
   	root = root->son;

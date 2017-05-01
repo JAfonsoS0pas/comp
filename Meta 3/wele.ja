@@ -5,8 +5,12 @@ class gcd2{
 			return b;
 		
 		if (a>b){
-		double d;
+		
 			a=b+c+d;
 			}
+	}
+	public static int costa(int x){
+
+		a=b+c+1.234;
 	}
 }
