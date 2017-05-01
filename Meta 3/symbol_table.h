@@ -5,7 +5,6 @@
 typedef struct tn* table_node;
 typedef struct tn{
   	char* value;
- 	char* name; //acrescentei
   	char* stype;
   	char* params;
   	char* flag;

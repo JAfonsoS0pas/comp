@@ -141,7 +141,7 @@ void check_method_body(no root, char* table_to){
 	}
 }
 
-void ast(no root){
+void ast(no root, char * name){
 
 	printf("vai construir a ast\n");
 	printf("root type %s\n", root->stype);
@@ -153,18 +153,39 @@ void ast(no root){
 		return;
 	}
 
+	if(strcmp(root->stype, "Program")==0){
+		strcpy(name, root->son->value);
+		printf("nome tabela actual %s\n ", name);
+
+	}
 	if(strcmp(root->stype, "MethodDecl")==0){
 		printf("Encontrou MethodDecl\n");
 		no aux = root->son; //methodheader
 		no aux2 = NULL;
-		char * name = (char * ) calloc(200, sizeof(char));
-		
 
-		/*while((aux!=NULL) && (strcmp(aux->stype,"MethodHeader")!=0)){
-			aux= aux->bro;
+
+		//buscar nome da tabela
+		
+		char * params = check_method_params(aux->son->bro->bro);
+		
+	
+			no aux3 = aux->son;
+			while(strcmp(aux3->stype, "Id")!=0){
+				aux3 = aux3->bro;
+			}
+			
+			strcpy(name, aux3->value);
+		if(strcmp(params,"()")!=0){
+			strcat(name, params);
+			
 		}
-		strcpy(name, aux->value);
-		printf("name %s\n", name);*/
+		else{
+			strcat(name, "()");
+		}
+		printf("nome actual!!!!!!!!!!!!!!!!!!!!!: %s\n ", name);
+		
+	
+		
 		
 		while((aux!=NULL) && (strcmp(aux->stype,"MethodBody")!=0)){
 
@@ -186,19 +207,19 @@ void ast(no root){
 				insert(aux2,name);
 			}
 			
-			printf("adicionou a` ast");
+			
 		}
 
 	}
 	if((strcmp(root->stype, "Program")==0)){
 		root= root->son;
-		ast(root);
+		ast(root,name);
 	}
 	else{
 		if(root->bro==NULL){
 			return;
 		}else{
-			ast(root->bro);
+			ast(root->bro,name);
 		}
 		
 	}
@@ -214,13 +235,15 @@ void insert(no root, char * name){
 	char * symbol_type =  NULL;
 
 
-	printf("root type %s\n ", aux->stype);
+	printf("root type %s\n  na tabela %s\n ", aux->stype, name);
 	if(aux->type == stat_node){
 		insert(aux->son, name);
 		insert(aux->bro, name);
+		symbol_type = search_char_table(aux->value, name);
+		printf("olsaaaaaa %s\n", symbol_type);
 	}
 
-	if(aux->type== id_node){
+	if(aux->type == id_node){
 
 		printf(" encontrou id\n");
 		
@@ -247,8 +270,24 @@ void insert(no root, char * name){
 			}
 		}
 	}
+
+	if(aux->type == stat_node){
+		insert(aux->son, name);
+		insert(aux->bro, name);
+	}
+
+	if(aux->type == op_node){
+		insert(aux->son, name);
+		//check type
+		insert(aux->bro, name);
+
+	}
+
+
 	aux->type_t = symbol_type;
+
 	printf("aux->type_t %s\n", aux->type_t);
+
 	if(aux->bro!=NULL){
 		insert(aux->bro,name);
 	}

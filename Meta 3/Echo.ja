@@ -1,6 +1,8 @@
 class gcd2 {  
 	public static double foo6() {}
-	public static void foo5(int x,double y, boolean z){}
+	public static void foo5(int x,double y, boolean z){
+			
+	}
 	public static int foo7(){}
 	public static boolean foo8(){
 		a = Integer.parseInt(args[0]);
