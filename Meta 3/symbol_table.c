@@ -53,6 +53,31 @@ table search_table(char* name){
   return NULL;
 }
 
+char* search_table_call(no root){
+  table_node head = symbol_table->my_table;
+  char str[500] = " - ";
+  while(head){
+    if(strcmp(root->value,head->value)==0 && strcmp(head->params,"")!=0){
+      strcat(str,head->params);
+      return strdup(str);
+    }
+    head=head->next;
+  }
+  return NULL;
+}
+
+char * search_table_return(no root){
+  table_node head = symbol_table->my_table;
+  char str[500] = " - ";
+  while(head){
+    if(strcmp(root->value,head->value)==0 && strcmp(head->params,"")!=0){
+      strcat(str,head->stype);
+      return strdup(str);
+    }
+    head=head->next;
+  }
+  return NULL;
+}
 
 char * search_char_table(char * name, char * t_name){
 	table aux =NULL;
@@ -145,66 +170,3 @@ void print_tables(){
 }
 
 
-
-void check_type(no root){
-
-
-  
-  //printf("entrou vai checkar %s\n", root->stype);
-
-  if((strcmp(root->stype, "If")==0)|| (strcmp(root->stype, "Block")==0)|| (strcmp(root->stype, "While")==0)||(strcmp(root->stype, "Return")==0)){
-    return;
-  }
-  
- 
-
-  int cnt = 0;
-
-if((strcmp(root->stype, "Assign")==0)){
-  
-  printf("Assign!!  %s %s \n",root->son->value,  root->son->type_t);
-  root->type_t = strdup(root->son->type_t);
-  root = root->son;
-  
-}  
-
-  if((strcmp(root->stype, "Sub")==0) || (strcmp(root->stype, "Add"))==0 || (strcmp(root->stype, "Mul"))==0 || (strcmp(root->stype, "Div"))==0) {
-    printf("encontrou add");
-    no aux  = root->son;
-
-    while(aux!=NULL){
-     
-     //printf("tipo do filho : %s\n ", aux->type_t);
-      if(cnt == 0){
-         if(strcmp(aux->type_t," - int")==0){
-
-          root->type_t  = strdup(aux->type_t);
-          printf("ADD %s %s\n", root->type_t, root->stype);
-
-        }
-        if(strcmp(aux->type_t," - double")==0){
-
-          root->type_t  = strdup(aux->type_t);
-          printf("ADD %s %s\n", root->type_t, root->stype);
-        }
-        cnt++;
-        
-      }
-      else{
-        if(strcmp(aux->type_t, root->type_t ) !=0){
-          
-          root->type_t  = strdup(" - double");
-         
-        }
-      }
-     aux = aux->bro;
-    }
-
-  }
-
-
-
-
-  
-  
-}

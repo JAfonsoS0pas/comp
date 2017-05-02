@@ -26,6 +26,6 @@ void insert_el(char *value, char* stype,char* params, char* flag, char* table_to
 table search_table(char* name);
 void print_tables();
 char * search_char_table(char * name, char * t_name);
-void check_type(no root);
-
+char* search_table_call(no root);
+char * search_table_return(no root);
 #endif

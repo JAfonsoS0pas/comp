@@ -11,3 +11,5 @@ void check_method_body(no root, char* table_to);
 void insert(no root, char * name);
 void ast(no root, char * name);
 void check_method_body_ids(no root, char* table_to);
+void check_type(no root);
+void check_calls(no root);
