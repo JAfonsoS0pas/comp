@@ -144,7 +144,26 @@ void check_method_body(no root, char* table_to){
 			char *stype = check_stype(head->son->stype);
 			insert_el(head->son->bro->value,stype,NULL,NULL,table_to);
 		}
+		else{
+			check_method_body_ids(head,table_to);
+		}
 		head=head->bro;
+	}
+}
+
+void check_method_body_ids(no root, char* table_to){
+	if(root==NULL){
+		return;
+	}
+	if(strcmp(root->stype,"Id")==0){
+			char * symbol_type =  search_char_table(root->value,table_to);
+			root->type_t = symbol_type;
+	}
+
+	no aux = root->son;
+	while(aux){
+		check_method_body_ids(aux,table_to);
+		aux=aux->bro;
 	}
 }
 

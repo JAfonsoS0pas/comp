@@ -55,35 +55,23 @@ table search_table(char* name){
 
 
 char * search_char_table(char * name, char * t_name){
-	
+	printf("VOU PROCURAR %s\n", name);
 	table aux =NULL;
 	table_node aux_nodes = NULL;
-	char * str = NULL;
+  char str[500] = " - ";
 
-  printf("tabela a procurar  %s\n : ",t_name);
 	for(aux = symbol_table;aux;aux=aux->next){
-
-      printf("tabela actual: %s | tabela minha: %s\n", aux->name, t_name);
       if(strcmp(aux->name, t_name)==0){
-        printf("encontrei a tabela que eu queria, quero %s\n", name);
-      	str = (char*)calloc(200,sizeof(char));
+        printf("ENCONTREI A TABELA %s\n",aux->name );
   	    aux_nodes = aux->my_table;
   	    while(aux_nodes){
-
-  	    	if(aux_nodes->params != NULL){
-  	    			if(strcmp(aux_nodes->params, "()")!=0){
-  	    				printf("encontrou params\n");
-  						  strcat(str,aux_nodes->params);
-  						  printf("str params %s \n", str);
-  						return str;
+          if(strcmp(aux_nodes->value, name)==0){
+            printf("ENCONTREI O MANO %s\n",aux_nodes->value );
+  	    	  if(aux_nodes->stype != NULL){
+                strcat(str,aux_nodes->stype);
+  						  return strdup(str);
   	    			}
-  					
   				}
-  				else{
-  					printf(" no params %s\n ", aux_nodes->stype);
-  					return aux_nodes->stype;
-  				}
-  	      
   	      aux_nodes=aux_nodes->next;
   	    }
 
