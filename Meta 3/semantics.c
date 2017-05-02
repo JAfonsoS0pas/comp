@@ -61,6 +61,14 @@ void check_program(no root){
 		char * cenas = (char*)strdup(" - boolean");
 		root->type_t = cenas;
 	}
+	if(strcmp(root->stype, "ParseArgs")==0){
+		char * cenas = (char*)strdup(" - int");
+		root->type_t = cenas;
+	}
+	if(strcmp(root->stype, "Length")==0){
+		char * cenas = (char*)strdup(" - int");
+		root->type_t = cenas;
+	}
 	
 
 
@@ -121,10 +129,6 @@ char* check_stype(char* root){
 	else if(strcmp(root,"Void")==0){
 		stype = (char*)calloc((strlen("void")+1),sizeof(char));
 		strcpy(stype,"void");
-	}
-	else if(strcmp(root,"ParseArgs")==0){
-		stype = (char*)calloc((strlen("int")+1),sizeof(char));
-		strcpy(stype,"int");
 	}
 	return stype;
 }
