@@ -20,11 +20,18 @@ void check_program(no root){
 	}
 	if (strcmp(root->stype, "MethodDecl")==0){
 		check_method_decl(root->son);
-
-		//check_declaration(root, "Method");
 	}
-	else{
-
+	if(strcmp(root->stype, "DecLit")==0){
+		char * cenas = (char*)strdup(" - int");
+		root->type_t = cenas;
+	}
+	if(strcmp(root->stype, "StrLit")==0){
+		char * cenas = (char*)strdup(" - String[]");
+		root->type_t = cenas;
+	}
+	if(strcmp(root->stype, "BoolLit")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
 	}
 	no aux = root->son;
 	while(aux!=NULL){
@@ -141,6 +148,7 @@ void check_method_body(no root, char* table_to){
 	}
 }
 
+
 void ast(no root, char * name){
 
 	printf("vai construir a ast\n");
@@ -169,12 +177,12 @@ void ast(no root, char * name){
 		char * params = check_method_params(aux->son->bro->bro);
 		
 	
-			no aux3 = aux->son;
-			while(strcmp(aux3->stype, "Id")!=0){
-				aux3 = aux3->bro;
-			}
-			
-			strcpy(name, aux3->value);
+		no aux3 = aux->son;
+		while(strcmp(aux3->stype, "Id")!=0){
+			aux3 = aux3->bro;
+		}
+		
+		strcpy(name, aux3->value);
 		if(strcmp(params,"()")!=0){
 			strcat(name, params);
 			

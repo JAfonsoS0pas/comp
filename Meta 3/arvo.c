@@ -10,22 +10,13 @@ no create(type_node type, char* value, char* stype){
 	new->value = (char*)malloc(1+strlen(value)*sizeof(char));
 	strcpy(new->value,value);
 	new->type= type;
-	new->type_t=NULL;
+	new->type_t="";
 	new->father=NULL;
 	new->son=NULL;
 	new->bro=NULL;
 	new->n = 0;
 
 	return new;
-
-}
-
-void give_type(no novo, char* type){
-	no aux = novo->bro;
-	while(aux!=NULL){
-		aux=aux->bro;
-	}
-	strcpy(aux->son->stype, type); 
 
 }
 
@@ -141,9 +132,9 @@ void printftree(no root, int prof){
 			i++;
 		}
 		if(strcmp(root->value,"")!=0)
-			printf("%s(%s)\n", root->stype, root->value);
+			printf("%s(%s)%s\n", root->stype, root->value,root->type_t);
 		else
-			printf("%s\n", root->stype);
+			printf("%s%s\n", root->stype, root->type_t);
 	}
 	aux = root->son;
 	while(aux!=NULL){

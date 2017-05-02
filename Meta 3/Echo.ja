@@ -9,6 +9,7 @@ class gcd2 {
 
         b = Integer.parseInt(args[1]);
         System.out.println(gcd);
+        System.out.println(true);
         System.out.println("Error: two parameters required.");
 
         int fgh;
