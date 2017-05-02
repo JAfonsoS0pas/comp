@@ -9,14 +9,14 @@ class gcd2 {
 			System.out.println(gcd);    
 		} else      
 			System.out.println("Error: two parameters required.");  
-	}  
-	public static int gcd(int a, int b) {    
+	} 
+	public static int gcd(double a, int b) {    
 		if (a == 0)        
 			return b;    
 		else {        
 			while (b > 0)            
 				if (a > b)                
-					a = a-b;            
+					a = a*b;            
 				else                
 					b = b-a;        
 				return a;    

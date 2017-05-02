@@ -75,48 +75,6 @@ int cntbros(no root){
 }
 
 
-
-void printftreetype(no root, int prof){
-	if(root==NULL){
-		return;
-	}
-	int i=0;
-	no aux;
-	if((root->type == root_node) &&(root->type_t!=NULL)){
-		printf("%s\n", root->stype);
-	}
-	else {
-		while(i<prof){
-			printf("..");
-			i++;
-		}
-		if((strcmp(root->value,"")!=0) && (root->type_t!=NULL)){
-			printf("%s(%s) - %s\n", root->stype, root->value, root->type_t);
-		}
-		
-		else if((strcmp(root->value,"")!=0)&&(root->type_t!=NULL)){
-			printf("%s\n", root->stype);
-		}
-
-		else{
-			printf("%s\n", root->stype);
-		}
-	}
-	aux = root->son;
-	while(aux!=NULL){
-		no auxToFree = aux;
-		printftreetype(aux, prof+1);
-		aux=aux->bro;
-		
-		free(auxToFree->stype);
-		free(auxToFree->value);
-		free(auxToFree);
-	}
-
-}
-
-
-
 void printftree(no root, int prof){
 	if(root==NULL){
 		return;

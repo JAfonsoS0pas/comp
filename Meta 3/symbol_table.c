@@ -72,22 +72,19 @@ char * search_char_table(char * name, char * t_name){
   	      aux_nodes=aux_nodes->next;
   	    }
       }
-      else{
-        aux_nodes= aux->my_table;
-        while(aux_nodes){
-          if(strcmp(aux_nodes->value, name)==0){
-            if(aux_nodes->stype != NULL){
-                strcat(str,aux_nodes->stype);
-                return strdup(str);
-              }
-          }
-          aux_nodes=aux_nodes->next;
+  }
+  aux_nodes= symbol_table->my_table;
+  while(aux_nodes){
+    if(strcmp(aux_nodes->value, name)==0){
+      if(aux_nodes->stype != NULL){
+          strcat(str,aux_nodes->stype);
+          return strdup(str);
         }
-      }
+    }
+    aux_nodes=aux_nodes->next;
+  
   }
 	return NULL;
-
-
 }
 
 void insert_el(char *value, char* stype,char* params,char* flag, char* table_to)
@@ -145,4 +142,69 @@ void print_tables(){
     }
     printf("\n");
   }
+}
+
+
+
+void check_type(no root){
+
+
+  
+  //printf("entrou vai checkar %s\n", root->stype);
+
+  if((strcmp(root->stype, "If")==0)|| (strcmp(root->stype, "Block")==0)|| (strcmp(root->stype, "While")==0)||(strcmp(root->stype, "Return")==0)){
+    return;
+  }
+  
+ 
+
+  int cnt = 0;
+
+if((strcmp(root->stype, "Assign")==0)){
+  
+  printf("Assign!!  %s %s \n",root->son->value,  root->son->type_t);
+  root->type_t = strdup(root->son->type_t);
+  root = root->son;
+  
+}  
+
+  if((strcmp(root->stype, "Sub")==0) || (strcmp(root->stype, "Add"))==0 || (strcmp(root->stype, "Mul"))==0 || (strcmp(root->stype, "Div"))==0) {
+    printf("encontrou add");
+    no aux  = root->son;
+
+    while(aux!=NULL){
+     
+     //printf("tipo do filho : %s\n ", aux->type_t);
+      if(cnt == 0){
+         if(strcmp(aux->type_t," - int")==0){
+
+          root->type_t  = strdup(aux->type_t);
+          printf("ADD %s %s\n", root->type_t, root->stype);
+
+        }
+        if(strcmp(aux->type_t," - double")==0){
+
+          root->type_t  = strdup(aux->type_t);
+          printf("ADD %s %s\n", root->type_t, root->stype);
+        }
+        cnt++;
+        
+      }
+      else{
+        if(strcmp(aux->type_t, root->type_t ) !=0){
+          
+          root->type_t  = strdup(" - double");
+         
+        }
+      }
+     aux = aux->bro;
+    }
+
+  }
+
+
+
+
+  
+  
 }

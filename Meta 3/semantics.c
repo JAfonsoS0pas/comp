@@ -106,6 +106,8 @@ void check_method_decl(no root){
 
 
 
+
+
 }
 
 char* check_stype(char* root){
@@ -174,16 +176,22 @@ void check_method_body(no root, char* table_to){
 	if(root->son){
 		head=root->son;
 	}
+
 	while(head){
 		if(strcmp(head->stype,"VarDecl")==0){
 			char *stype = check_stype(head->son->stype);
 			insert_el(head->son->bro->value,stype,NULL,NULL,table_to);
 		}
-
+		
 		else{
+			
 			check_method_body_ids(head,table_to);
+			
+			
 		}
+
 		head=head->bro;
+
 	}
 }
 
@@ -200,153 +208,13 @@ void check_method_body_ids(no root, char* table_to){
 	if(strcmp(root->stype,"Call")==0){
 		//procurar metodo	
 	}
+	
 
 	no aux = root->son;
 	while(aux){
 		check_method_body_ids(aux,table_to);
+		check_type(aux);
 		aux=aux->bro;
 	}
 }
-
-
-void ast(no root, char * name){
-
-	printf("vai construir a ast\n");
-	printf("root type %s\n", root->stype);
-
-	printf("ROOT TYPE %s\n ", root->stype);
-
-	if(root==NULL){
-		printf("root null\n");
-		return;
-	}
-
-	if(strcmp(root->stype, "Program")==0){
-		strcpy(name, root->son->value);
-		printf("nome tabela actual %s\n ", name);
-
-	}
-	if(strcmp(root->stype, "MethodDecl")==0){
-		printf("Encontrou MethodDecl\n");
-		no aux = root->son; //methodheader
-		no aux2 = NULL;
-
-
-		//buscar nome da tabela
-		
-		char * params = check_method_params(aux->son->bro->bro);
-		
-	
-		no aux3 = aux->son;
-		while(strcmp(aux3->stype, "Id")!=0){
-			aux3 = aux3->bro;
-		}
-		
-		strcpy(name, aux3->value);
-		if(strcmp(params,"()")!=0){
-			strcat(name, params);
-			
-		}
-		else{
-			strcat(name, "()");
-		}
-		printf("nome actual!!!!!!!!!!!!!!!!!!!!!: %s\n ", name);
-		
-	
-		
-		
-		while((aux!=NULL) && (strcmp(aux->stype,"MethodBody")!=0)){
-
-			aux= aux->bro;
-		}
-		printf("encontrou methodbody!\n");
-		
-		if(aux->son!=NULL){
-
-			aux2 = aux->son;
-
-			while((aux2!=NULL)&&(aux2->type==var_node)){
-				
-				aux2 = aux2->bro;
-			}
-
-			aux2= aux2->son;
-			if(aux2!=NULL){
-				insert(aux2,name);
-			}
-			
-			
-		}
-
-	}
-	if((strcmp(root->stype, "Program")==0)){
-		root= root->son;
-		ast(root,name);
-	}
-	else{
-		if(root->bro==NULL){
-			return;
-		}else{
-			ast(root->bro,name);
-		}
-		
-	}
-	
-
-}
-
-
-
-void insert(no root, char * name){
-	printf("entrou no insert\n");
-	no aux  = root;
-	char * symbol_type =  NULL;
-
-
-	printf("root type %s\n  na tabela %s\n ", aux->stype, name);
-	if(aux->type == stat_node){
-		insert(aux->son, name);
-		insert(aux->bro, name);
-		symbol_type = search_char_table(aux->value, name);
-		printf("olsaaaaaa %s\n", symbol_type);
-	}
-
-	if(aux->type == id_node){
-
-		printf(" encontrou id\n");
-		
-		symbol_type = search_char_table(aux->value, name);
-		
-		printf("olsaaaaaa %s\n", symbol_type);
-
-	}
-
-	if(aux->type == stat_node){
-		insert(aux->son, name);
-		insert(aux->bro, name);
-	}
-
-	if(aux->type == op_node){
-		insert(aux->son, name);
-		//check type
-		insert(aux->bro, name);
-
-	}
-
-
-	aux->type_t = symbol_type;
-
-	printf("aux->type_t %s\n", aux->type_t);
-
-	if(aux->bro!=NULL){
-		insert(aux->bro,name);
-	}
-	else{
-		return;
-	}
-	
-
-}
-
-
 
