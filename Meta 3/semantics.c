@@ -194,8 +194,11 @@ void check_method_body_ids(no root, char* table_to){
 		return;
 	}
 	if(strcmp(root->stype,"Id")==0){
-			char * symbol_type =  search_char_table(root->value,table_to);
-			root->type_t = symbol_type;
+		char * symbol_type =  search_char_table(root->value,table_to);
+		root->type_t = symbol_type;
+	}
+	if(strcmp(root->stype,"Call")==0){
+		//procurar metodo	
 	}
 
 	no aux = root->son;
