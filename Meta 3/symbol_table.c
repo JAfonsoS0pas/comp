@@ -56,7 +56,9 @@ table search_table(char* name){
 char* search_table_call(no root, char * yes){
   table_node head = symbol_table->my_table;
   char str[500] = " - ";
+  //printf("root_value - %s ,yes - %s\n",root->value, yes );
   while(head){
+    //printf("head_value - %s, head->params %s\n",head->value, head->params );
     if((root->value!=NULL) && (head->value!=NULL)&&(yes!=NULL) && (head->params!=NULL)){
       if(strcmp(root->value,head->value)==0 && strcmp(head->params,yes)==0 && strcmp(head->params,"")!=0){
             strcat(str,head->params);
@@ -65,6 +67,7 @@ char* search_table_call(no root, char * yes){
     }
     head=head->next;  
   }
+
   return strdup(" - undef");
 }
 

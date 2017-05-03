@@ -89,13 +89,12 @@ void check_calls(no root){
 		
 		if(strcmp(root->stype,"Call")==0){
 
-			
+			char params[500] = "(";
+
 			if(root->son->bro!=NULL){
 				
 				no aux=root->son->bro;
-				char params[500] = "(";
-
-
+				
 				while(aux){
 
 						char aux_str[100];
@@ -118,15 +117,14 @@ void check_calls(no root){
 						
 
 				}
-				strcat(params, ")");
-				char * wowo = strdup(params);
-				if(root->son!=NULL){
-					root->son->type_t = search_table_call(root->son, wowo);
-					root->type_t = search_table_return(root->son,wowo);
-				}
-				
 			}
-			
+			strcat(params, ")");
+			char * wowo = strdup(params);
+			if(root->son!=NULL){
+				//printf("VALUE - %s, yes - %s\n",root->son->value, wowo );
+				root->son->type_t = search_table_call(root->son, wowo);
+				root->type_t = search_table_return(root->son,wowo);
+			}
 		}
 
 		
