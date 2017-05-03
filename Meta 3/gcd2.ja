@@ -48,7 +48,7 @@ class gcd2 {
   public static int gcd(boolean a,boolean b) {
 
   }
-  public static int gcd(double a , int b){
+  public static int gcd(double a , double b){
 
   }
 }

@@ -98,7 +98,11 @@ void check_calls(no root){
 				while(aux){
 
 						char aux_str[100];
+						if(strcmp(aux->type_t,"")==0){
+							check_calls(aux);
+						}
 						if(aux->type_t!=NULL){
+							printf("HUGO (%s) - (%s)\n",aux->value,aux->type_t );
 
 							strcpy(aux_str,aux->type_t);
 							char * token;
@@ -121,9 +125,10 @@ void check_calls(no root){
 			strcat(params, ")");
 			char * wowo = strdup(params);
 			if(root->son!=NULL){
-				//printf("VALUE - %s, yes - %s\n",root->son->value, wowo );
+				printf("VALUE - %s, yes - %s\n",root->son->value, wowo );
 				root->son->type_t = search_table_call(root->son, wowo);
 				root->type_t = search_table_return(root->son,wowo);
+				printf("ROOT_TYPE - %s ROOT_TYPE_T - %s\n",root->type_t,root->son->type_t );
 			}
 		}
 
