@@ -27,5 +27,5 @@ table search_table(char* name);
 void print_tables();
 char * search_char_table(char * name, char * t_name);
 char* search_table_call(no root, char * yes);
-char * search_table_return(no root);
+char * search_table_return(no root, char * yes);
 #endif

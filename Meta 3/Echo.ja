@@ -1,24 +1,16 @@
 class gcd2 {  
 	
-	
-  public static double gcd2;
+	public static void main(){
+		int a;
+		double b;
+		a =cona(1);
+		b =cona(cona(1),2.2);
 
-	public static int gcd3(int a,double q, double s, double f, double ad, double r, double b) {              
-	    do{
-	    	cona();
-		    cona(a);
-		    cona(a,x);
-
-
-	    }while(true);
 	}
 	public static void cona(){}
-	public static int cona(int a, double x){
-		cona();
-		cona(a,b,x);
-		
-
-	}
+	public static int cona(int x){}
+	public static double cona(int x, double y){}
+	public static boolean cona(int x, double y,boolean z){}
 
 
 

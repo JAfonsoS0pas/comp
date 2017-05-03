@@ -70,8 +70,6 @@ void check_program(no root){
 		root->type_t = cenas;
 	}
 	
-
-
 	no aux = root->son;
 	while(aux!=NULL){
 		check_program(aux);
@@ -83,74 +81,41 @@ void check_calls(no root){
 	if(root==NULL){
 		return;
 	}
-	char * yes;
-	//printf("welelelel\n");
-	//printf("root -> stpe%s\n",root->stype );
 	if(root->stype!=NULL){
-		//printf("pasoou\n");
 		if(strcmp(root->stype,"Call")==0){
 			if(root->son->bro!=NULL){
 				no aux=root->son->bro;
 				char params[500] = "(";
-				//printf("35\n");
 				while(aux){
-					//printf("56\n");
-					//printf("AUX -> %s\n",aux->type_t );
+					printf("WHILE %s\n",aux->type_t );
 					char aux_str[100];
-					//printf("segmano\n");
 					if(strcmp(aux->type_t,"")!=0){
-						//printf("segmano4\n");
-						//printf("el tipo %s\n ", aux->type_t);
 						strcpy(aux_str,aux->type_t);
-						//printf("passou2");
 						char * token;
-						
-						char * search="  - ";
-						
+						char search[]="  - ";
 						token=strtok(aux_str, search);
-						//printf("passou3");
-						yes = strdup(token);
-						//printf("passou3");
-						//printf("ESTE yes %s\n", yes);
-						strcat(params, yes);
-						//printf("passou4");
-						token = strtok(NULL,aux_str);
-						
+						strcat(params, token);
 						if(aux->bro!=NULL)
 							strcat(params,",");
-							//printf("passou5");
-						}else{break;}
-						if(aux->bro!=NULL){
-							aux=aux->bro;
 						}
-						else{break;}	
-						
-							
-					
+						aux=aux->bro;
 				}
-				//printf("saiu\n");
 				strcat(params, ")");
-				//printf("passou7");
-				//printf("PARAMS ASDASD %s\n",params );
-				char * wowo;
-				wowo = strdup(params);
-				//printf("passou8");
+				char * wowo = strdup(params);
 				if(root->son!=NULL){
-				root->son->type_t = search_table_call(root->son, wowo);
-				//printf("passou9");
-				//printf("CALL SON TYPE_T %s\n", root->son->type_t );
-				root->type_t = search_table_return(root->son);
-				//sprintf("passou10");
-				//printf("CALL Root TYPE_T %s\n", root->type_t );
-				}}
+					root->son->type_t = search_table_call(root->son, wowo);
+					printf("ANTES DAS CENAS %s\n",root->son->type_t );
+					root->type_t = search_table_return(root->son,wowo);
+					printf("CENAS %s\n",root->type_t );
+				}
+			}
 		}
 	}
-	if(root->son!=NULL){
 	no aux = root->son;
 	while(aux!=NULL){
 		check_calls(aux);
 		aux=aux->bro;
-	}}
+	}
 
 }
 
