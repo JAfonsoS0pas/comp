@@ -67,6 +67,40 @@ char* search_table_call(no root, char * yes){
     }
     head=head->next;  
   }
+  
+  int cnt = 0;
+  char * token;
+  char * p = yes;
+  p++;
+  p[strlen(p)-1]=0;
+
+  char *a[200];
+
+  if (yes != NULL) {
+
+    while ((token = strsep(&p, ",")) != NULL)
+    {
+      if(strcmp(token, " ")!=0){
+        a[cnt] = strdup(token);
+        printf("parametro: %s\n", a[cnt]);
+        cnt ++;
+      }
+      
+    }
+
+  }
+  printf("tenho parametros %d\n", cnt);
+  
+  while(head){
+    
+    if((root->value!=NULL) && (head->value!=NULL) && (head->params!=NULL)){
+      if(strcmp(root->value,head->value)==0 && strcmp(head->params,"")!=0){
+            strcat(str,head->params);
+            return strdup(str);
+        }
+    }
+    head=head->next;  
+  }
 
   return strdup(" - undef");
 }

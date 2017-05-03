@@ -2,10 +2,8 @@
 class gcd2 {  
 	
 	public static void main(){
-		int a;
-		double b;
-		a =cona(1);
-		b =cona(cona(1,2,x));
+		int b;
+		b =cona(1,2);
 
 	}
 
