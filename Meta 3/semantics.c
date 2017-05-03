@@ -87,7 +87,6 @@ void check_calls(no root){
 				no aux=root->son->bro;
 				char params[500] = "(";
 				while(aux){
-					printf("WHILE %s\n",aux->type_t );
 					char aux_str[100];
 					if(strcmp(aux->type_t,"")!=0){
 						strcpy(aux_str,aux->type_t);
@@ -95,18 +94,16 @@ void check_calls(no root){
 						char search[]="  - ";
 						token=strtok(aux_str, search);
 						strcat(params, token);
-						if(aux->bro!=NULL)
-							strcat(params,",");
 						}
-						aux=aux->bro;
+					if(aux->bro!=NULL)
+						strcat(params,",");
+					aux=aux->bro;
 				}
 				strcat(params, ")");
 				char * wowo = strdup(params);
 				if(root->son!=NULL){
 					root->son->type_t = search_table_call(root->son, wowo);
-					printf("ANTES DAS CENAS %s\n",root->son->type_t );
 					root->type_t = search_table_return(root->son,wowo);
-					printf("CENAS %s\n",root->type_t );
 				}
 			}
 		}
@@ -216,7 +213,6 @@ void check_method_body(no root, char* table_to){
 	if(root->son){
 		head=root->son;
 	}
-
 	while(head){
 		if(strcmp(head->stype,"VarDecl")==0){
 			char *stype = check_stype(head->son->stype);

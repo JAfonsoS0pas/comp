@@ -54,21 +54,18 @@ table search_table(char* name){
 }
 
 char* search_table_call(no root, char * yes){
-
   table_node head = symbol_table->my_table;
   char str[500] = " - ";
   while(head){
     if((root->value!=NULL) && (head->value!=NULL)&&(yes!=NULL) && (head->params!=NULL)){
-      printf("yoyoyoyoyo %s - %s - %s - %s\n",root->value,head->value,yes,head->params );
       if(strcmp(root->value,head->value)==0 && strcmp(head->params,yes)==0 && strcmp(head->params,"")!=0){
             strcat(str,head->params);
-            printf("yoyoyo%s\n", str);
             return strdup(str);
         }
     }
     head=head->next;  
   }
-  return NULL;
+  return strdup(" - undef");
 }
 
 char * search_table_return(no root, char * yes){
@@ -81,7 +78,7 @@ char * search_table_return(no root, char * yes){
     }
     head=head->next;
   }
-  return NULL;
+  return strdup(" - undef");
 }
 
 char * search_char_table(char * name, char * t_name){
