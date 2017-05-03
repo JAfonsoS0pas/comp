@@ -3,15 +3,22 @@ class gcd2 {
 	
   public static double gcd2;
 
-	public static int gcd3(double a, int b, double c, double x) {              
-    while(a>b){
-            a=q*s*f*a-ad-r;
-    }
-      
+	public static int gcd3(int a,double q, double s, double f, double ad, double r, double b) {              
+	    do{
+	    	cona();
+		    cona(a);
+		    cona(a,x);
 
+
+	    }while(true);
+	}
+	public static void cona(){}
+	public static int cona(int a, double x){
+		cona();
+		cona(a,b,x);
 		
-		
-	}  
+
+	}
 
 
 

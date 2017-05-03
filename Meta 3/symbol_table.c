@@ -53,15 +53,30 @@ table search_table(char* name){
   return NULL;
 }
 
-char* search_table_call(no root){
+char* search_table_call(no root, char * yes){
+
   table_node head = symbol_table->my_table;
   char str[500] = " - ";
   while(head){
-    if(strcmp(root->value,head->value)==0 && strcmp(head->params,"")!=0){
-      strcat(str,head->params);
-      return strdup(str);
+    //printf("hueheuhu\n");
+    if((root->value!=NULL) && (head->value!=NULL)&&(yes!=NULL)&&(head->params!=NULL)){
+
+      if(strcmp(root->value,head->value)==0 && strcmp(head->params,yes)==0&&strcmp(head->params,"")!=0){
+      //    printf("wowowo\n");
+          strcat(str,head->params);
+          return strdup(str);
+        }
+      
+
     }
-    head=head->next;
+    if(head->next!=NULL){
+      //printf("wowowo22222\n");
+       head=head->next;
+    }
+    else{
+      break;
+    }
+   
   }
   return NULL;
 }
