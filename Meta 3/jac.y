@@ -305,9 +305,11 @@ int main(int argc, char *argv[]){
 			flag=2;
 			yyparse();
 			yylex_destroy();
+
 			check_program(root);
 			print_tables();
 			check_calls(root);
+			
 
 			if(!print_flag)
     			printftree(root,0);

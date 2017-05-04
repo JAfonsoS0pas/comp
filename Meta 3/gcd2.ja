@@ -9,7 +9,7 @@ class gcd2 {
       a = Integer.parseInt(args[0]);
       b = Integer.parseInt(args[1]);
       gcd = gcd(Integer.parseInt(args[1]),Integer.parseInt(args[0]));
-      gcd2 = gcd(2.2,gcd(2.2,3.2));
+      gcd2 = gcd(2.2,gcd(2.2,3.2,x));
       gcd3 = gcd(true,2);
       gcd4 = gcd();
       gcd5 = gcd(2.2);

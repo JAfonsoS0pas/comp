@@ -111,59 +111,181 @@ char* search_table_call(no root, char * yes){
 }
 
 char * search_table_return(no root, char * yes){
+
   table_node head = symbol_table->my_table;
   char str[500] = " - ";
   while(head){
+     // printf("head->params %s | Yes %s\n\n", head->params, yes);
       if(strcmp(root->value,head->value)==0 && strcmp(head->params,yes)==0 && strcmp(head->params,"")!=0){
         strcat(str,head->stype);
+       // printf("encontrei!");
         return strdup(str);
     }
     head=head->next;
   }
-  char * token;
+  ////////////////////////AQUI//////////////////
+  
+  //printf(" nao encontrei parei\n");
+  char * token ="";
+  char * counter = strdup(yes);
   char * p = strdup(yes);
+  char * apl ;
   p++;
   p[strlen(p)-1]=0;
-  char teste[500] ="(";
+  char * copia;
+  copia = strdup(p);
+  char * primeiro ="";
 
+  char * oui;
+  int cnt5 = 0;
+  oui = strtok(counter,",");
+  while(oui!=NULL){
+      cnt5 ++;
+      oui = strtok(NULL,",");
+  }
 
+  if(strcmp(yes, "(undef)")==0){
+    return "- undef";
+  }
+ // printf("CNT5 %d\n", cnt5 );
+  int k;
+
+//printf("YES %s\n", yes);
+for(k=0;k<cnt5;k++){
+  int cnt = 0;
+  char * yolo="";
   if (p != NULL) {
-    
-    // printf("P1 - %s\n",p );
-    token = strsep(&p, ",");
-    while (token != NULL)
-    {
-      // printf("P2 - %s\n",p );
-      if(strcmp(token, "")!=0){
-        
-        // printf("parametro: %s\n", token);
-        if(strcmp(token,"double")==0){
-          strcat(teste,"int");
+    if(cnt==0){
+
+     token = strtok(p,",");
+     char * rest = "first";
+     int ty = 0;
+
+     char* save="";
+     while(rest!=NULL){
+      if(ty==0){
+        primeiro = strdup(rest);
+        rest = strtok(NULL,",");
+        if(rest==NULL){
+          break;
+        }else{
+        // printf("rest %s\n", rest);
+        save = strdup(rest);
         }
-        else{
-          strcat(teste,token);
+        
+      }
+      else{
+
+        rest = strtok(NULL,",");
+        if(rest!=NULL){
+          strcat(save,rest);
+        }else{
+          break;
+        }
+        
+      }
+
+    }
+
+      if(strcmp(yes, "(double)")==0){
+
+        return search_table_return(root, "(int)");
+      }
+
+
+      if(strcmp(yes, "()")==0){
+
+        return "- undef";
+      }
+      if(strcmp(yes,"(int)")==0){
+        return "- undef";
+      }
+     // printf("YES5 %s\n");
+      if(strcmp(token,"double")==0){
+          strcpy(token, "int");
+      }
+
+    //  printf("YES4 %s\n", yes);
+      char * corte = strdup(token);
+      strcat(corte, ",");
+      if(strcmp(primeiro, "first")!=0){
+         strcat(corte, primeiro);
+         apl = strdup("(");
+        
+         yolo = strdup(corte);
+          strcat(apl, yolo);
+          strcat(apl,")");
+          //printf("corte : %s\n", apl);
+       //   printf("corte : %s\n", apl);
+      }
+   //   printf("YES3 %s\n", save);
+      search_table_return(root, apl);
+     // printf("YOLO CORTE: %s\n", apl);
+    //  printf("YES3 %s\n", save);
+    }
+   }else{
+
+    //printf("YES 5555%s\n", yes);
+    //printf("YOLO CORTE: %s\n", yolo);
+    token = strtok(p,yolo);
+     char * rest = "first";
+     int ty = 0;
+     char* save="";
+     while(rest!=NULL){
+      if(ty==0){
+        primeiro = strdup(rest);
+        rest = strtok(NULL,",");
+        if(rest!=NULL){
+          save = strdup(rest);
         }
       }
-     
-      token = strsep(&p, ",");
-      if(token)
-        strcat(teste,",");
+      else{
+
+        rest = strtok(NULL,",");
+        if(rest!=NULL){
+          strcat(save,rest);
+        }else{
+          break;
+        }
+      }
+
     }
-    
-    strcat(teste,")");
+ //   printf("YES %s\n", yes);
+      if(strcmp(token,"double")==0){
+          strcpy(token, "int");
+      }
+
+
+      char * corte = strdup(token);
+      strcat(corte, ",");
+      if(strcmp(primeiro, "first")!=0){
+        strcat(corte, primeiro);
+   //    printf("corte : %s\n", corte);
+        apl = strdup("(");
+        
+         yolo = strdup(corte);
+          strcat(apl, yolo);
+          strcat(apl,")");
+      //  printf("corte : %s\n", yolo);
+      }else{
+        strcat(yolo,")");
+      }
+
+      search_table_return(root, apl);
+
+
+
+
   }
-  if(strcmp(yes,teste)!=0){
-   
-    return search_table_return(root,teste);
-    
-    // printf("YA\n");
-  }
+     
+    }
+
   
   return strdup(" - undef");
+
 }
 
 char * search_char_table(char * name, char * t_name){
-  char * var = strdup(name);
 	table aux =NULL;
 	table_node aux_nodes = NULL;
   char str[500] = " - ";
@@ -174,10 +296,10 @@ char * search_char_table(char * name, char * t_name){
       if(strcmp(aux->name, t_name)==0){
   	    aux_nodes = aux->my_table;
   	    while(aux_nodes){
-          printf("1 -rogerio %s name:%s\n", aux_nodes->value, var);
+          //printf("1 -rogerio %s name:%s\n", aux_nodes->value, var);
 
           if(strcmp(aux_nodes->value, name)==0){
-            printf("name: %s\n", name);
+            //printf("name: %s\n", name);
   	    	  if(aux_nodes->stype != NULL){
                 strcat(str,aux_nodes->stype);
   						  return strdup(str);
@@ -203,32 +325,30 @@ char * search_char_table(char * name, char * t_name){
 
   aux = symbol_table;
   //printf("vou à MAIN  \n");
-   /*
-   aux = symbol_table;
-   
-   
+
     aux_nodes = aux->my_table;
     while(aux_nodes){
-      printf("55 -rogerio %s name:%s\n", aux_nodes->value, var);
+      //printf("55 -rogerio %s name:%s\n", aux_nodes->value, var);
 
       if(strcmp(aux_nodes->value, name)==0){
-        printf("name: %s\n", name);
+       // printf("name: %s\n", name);
         if(aux_nodes->stype != NULL){
             strcat(str,aux_nodes->stype);
             return strdup(str);
           } 
       }
       aux_nodes=aux_nodes->next;
-      printf("aux_nodes %s\n", aux_nodes);
-      printf("55 -rogerio %s name:%s\n", aux_nodes->value, var);
+      //printf("aux_nodes %s\n", aux_nodes);
+      //printf("55 -rogerio %s name:%s\n", aux_nodes->value, var);
     }
-      */
+      
   
 	return ("- undef");
 }
 
 void insert_el(char *value, char* stype,char* params,char* flag, char* table_to)
 {
+  
   table_node new_node= calloc(1,sizeof(tn));
   new_node->value = value;
   new_node->stype = stype;

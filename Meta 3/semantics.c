@@ -183,6 +183,7 @@ void check_method_decl(no root){
 	}
 	char *params = check_method_params(root->son->bro->bro);
 	
+	
     char * new_str ;
 	if((new_str = malloc(strlen(value)+strlen(params)+1)) != NULL){
 	    new_str[0] = '\0';   // ensures the memory is an empty string
@@ -236,6 +237,8 @@ void add_method_params(no root,char* table_to){
 }
 
 char* check_method_params(no root){
+
+
 	char params[500] = "(";
 	no aux=NULL;
 	if(root->son)
