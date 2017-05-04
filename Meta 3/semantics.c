@@ -83,25 +83,28 @@ void check_calls(no root){
 	if(root==NULL){
 		return;
 	}
-
+	
 	if(root->stype!=NULL){
 
 		
 		if(strcmp(root->stype,"Call")==0){
 
 			char params[500] = "(";
-
+			
 			if(root->son->bro!=NULL){
 				
 				no aux=root->son->bro;
 				
 				while(aux){
-
+						
 						char aux_str[100];
-						if(strcmp(aux->type_t,"")==0){
+						if(aux->type_t!=NULL){
+							
 							check_calls(aux);
 						}
+						
 						if(aux->type_t!=NULL){
+							
 							//printf("HUGO (%s) - (%s)\n",aux->value,aux->type_t );
 
 							strcpy(aux_str,aux->type_t);
@@ -109,15 +112,26 @@ void check_calls(no root){
 							char search[]="  - ";
 							
 							token=strtok(aux_str, search);
+							
 							if(token!=NULL){
+								
 								strcat(params, token);
 
 								if(aux->bro!=NULL)
+									
 									strcat(params,",");
 							}
 
 						}
-						aux=aux->bro;
+						
+						if(aux->bro!=NULL){
+							
+							aux=aux->bro;
+						}else{
+							
+							break;
+						}
+						
 						
 
 				}
@@ -128,6 +142,7 @@ void check_calls(no root){
 				//printf("VALUE - %s, yes - %s\n",root->son->value, wowo );
 				root->son->type_t = search_table_call(root->son, wowo);
 				root->type_t = search_table_return(root->son,wowo);
+				
 				//printf("ROOT_TYPE - %s ROOT_TYPE_T - %s\n",root->type_t,root->son->type_t );
 			}
 		}
@@ -135,9 +150,13 @@ void check_calls(no root){
 		
 	}
 	no aux = root->son;
+	
 	while(aux!=NULL){
+		
 		check_calls(aux);
+		
 		aux=aux->bro;
+		
 	}
 
 }
