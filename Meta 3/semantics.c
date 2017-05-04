@@ -69,7 +69,10 @@ void check_program(no root){
 		char * cenas = (char*)strdup(" - int");
 		root->type_t = cenas;
 	}
-	
+	if(strcmp(root->stype, "Not")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
+	}	
 	no aux = root->son;
 	while(aux!=NULL){
 		check_program(aux);
@@ -98,7 +101,9 @@ void check_calls(no root){
 				while(aux){
 						
 						char aux_str[100];
-						if(aux->type_t!=NULL){
+						if(aux->type_t==NULL)
+							return;
+						if(strcmp(aux->type_t,"")==0){
 							
 							check_calls(aux);
 						}
@@ -122,28 +127,17 @@ void check_calls(no root){
 									strcat(params,",");
 							}
 
-						}
-						
-						if(aux->bro!=NULL){
-							
-							aux=aux->bro;
-						}else{
-							
-							break;
-						}
-						
-						
-
+						}	
+						aux=aux->bro;
 				}
 			}
 			strcat(params, ")");
 			char * wowo = strdup(params);
 			if(root->son!=NULL){
-				//printf("VALUE - %s, yes - %s\n",root->son->value, wowo );
 				root->son->type_t = search_table_call(root->son, wowo);
 				root->type_t = search_table_return(root->son,wowo);
 				
-				//printf("ROOT_TYPE - %s ROOT_TYPE_T - %s\n",root->type_t,root->son->type_t );
+				// printf("ROOT_TYPE - %s ROOT_TYPE_T - %s\n",root->type_t,root->son->type_t );
 			}
 		}
 

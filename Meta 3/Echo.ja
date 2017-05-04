@@ -3,11 +3,7 @@ class gcd2 {
   public static void main(String[] args) {
     int a, b;
     int gcd2,gcd3,gcd4,gcd5,gcd6;
-    b = Integer.parseInt(args[11245214]);
-    b = Integer.parseInt(args[11245214]);
     if (args.length >= 2) {
-      a = Integer.parseInt(args[0]);
-      b = Integer.parseInt(args[1]);
       gcd = gcd(Integer.parseInt(args[1]),Integer.parseInt(args[0]));
       gcd2 = gcd(2.2,gcd(2.2,3.2));
       gcd3 = gcd(true,2);
@@ -22,16 +18,6 @@ class gcd2 {
   public static int gcd2;
   public static int gcd3;
   public static int gcd(int a,int b) {
-    if (a == 0)
-      return b;
-    else {
-      while (b > 0)
-      if (a > b)
-      a = a-b;
-      else
-      b = b-a;
-      return a;
-    }
   }
   public static int gcd() {
 

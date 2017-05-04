@@ -54,6 +54,7 @@ table search_table(char* name){
 }
 
 char* search_table_call(no root, char * yes){
+  // printf("CALL %s\n",yes );
   table_node head = symbol_table->my_table;
   char str[500] = " - ";
   //printf("root_value - %s ,yes - %s\n",root->value, yes );
@@ -101,7 +102,11 @@ char* search_table_call(no root, char * yes){
     strcat(teste,")");
  }
   if(strcmp(yes,teste)!=0){
-    return search_table_call(root,teste);
+    free(p);
+      p = search_table_call(root,teste);
+      if(strcmp(p," - undef")!=0){
+        return p;
+      }
     // printf("YA\n");
   }
   // printf("tenho parametros %s\n", yes);
@@ -111,6 +116,7 @@ char* search_table_call(no root, char * yes){
 }
 
 char * search_table_return(no root, char * yes){
+   // printf("RETURN %s - %s\n",root->value,yes );
   table_node head = symbol_table->my_table;
   char str[500] = " - ";
   while(head){
@@ -136,9 +142,10 @@ char * search_table_return(no root, char * yes){
       // printf("P2 - %s\n",p );
       if(strcmp(token, "")!=0){
         
-        // printf("parametro: %s\n", token);
+         // printf("parametro: %s\n", token);
         if(strcmp(token,"double")==0){
           strcat(teste,"int");
+          // printf("troquei\n");
         }
         else{
           strcat(teste,token);
@@ -153,12 +160,14 @@ char * search_table_return(no root, char * yes){
     strcat(teste,")");
   }
   if(strcmp(yes,teste)!=0){
-   
-    return search_table_return(root,teste);
-    
+      free(p);
+      p = search_table_return(root,teste);
+      if(strcmp(p," - undef")!=0){
+        return p;
+      }
     // printf("YA\n");
   }
-  
+  // printf("CHEGUEI AO UNDEF %s\n",yes );
   return strdup(" - undef");
 }
 
