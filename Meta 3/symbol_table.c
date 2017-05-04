@@ -163,26 +163,34 @@ char * search_table_return(no root, char * yes){
 }
 
 char * search_char_table(char * name, char * t_name){
+  char * var = strdup(name);
 	table aux =NULL;
 	table_node aux_nodes = NULL;
   char str[500] = " - ";
 
 	for(aux = symbol_table;aux;aux=aux->next){
+    
+
       if(strcmp(aux->name, t_name)==0){
   	    aux_nodes = aux->my_table;
   	    while(aux_nodes){
+          printf("1 -rogerio %s name:%s\n", aux_nodes->value, var);
+
           if(strcmp(aux_nodes->value, name)==0){
+            printf("name: %s\n", name);
   	    	  if(aux_nodes->stype != NULL){
                 strcat(str,aux_nodes->stype);
   						  return strdup(str);
-  	    			}
+  	    			} 
   				}
   	      aux_nodes=aux_nodes->next;
   	    }
       }
   }
   aux_nodes= symbol_table->my_table;
+
   while(aux_nodes){
+   
     if(strcmp(aux_nodes->value, name)==0){
       if(aux_nodes->stype != NULL){
           strcat(str,aux_nodes->stype);
@@ -192,7 +200,31 @@ char * search_char_table(char * name, char * t_name){
     aux_nodes=aux_nodes->next;
   
   }
-	return NULL;
+
+  aux = symbol_table;
+  //printf("vou à MAIN  \n");
+   /*
+   aux = symbol_table;
+   
+   
+    aux_nodes = aux->my_table;
+    while(aux_nodes){
+      printf("55 -rogerio %s name:%s\n", aux_nodes->value, var);
+
+      if(strcmp(aux_nodes->value, name)==0){
+        printf("name: %s\n", name);
+        if(aux_nodes->stype != NULL){
+            strcat(str,aux_nodes->stype);
+            return strdup(str);
+          } 
+      }
+      aux_nodes=aux_nodes->next;
+      printf("aux_nodes %s\n", aux_nodes);
+      printf("55 -rogerio %s name:%s\n", aux_nodes->value, var);
+    }
+      */
+  
+	return ("- undef");
 }
 
 void insert_el(char *value, char* stype,char* params,char* flag, char* table_to)

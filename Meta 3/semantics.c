@@ -61,6 +61,10 @@ void check_program(no root){
 		char * cenas = (char*)strdup(" - boolean");
 		root->type_t = cenas;
 	}
+	if(strcmp(root->stype, "Not")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
+	}
 	if(strcmp(root->stype, "ParseArgs")==0){
 		char * cenas = (char*)strdup(" - int");
 		root->type_t = cenas;
@@ -286,6 +290,7 @@ void check_method_body_ids(no root, char* table_to){
 	if(strcmp(root->stype,"Id")==0){
 		char * symbol_type =  search_char_table(root->value,table_to);
 		root->type_t = symbol_type;
+		//printf("dwnedioedwio: %s\n", root->type_t);
 	}
 		no aux2 = root;
 	
