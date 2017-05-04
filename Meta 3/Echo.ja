@@ -20,7 +20,7 @@ class gcd2 {
   }
   public static int gcd1;
   public static int gcd2;
-  
+  public static int gcd3;
   public static int gcd(int a,int b) {
     if (a == 0)
       return b;
@@ -33,7 +33,6 @@ class gcd2 {
       return a;
     }
   }
-  public static int gcd3;
   public static int gcd() {
 
   }

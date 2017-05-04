@@ -67,6 +67,41 @@ char* search_table_call(no root, char * yes){
     }
     head=head->next;  
   }
+  
+  char * token;
+  char * p = strdup(yes);
+  p++;
+  p[strlen(p)-1]=0;
+  char teste[500] ="(";
+
+
+  if (p != NULL) {
+    // printf("P1 - %s\n",p );
+    token = strsep(&p, ",");
+    while (token != NULL)
+    {
+      // printf("P2 - %s\n",p );
+      if(strcmp(token, "")!=0){
+        // printf("parametro: %s\n", token);
+        if(strcmp(token,"double")==0){
+          strcat(teste,"int");
+        }
+        else{
+          strcat(teste,token);
+        }
+      }
+      token = strsep(&p, ",");
+      if(token)
+        strcat(teste,",");
+    }
+    strcat(teste,")");
+  }
+  if(strcmp(yes,teste)!=0){
+    return search_table_call(root,teste);
+    // printf("YA\n");
+  }
+  // printf("tenho parametros %s\n", yes);
+  // printf("e agora tenho %s\n",teste );
 
   return strdup(" - undef");
 }
@@ -80,6 +115,38 @@ char * search_table_return(no root, char * yes){
         return strdup(str);
     }
     head=head->next;
+  }
+  char * token;
+  char * p = strdup(yes);
+  p++;
+  p[strlen(p)-1]=0;
+  char teste[500] ="(";
+
+
+  if (p != NULL) {
+    // printf("P1 - %s\n",p );
+    token = strsep(&p, ",");
+    while (token != NULL)
+    {
+      // printf("P2 - %s\n",p );
+      if(strcmp(token, "")!=0){
+        // printf("parametro: %s\n", token);
+        if(strcmp(token,"double")==0){
+          strcat(teste,"int");
+        }
+        else{
+          strcat(teste,token);
+        }
+      }
+      token = strsep(&p, ",");
+      if(token)
+        strcat(teste,",");
+    }
+    strcat(teste,")");
+  }
+  if(strcmp(yes,teste)!=0){
+    return search_table_return(root,teste);
+    // printf("YA\n");
   }
   return strdup(" - undef");
 }
