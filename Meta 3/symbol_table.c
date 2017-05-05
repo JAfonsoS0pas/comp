@@ -115,17 +115,17 @@ char * search_table_return(no root, char * yes){
   table_node head = symbol_table->my_table;
   char str[500] = " - ";
   while(head){
-     // printf("head->params %s | Yes %s\n\n", head->params, yes);
+      //printf("head->params %s | Yes %s\n\n", head->params, yes);
       if(strcmp(root->value,head->value)==0 && strcmp(head->params,yes)==0 && strcmp(head->params,"")!=0){
         strcat(str,head->stype);
-       // printf("encontrei!");
+        //printf("encontrei!");
         return strdup(str);
     }
     head=head->next;
   }
-  ////////////////////////AQUI//////////////////
+ /* ////////////////////////AQUI//////////////////
   
-  //printf(" nao encontrei parei\n");
+  printf(" nao encontrei parei\n");
   char * token ="";
   char * counter = strdup(yes);
   char * p = strdup(yes);
@@ -147,10 +147,21 @@ char * search_table_return(no root, char * yes){
   if(strcmp(yes, "(undef)")==0){
     return "- undef";
   }
- // printf("CNT5 %d\n", cnt5 );
+  printf("CNT5 %d\n", cnt5 );
   int k;
 
-//printf("YES %s\n", yes);
+printf("YES %s\n", yes);
+  int not_double = 0;
+
+if(cnt5==1){
+  if(strcmp(yes,"(double)")==0){
+    return search_table_return(root, "(int)"); 
+  }else{
+    return "- undef";
+  }
+}
+
+
 for(k=0;k<cnt5;k++){
   int cnt = 0;
   char * yolo="";
@@ -160,22 +171,38 @@ for(k=0;k<cnt5;k++){
      token = strtok(p,",");
      char * rest = "first";
      int ty = 0;
-
+     printf("token : %s\n", token);
      char* save="";
+
+
      while(rest!=NULL){
       if(ty==0){
         primeiro = strdup(rest);
+        if(strcmp("double", primeiro)==0){
+          not_double = 1;
+        }
         rest = strtok(NULL,",");
-        if(rest==NULL){
+        if(strcmp("double", rest)==0){
+          not_double = 1;
+        }
+
+
+        if((rest==NULL)||(strcmp(rest, "undef"))){
           break;
         }else{
-        // printf("rest %s\n", rest);
-        save = strdup(rest);
+         
+          printf("save: %s\n", save);
+         
+
         }
-        
+       printf("rest2 %s\n", rest);
+        printf("rest2 %s\n", primeiro);
+       
+        printf("yolo");
       }
       else{
-
+       printf("yolo");
+        printf("rest4 %s\n", rest);
         rest = strtok(NULL,",");
         if(rest!=NULL){
           strcat(save,rest);
@@ -184,9 +211,17 @@ for(k=0;k<cnt5;k++){
         }
         
       }
-
+     printf("yolo");
+     printf("restddd2 %s\n", primeiro);
+      printf("hue");
+      printf("rest %s\n", rest);
+      printf("rest2 %s\n", save);
+       save = strdup(rest);
+      
     }
 
+    printf("hue");
+      printf("rest 3\n" );
       if(strcmp(yes, "(double)")==0){
 
         return search_table_return(root, "(int)");
@@ -200,33 +235,42 @@ for(k=0;k<cnt5;k++){
       if(strcmp(yes,"(int)")==0){
         return "- undef";
       }
-     // printf("YES5 %s\n");
+      printf("YES5 %s\n");
       if(strcmp(token,"double")==0){
+          not_double = 1;
           strcpy(token, "int");
       }
 
-    //  printf("YES4 %s\n", yes);
+      if(not_double==0){
+        return "- undef";
+      }
+
+     
       char * corte = strdup(token);
       strcat(corte, ",");
       if(strcmp(primeiro, "first")!=0){
+        printf("corte:    %s\n ", corte);
          strcat(corte, primeiro);
          apl = strdup("(");
         
          yolo = strdup(corte);
           strcat(apl, yolo);
+           printf("YOLO CORTE: %s\n", apl);
+            printf("YOLO CORTE: %s\n", yolo);
           strcat(apl,")");
-          //printf("corte : %s\n", apl);
-       //   printf("corte : %s\n", apl);
+          printf("corte : %s\n", apl);
+          printf("corte : %s\n", apl);
       }
-   //   printf("YES3 %s\n", save);
+     printf("YES3 %s\n", save);
+      printf("YOLO CORTE: %s\n", apl);
       search_table_return(root, apl);
-     // printf("YOLO CORTE: %s\n", apl);
-    //  printf("YES3 %s\n", save);
+    
+      printf("YES3 %s\n", save);
     }
    }else{
 
-    //printf("YES 5555%s\n", yes);
-    //printf("YOLO CORTE: %s\n", yolo);
+    printf("YES 5555%s\n", yes);
+    printf("YOLO CORTE: %s\n", yolo);
     token = strtok(p,yolo);
      char * rest = "first";
      int ty = 0;
@@ -234,7 +278,13 @@ for(k=0;k<cnt5;k++){
      while(rest!=NULL){
       if(ty==0){
         primeiro = strdup(rest);
+        if(strcmp("double", primeiro)==0){
+          not_double = 1;
+        }
         rest = strtok(NULL,",");
+        if(strcmp("double", rest)==0){
+          not_double = 1;
+        }
         if(rest!=NULL){
           save = strdup(rest);
         }
@@ -242,7 +292,7 @@ for(k=0;k<cnt5;k++){
       else{
 
         rest = strtok(NULL,",");
-        if(rest!=NULL){
+       if((rest==NULL)||(strcmp(rest, "undef")==0)){
           strcat(save,rest);
         }else{
           break;
@@ -250,23 +300,28 @@ for(k=0;k<cnt5;k++){
       }
 
     }
- //   printf("YES %s\n", yes);
+   printf("YES %s\n", yes);
       if(strcmp(token,"double")==0){
           strcpy(token, "int");
+          not_double=1;
       }
+      if(not_double!=1){
+        return ("- undef");
+      }
+
 
 
       char * corte = strdup(token);
       strcat(corte, ",");
       if(strcmp(primeiro, "first")!=0){
         strcat(corte, primeiro);
-   //    printf("corte : %s\n", corte);
+      printf("corte : %s\n", corte);
         apl = strdup("(");
         
          yolo = strdup(corte);
           strcat(apl, yolo);
           strcat(apl,")");
-      //  printf("corte : %s\n", yolo);
+        printf("corte : %s\n", yolo);
       }else{
         strcat(yolo,")");
       }
@@ -280,7 +335,7 @@ for(k=0;k<cnt5;k++){
      
     }
 
-  
+  */
   return strdup(" - undef");
 
 }
@@ -302,6 +357,7 @@ char * search_char_table(char * name, char * t_name){
             //printf("name: %s\n", name);
   	    	  if(aux_nodes->stype != NULL){
                 strcat(str,aux_nodes->stype);
+                
   						  return strdup(str);
   	    			} 
   				}
@@ -402,6 +458,11 @@ void print_tables(){
     }
     printf("\n");
   }
+
+
+
+
+
 }
 
 

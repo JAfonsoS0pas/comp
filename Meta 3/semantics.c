@@ -6,11 +6,14 @@
 #include <string.h>
 #include <ctype.h>
 
+extern table symbol_table;
 
 void check_program(no root){
     if(root==NULL){
 		return;
 	}
+
+
 	if(strcmp(root->stype, "Program")==0){
 		char* name = (char*)strdup(root->son->value);
 		init_class_table(name);
@@ -73,12 +76,19 @@ void check_program(no root){
 		char * cenas = (char*)strdup(" - int");
 		root->type_t = cenas;
 	}
+	if(strcmp(root->stype, "Mod")==0){
+		char * cenas = (char*)strdup(" - int");
+		root->type_t = cenas;
+	}
 	
 	no aux = root->son;
 	while(aux!=NULL){
 		check_program(aux);
 		aux=aux->bro;
 	}
+	
+
+	
 }
 
 void check_calls(no root){
@@ -222,6 +232,52 @@ char* check_stype(char* root){
 	return stype;
 }
 
+
+void go_again(no root){
+//	printf("entrei");
+	no aux = NULL;
+	if(root==NULL){
+		
+		return;
+	}
+
+//printf("entrei");
+	if(root->son!=NULL){
+		aux = root->son;
+	}
+//	printf("entrei");
+	while(aux!=NULL){
+
+		if(strcmp(aux->stype, "Print")==0 ){
+		
+		if(strcmp(aux->son->type_t, "- undef")==0 ){
+		
+		char * symbol_type =  search_char_table(aux->son->value,symbol_table->name);
+		root->type_t = symbol_type;
+		}
+	}
+		
+		if(strcmp(aux->stype,"Id")==0){
+		if(strcmp(aux->type_t, "- undef")==0 ){
+			
+			char * symbol_type =  search_char_table(aux->value,symbol_table->name);
+			root->type_t = symbol_type;
+		}
+
+
+		if(aux!=NULL){
+			go_again(root);
+			aux=aux->bro;
+		}else{
+			break;
+		}
+		
+		}
+	}
+
+
+
+}
 
 void add_method_params(no root,char* table_to){
 	no head=NULL;

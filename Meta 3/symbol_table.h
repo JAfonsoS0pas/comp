@@ -7,6 +7,7 @@ typedef struct tn{
   	char* value;
   	char* stype;
   	char* params;
+	int is_declared;
   	char* flag;
   	table_node next;
 }tn;
