@@ -1,40 +1,24 @@
 class gcd2 {
-  public static int gcd;
-  public static void main(String[] args) {
-    int a, b;
-    int gcd2,gcd3,gcd4,gcd5,gcd6;
-    if (args.length >= 2) {
-      gcd = gcd(Integer.parseInt(args[1]),Integer.parseInt(args[0]));
-      gcd2 = gcd(2.2,gcd(2.2,3.2));
-      gcd3 = gcd(true,2);
-      gcd4 = gcd();
-      gcd5 = gcd(2.2);
-      gcd6 = gcd(2);
-      System.out.println(gcd);
-    } else
-      System.out.println("Error: two parameters required.");
-  }
-  public static int gcd1;
-  public static int gcd2;
-  public static int gcd3;
-  public static int gcd(int a,int b) {
-  }
-  public static int gcd() {
+	public static double a,b;
+	public static void main(String[] args) {
+		a=3;
+		int a,b;
+		if (args.length >= 2 || true) {
+		  a=4;
+		  return 0;
+		}
 
-  }
-  public static int gcd(int a) {
+	}
 
-  }
-  public static int gcd(int a,boolean b) {
 
-  }
-  public static int gcd(boolean a,int b) {
+	public static int b(boolean asd, boolean b, boolean d, boolean o){
+		
+		
+		 b(a(1.2,d,b,5.5), c(3));
 
-  }
-  public static int gcd(boolean a,boolean b) {
+		System.out.println(a);
+		boolean a;
+		System.out.println(a);
 
-  }
-  public static int gcd(double a , double b){
-
-  }
+	} 
 }

@@ -21,6 +21,29 @@ void check_program(no root){
 	if (strcmp(root->stype, "MethodDecl")==0){
 		check_method_decl(root->son);
 	}
+	no aux = root->son;
+	while(aux!=NULL){
+		check_program(aux);
+		aux=aux->bro;
+	}
+}
+
+
+void check_ast(no root){
+	if(root==NULL){
+		return;
+	}
+	if(strcmp(root->stype,"MethodDecl")==0){
+		check_method_body_ast(root);
+	}
+	if(strcmp(root->stype, "And")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
+	}
+	if(strcmp(root->stype, "Or")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
+	}
 	if(strcmp(root->stype, "DecLit")==0){
 		char * cenas = (char*)strdup(" - int");
 		root->type_t = cenas;
@@ -61,6 +84,10 @@ void check_program(no root){
 		char * cenas = (char*)strdup(" - boolean");
 		root->type_t = cenas;
 	}
+	if(strcmp(root->stype, "Not")==0){
+		char * cenas = (char*)strdup(" - boolean");
+		root->type_t = cenas;
+	}
 	if(strcmp(root->stype, "ParseArgs")==0){
 		char * cenas = (char*)strdup(" - int");
 		root->type_t = cenas;
@@ -69,108 +96,43 @@ void check_program(no root){
 		char * cenas = (char*)strdup(" - int");
 		root->type_t = cenas;
 	}
-	if(strcmp(root->stype, "Not")==0){
-		char * cenas = (char*)strdup(" - boolean");
+	if(strcmp(root->stype, "Mod")==0){
+		char * cenas = (char*)strdup(" - int");
 		root->type_t = cenas;
-	}	
+	}
+
 	no aux = root->son;
 	while(aux!=NULL){
-		check_program(aux);
+		check_ast(aux);
 		aux=aux->bro;
 	}
-}
-
-void check_calls(no root){
-
-	
-	if(root==NULL){
-		return;
+	if(strcmp(root->stype, "Assign")==0 || strcmp(root->stype, "Minus")==0 || strcmp(root->stype, "Plus")==0 || strcmp(root->stype, "Assign")==0 || strcmp(root->stype, "Call")==0 ){
+		char * cenas = (char*)strdup(root->son->type_t);
+		root->type_t = cenas;
 	}
-	
-	if(root->stype!=NULL){
-
-		
-		if(strcmp(root->stype,"Call")==0){
-
-			char params[500] = "(";
-			
-			if(root->son->bro!=NULL){
-				
-				no aux=root->son->bro;
-				
-				while(aux){
-						
-						char aux_str[100];
-						if(aux->type_t==NULL)
-							return;
-						if(strcmp(aux->type_t,"")==0){
-							
-							check_calls(aux);
-						}
-						
-						if(aux->type_t!=NULL){
-							
-							//printf("HUGO (%s) - (%s)\n",aux->value,aux->type_t );
-
-							strcpy(aux_str,aux->type_t);
-							char * token;
-							char search[]="  - ";
-							
-							token=strtok(aux_str, search);
-							
-							if(token!=NULL){
-								
-								strcat(params, token);
-
-								if(aux->bro!=NULL)
-									
-									strcat(params,",");
-							}
-
-						}	
-						aux=aux->bro;
-				}
-			}
-			strcat(params, ")");
-			char * wowo = strdup(params);
-			if(root->son!=NULL){
-				root->son->type_t = search_table_call(root->son, wowo);
-				root->type_t = search_table_return(root->son,wowo);
-				
-				// printf("ROOT_TYPE - %s ROOT_TYPE_T - %s\n",root->type_t,root->son->type_t );
-			}
+	if(strcmp(root->stype, "Add")==0 || strcmp(root->stype, "Sub")==0 || strcmp(root->stype, "Div")==0 || strcmp(root->stype, "Mul")==0){
+		char * cenas;
+		printf("1%s 2%s 3%d\n",root->son->type_t,root->son->bro->type_t,strcmp(root->son->stype, root->son->bro->stype) );
+		if(strcmp(root->son->type_t, root->son->bro->type_t)==0){
+			cenas = (char*)strdup(root->son->type_t);	
 		}
-
-		
+		else{
+			cenas = (char*)strdup(" - double"); 
+		}
+		root->type_t = cenas;
 	}
-	no aux = root->son;
-	
-	while(aux!=NULL){
-		
-		check_calls(aux);
-		
-		aux=aux->bro;
-		
-	}
-
 }
 
 void check_field_decl(no root){
 	char *stype = check_stype(root->son->stype);
-	char *value =NULL;
-	if(root->son->bro!=NULL){
-    	value = (char*)strdup(root->son->bro->value);
-	}
+    char *value = (char*)strdup(root->son->bro->value);
     insert_el(value,stype,NULL,NULL,"Class");
 }
 
 
 void check_method_decl(no root){
 	char *stype = check_stype(root->son->stype);
-	char *value=NULL;
-	if(root->son->bro!=NULL){
-		 value = (char*)strdup(root->son->bro->value);
-	}
+	char *value = (char*)strdup(root->son->bro->value);
 	char *params = check_method_params(root->son->bro->bro);
 	
     char * new_str ;
@@ -184,6 +146,7 @@ void check_method_decl(no root){
     insert_el("return",stype,NULL,NULL,new_str);
     add_method_params(root->son->bro->bro,new_str);
     check_method_body(root->bro,new_str);
+
 }
 
 char* check_stype(char* root){
@@ -207,6 +170,10 @@ char* check_stype(char* root){
 	else if(strcmp(root,"Void")==0){
 		stype = (char*)calloc((strlen("void")+1),sizeof(char));
 		strcpy(stype,"void");
+	}
+	else if(strcmp(root,"ParseArgs")==0){
+		stype = (char*)calloc((strlen("int")+1),sizeof(char));
+		strcpy(stype,"int");
 	}
 	return stype;
 }
@@ -257,20 +224,31 @@ void check_method_body(no root, char* table_to){
 			char *stype = check_stype(head->son->stype);
 			insert_el(head->son->bro->value,stype,NULL,NULL,table_to);
 		}
-		
-		else{
-			check_method_body_ids(head,table_to);
-		}
-		if(head->bro){
-			head=head->bro;
-		}else{
-			break;
-		}
-		
-
+		head=head->bro;
 	}
 }
 
+
+void check_method_body_ast(no root){ // root = methodHeader
+	char * name = root->son->son->bro->value;
+	char * params = check_method_params(root->son->son->bro->bro); 
+	printf("check:%s - %s\n",name,params );
+	no head=root->son->bro->son;
+	char*  table_to = malloc(strlen(name)+strlen(params)+1);
+	table_to[0] = '\0';   // ensures the memory is an empty string
+    strcat(table_to,name);
+    strcat(table_to,params);  
+
+	while(head){
+		if(strcmp(head->stype,"VarDecl")==0){
+			//ignora			
+		}
+		else{
+			check_method_body_ids(head,table_to);
+		}
+		head=head->bro;
+	 }
+}
 
 
 void check_method_body_ids(no root, char* table_to){
@@ -279,73 +257,23 @@ void check_method_body_ids(no root, char* table_to){
 	}
 	if(strcmp(root->stype,"Id")==0){
 		char * symbol_type =  search_char_table(root->value,table_to);
+		printf("symbol_type%s\n",symbol_type );
+		
 		root->type_t = symbol_type;
 	}
-		no aux2 = root;
-	
-		no aux = root->son;
-
-		while(aux){
-
-			check_method_body_ids(aux,table_to);
-			if(aux!=NULL){
-				check_type(aux);
-				check_type(aux2);}
-			if(aux->bro!=NULL){
-				aux=aux->bro;
-			}
-			else{
-				break;
-			}
-			
+	no aux = root->son;
+	while(aux){
+		check_method_body_ids(aux,table_to);
+		aux=aux->bro;
+	}
+	if(strcmp(root->stype,"Call")==0){
+		table calling = search_table(root->son->value);
+		if(calling){
 
 		}
+		else{
+			
+		}
+	}
 	
 }
-
-
-
-void check_type(no root){
-	if((strcmp(root->stype, "If")==0)|| (strcmp(root->stype, "Block")==0)|| (strcmp(root->stype, "While")==0)||(strcmp(root->stype, "Return")==0)){
-    	return;
-  	}
-	int cnt = 0;
-
-	if((strcmp(root->stype, "Assign")==0)){
-		if(root->son->type_t!=NULL){
-		  	root->type_t = strdup(root->son->type_t);
-		  	root = root->son;
-  		}
-	}  
-
-  	if((strcmp(root->stype, "Sub")==0) || (strcmp(root->stype, "Add"))==0 || (strcmp(root->stype, "Mul"))==0 || (strcmp(root->stype, "Div"))==0) {
-    	no aux  = root->son;
-    	while(aux!=NULL){
-    		if(aux->type_t!=NULL){
-		      	if(cnt == 0){
-			        if(strcmp(aux->type_t," - int")==0){
-			        	root->type_t  = strdup(aux->type_t);
-			        }
-			        if(strcmp(aux->type_t," - double")==0){
-			          	root->type_t  = strdup(aux->type_t);
-			        }
-			        cnt++;
-		     	}
-		      	else{
-		      		if((aux->type_t!=NULL)){
-			        	if(strcmp(aux->type_t, root->type_t ) !=0){
-			          		root->type_t  = strdup(" - double");
-			        	}
-			    	}
-				}
-			}
-			if(aux->bro!=NULL){
-				aux = aux->bro;
-			}
-			else{
-				break;
-			}
-    	}
-  	}
-}
-

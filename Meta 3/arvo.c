@@ -15,7 +15,6 @@ no create(type_node type, char* value, char* stype){
 	new->son=NULL;
 	new->bro=NULL;
 	new->n = 0;
-
 	return new;
 
 }
@@ -95,6 +94,7 @@ void printftree(no root, int prof){
 			printf("%s%s\n", root->stype, root->type_t);
 	}
 	aux = root->son;
+	
 	while(aux!=NULL){
 		no auxToFree = aux;
 		printftree(aux, prof+1);

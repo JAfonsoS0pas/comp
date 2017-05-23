@@ -1,16 +1,11 @@
-class gcd2{
-	public static double gdc2;
-	public static int gcd2 (int a, int b){
-		if (a==0 && a==b)
-			return b;
+class wele{
+	
+	public static int main (int a, int b){
 		
-		if (a>b){
+		if (a>gdc2){
 		
-			a=b+c+d;
 			}
 	}
-	public static int costa(int x){
-
-		a=b+c+1.234;
-	}
+	public static double gdc2;
+	
 }
