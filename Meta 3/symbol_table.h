@@ -15,13 +15,16 @@ typedef struct t* table;
 typedef struct t{
 	char* type;
 	char* name;
+	char* clean_name;
+	char** params_array;
+	int n_params;
 	table_node my_table;
 	table next;
 }t;
 
 
 void init_class_table(char* name);
-void init_method_table(char* name);
+void init_method_table(char* name ,char* clean_name, char** params_array);
 void insert_el(char *value, char* stype,char* params, char* flag, char* table_to);
 table search_table(char* name);
 void print_tables();

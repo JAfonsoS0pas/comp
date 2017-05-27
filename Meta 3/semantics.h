@@ -11,3 +11,4 @@ void check_method_body(no root, char* table_to);
 void check_ast(no root);
 void check_method_body_ids(no root, char* table_to);
 void check_method_body_ast(no root);
+char** check_method_params_array(no root);

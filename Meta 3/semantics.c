@@ -106,13 +106,12 @@ void check_ast(no root){
 		check_ast(aux);
 		aux=aux->bro;
 	}
-	if(strcmp(root->stype, "Assign")==0 || strcmp(root->stype, "Minus")==0 || strcmp(root->stype, "Plus")==0 || strcmp(root->stype, "Assign")==0 || strcmp(root->stype, "Call")==0 ){
+	if(strcmp(root->stype, "Assign")==0 || strcmp(root->stype, "Minus")==0 || strcmp(root->stype, "Plus")==0 ){
 		char * cenas = (char*)strdup(root->son->type_t);
 		root->type_t = cenas;
 	}
 	if(strcmp(root->stype, "Add")==0 || strcmp(root->stype, "Sub")==0 || strcmp(root->stype, "Div")==0 || strcmp(root->stype, "Mul")==0){
 		char * cenas;
-		printf("1%s 2%s 3%d\n",root->son->type_t,root->son->bro->type_t,strcmp(root->son->stype, root->son->bro->stype) );
 		if(strcmp(root->son->type_t, root->son->bro->type_t)==0){
 			cenas = (char*)strdup(root->son->type_t);	
 		}
@@ -134,6 +133,7 @@ void check_method_decl(no root){
 	char *stype = check_stype(root->son->stype);
 	char *value = (char*)strdup(root->son->bro->value);
 	char *params = check_method_params(root->son->bro->bro);
+	char **params_array = check_method_params_array(root->son->bro->bro);
 	
     char * new_str ;
 	if((new_str = malloc(strlen(value)+strlen(params)+1)) != NULL){
@@ -142,7 +142,7 @@ void check_method_decl(no root){
 	    strcat(new_str,params);
 	}
     insert_el(value,stype,params,NULL,"Class");
-    init_method_table(new_str);
+    init_method_table(new_str,value,params_array);
     insert_el("return",stype,NULL,NULL,new_str);
     add_method_params(root->son->bro->bro,new_str);
     check_method_body(root->bro,new_str);
@@ -189,7 +189,6 @@ void add_method_params(no root,char* table_to){
 		insert_el(head->son->bro->value,stype,NULL,"param",table_to);
 		head=head->bro;
 	}
-
 }
 
 char* check_method_params(no root){
@@ -214,6 +213,31 @@ char* check_method_params(no root){
 	return strdup(params);
 }
 
+char** check_method_params_array(no root){
+	char** params = (char **)malloc(10 * sizeof(char*)); // maximo de 10 argumentos
+	int i=1;
+	no aux=NULL;
+	if(root->son)
+		aux = root->son;
+	while(aux){
+		if(strcmp(aux->son->stype,"StringArray")==0)
+			params[i] = strdup("String[]");	
+		else if(strcmp(aux->son->stype,"Int")==0)
+			params[i] = strdup("int");
+		else if(strcmp(aux->son->stype,"Double")==0)
+			params[i] = strdup("double");
+		else if(strcmp(aux->son->stype,"Bool")==0)
+			params[i] = strdup("boolean");
+		i++;
+		aux=aux->bro;
+	}
+	char str[10];
+	sprintf(str, "%d", i-1);
+	params[0] = strdup(str);
+
+	return params;
+}
+
 void check_method_body(no root, char* table_to){
 	no head=NULL;
 	if(root->son){
@@ -232,7 +256,6 @@ void check_method_body(no root, char* table_to){
 void check_method_body_ast(no root){ // root = methodHeader
 	char * name = root->son->son->bro->value;
 	char * params = check_method_params(root->son->son->bro->bro); 
-	printf("check:%s - %s\n",name,params );
 	no head=root->son->bro->son;
 	char*  table_to = malloc(strlen(name)+strlen(params)+1);
 	table_to[0] = '\0';   // ensures the memory is an empty string
@@ -257,7 +280,6 @@ void check_method_body_ids(no root, char* table_to){
 	}
 	if(strcmp(root->stype,"Id")==0){
 		char * symbol_type =  search_char_table(root->value,table_to);
-		printf("symbol_type%s\n",symbol_type );
 		
 		root->type_t = symbol_type;
 	}
@@ -272,7 +294,7 @@ void check_method_body_ids(no root, char* table_to){
 
 		}
 		else{
-			
+
 		}
 	}
 	

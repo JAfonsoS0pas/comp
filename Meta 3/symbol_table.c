@@ -17,18 +17,21 @@ void init_class_table(char* name){
   symbol_table->name = (char*)calloc((strlen(name)+1),sizeof(char));
   strcpy(symbol_table->name,name);
 
+  symbol_table->params_array = NULL;
+
 }
 
 
-void init_method_table(char* name ){
+void init_method_table(char* name ,char* clean_name ,char** params_array){
 
   table new_node = calloc(1,sizeof(t));
 
   new_node->type = (char*)calloc((strlen("Method")+1),sizeof(char));
   strcpy(new_node->type,"Method");
 
-  new_node->name = (char*)calloc((strlen(name)+1),sizeof(char));
-  strcpy(new_node->name,name);
+  new_node->name = name;
+  new_node->clean_name = clean_name;
+  new_node->params_array = params_array;
 
 
   table head = symbol_table;
@@ -45,7 +48,6 @@ void init_method_table(char* name ){
 table search_table(char* name){
   table head = symbol_table;
   while(head){
-    printf("head:%s table_to:%s\n",head->name,name );
     if(strcmp(head->name,name)==0){
       return head;
     }
@@ -98,6 +100,15 @@ void print_tables(){
   table_node aux_nodes;
   
   for(aux = symbol_table;aux;aux=aux->next){
+    
+    if(aux->params_array){
+      int i=atoi(aux->params_array[0]);
+      while(i>0){
+        //printf("YO -> %s%d\n",aux->params_array[i],i );
+        i--;
+      }
+    }
+
     printf("===== %s %s Symbol Table =====\n",aux->type, aux->name);
     aux_nodes = aux->my_table;
     while(aux_nodes){

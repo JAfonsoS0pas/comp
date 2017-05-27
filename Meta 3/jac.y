@@ -13,6 +13,7 @@
 	no aux2;
     int print_flag = 0,flag = 0;
     table symbol_table = NULL;
+    extern int linha;
 %}
 
  

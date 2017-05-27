@@ -1,7 +1,7 @@
 class gcd2 {
 	public static double a,b;
 	public static void main(String[] args) {
-		a=3;
+		a=3.0;
 		int a,b;
 		if (args.length >= 2 || true) {
 		  a=4;
@@ -11,7 +11,7 @@ class gcd2 {
 	}
 
 
-	public static int b(boolean asd, boolean b, boolean d, boolean o){
+	public static int b(boolean asd, boolean b, double d, int o){
 		
 		
 		 b(a(1.2,d,b,5.5), c(3));
