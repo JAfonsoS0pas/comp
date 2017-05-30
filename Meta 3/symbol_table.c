@@ -22,7 +22,7 @@ void init_class_table(char* name){
 }
 
 
-void init_method_table(char* name ,char* clean_name ,char** params_array){
+void init_method_table(char* name ,char* clean_name ,char** params_array, char* stype){
 
   table new_node = calloc(1,sizeof(t));
 
@@ -36,13 +36,15 @@ void init_method_table(char* name ,char* clean_name ,char** params_array){
 
   table head = symbol_table;
   if(head==NULL){
-    symbol_table = new_node; 
+    symbol_table = new_node;
   }else{
     while(head->next){
       head=head->next; 
     }
     head->next=new_node;
   }
+
+  insert_elem("return",stype,NULL,NULL,head->next);
 }
 
 table search_table(char* name){
@@ -56,6 +58,59 @@ table search_table(char* name){
   return NULL;
 }
 
+table check_call(char* id, char** params,int promotion){
+  table head = symbol_table->next;
+  while(head!=NULL){
+    if(strcmp(head->clean_name,id)==0){
+      if(head->params_array!=NULL && params!=NULL){
+        if(strcmp(head->params_array[0],params[0])==0){
+          int j=atoi(params[0]),i,myTable=0;
+          for(i=1;i<=j;i++){
+            if(promotion==1){
+              if(strcmp(head->params_array[i],params[i])!=0 && !(strcmp(head->params_array[i],"double")==0 && strcmp(params[i],"int")==0)){
+                myTable=1;
+              }
+            }else{
+              if(strcmp(head->params_array[i],params[i])!=0 ){
+                myTable=1;
+              }  
+            }
+          }
+          if(myTable==0){
+            return head;
+          }
+        }
+      }
+    }
+    head=head->next;
+  }
+  if(promotion==0){
+    return check_call(id,params,1);
+  }
+  return NULL;
+}
+
+
+void insert_elem(char* value, char* stype, char* params, char* flag, table table_to){
+  table_node new_node= calloc(1,sizeof(tn));
+  new_node->value = value;
+  new_node->stype = stype;
+  new_node->next=NULL;
+  if(params){
+    new_node->params = params;
+  }
+  else{
+    new_node->params = "";
+  }
+  if(flag){
+    new_node->flag= flag;
+  }
+  else{
+    new_node->flag= "";
+  }
+  table_to->my_table = new_node;
+   
+}
 
 void insert_el(char *value, char* stype,char* params,char* flag, char* table_to)
 {
@@ -100,15 +155,6 @@ void print_tables(){
   table_node aux_nodes;
   
   for(aux = symbol_table;aux;aux=aux->next){
-    
-    if(aux->params_array){
-      int i=atoi(aux->params_array[0]);
-      while(i>0){
-        //printf("YO -> %s%d\n",aux->params_array[i],i );
-        i--;
-      }
-    }
-
     printf("===== %s %s Symbol Table =====\n",aux->type, aux->name);
     aux_nodes = aux->my_table;
     while(aux_nodes){
@@ -141,7 +187,7 @@ char* search_char_table(char * name, char * t_name){
   }
   aux=symbol_table;
   for(aux_nodes=aux->my_table;aux_nodes;aux_nodes=aux_nodes->next){
-    if(strcmp(aux_nodes->value,name)==0){
+    if(strcmp(aux_nodes->value,name)==0 && strcmp(aux_nodes->params,"")==0){
         strcat(str,aux_nodes->stype);
         return strdup(str);
       }

@@ -309,9 +309,11 @@ int main(int argc, char *argv[]){
 			check_program(root);
 			
 			check_ast(root);
-			print_tables();
-			if(!print_flag)
+			if(!print_flag){
+				print_tables();
     			printftree(root,0);
+			}
+				
     	}
 	}
 	else{

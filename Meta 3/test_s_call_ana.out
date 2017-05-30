@@ -1,3 +1,4 @@
+Line 25, col 22: Symbol b() already defined
 ===== Class gcd2 Symbol Table =====
 a	()	int
 meow	()	int
@@ -7,7 +8,6 @@ b	()	double
 b	(double,int)	void
 b	(double,double)	void
 b	(int,int)	boolean
-b	()	double
 b	(boolean,boolean,boolean,boolean)	int
 
 ===== Method a() Symbol Table =====
@@ -31,7 +31,6 @@ c		double	param
 
 ===== Method b() Symbol Table =====
 return		double
-return		double
 
 ===== Method b(double,int) Symbol Table =====
 return		void
@@ -48,8 +47,6 @@ return		boolean
 a		int	param
 b		int	param
 
-===== Method b() Symbol Table =====
-
 ===== Method b(boolean,boolean,boolean,boolean) Symbol Table =====
 return		int
 asd		boolean	param
@@ -58,12 +55,6 @@ d		boolean	param
 o		boolean	param
 a		int
 
-P1 - int
-P2 - (null)
-parametro: int
-P1 - int
-P2 - (null)
-parametro: int
 Program
 ..Id(gcd2)
 ..MethodDecl
