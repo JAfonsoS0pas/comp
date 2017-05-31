@@ -1,0 +1,14 @@
+Assignment -> 
+	class gcd2 {
+		public static double a;
+		public static void main() {
+			a=3; // a dar int em vez de double
+			int a,b;
+			a=4;
+		}
+	}
+
+
+Call ->
+
+mudar tudo o que usa metodo(params) !!! :( fake, apenas nos calls usa o array de strings

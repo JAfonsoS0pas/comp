@@ -1,0 +1,9 @@
+class gcd{
+public static void a(int c, int d)
+  {
+    System.out.println(b0);
+    boolean b0;
+    System.out.println(b0);
+  }
+  public static int b0;
+}

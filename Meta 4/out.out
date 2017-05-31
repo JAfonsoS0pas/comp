@@ -1,0 +1,3 @@
+define i32 @code_gen() {
+ret i32 0 
+}
