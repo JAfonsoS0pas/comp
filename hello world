@@ -1,0 +1,4 @@
+int main{
+  printf("rogério vai comer merda");
+  return 0;
+ }
